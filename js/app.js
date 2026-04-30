@@ -591,13 +591,9 @@ function renderHome() {
   app.innerHTML = `
     <div class="home-page fade-in">
       <div class="home-logo">
-        <div class="logo-badge">
-          <span class="logo-badge-top">피부과</span>
-          <span class="logo-badge-bottom">전문의</span>
-        </div>
+        <img src="images/badge.jpg" alt="피부과 전문의" class="home-badge-logo">
       </div>
-      <h1 class="home-title">AKD</h1>
-      <p class="home-subtitle">대한피부과의사회 회원 검색</p>
+      <h1 class="home-subtitle home-main-title">우리 동네 피부과 의사를 찾아볼까요?</h1>
       <div class="search-box">
         <input type="text" class="search-input" id="searchInput"
                placeholder="의사명, 병원명, 진료과목으로 검색" autocomplete="off">
@@ -706,7 +702,8 @@ function renderMembers() {
             <div class="member-card-photo-wrap">
               <img src="${photoUrl(m.photo)}" class="member-card-photo" alt="${m.name}"
                    onerror="this.style.display='none'">
-              <span class="member-card-badge">${m.specialty}</span>
+              <img src="images/badge.jpg" alt="피부과 전문의" class="member-card-badge-img">
+              <span class="sr-only">${m.specialty}</span>
             </div>
             <div class="member-card-body">
               <h3>${m.name}</h3>
