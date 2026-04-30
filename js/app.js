@@ -147,7 +147,11 @@ const MEMBERS = [
       '2023 베스트 렉쳐 선정',
       '2024 베스트 기획자 상'
     ],
-    treatments: ['백반증', '건선', '아토피', '여드름', '기미/색소', '피부암/점', '레이저토닝']
+    treatments: ['백반증', '건선', '아토피', '여드름', '기미/색소', '피부암/점', '레이저토닝'],
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'https://www.healhouseskin.com' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/healhouseskin/' }
+    ]
   },
   {
     id: 'kim-hongseok',
@@ -190,7 +194,15 @@ const MEMBERS = [
       '2022 베스트렉처 수상',
       '대한피부과의사회 홍보이사'
     ],
-    treatments: ['여드름', '기미/색소', '리프팅/탄력', '레이저토닝', '탈모/모발']
+    treatments: ['여드름', '기미/색소', '리프팅/탄력', '레이저토닝', '탈모/모발'],
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'https://vos.co.kr' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/vos_skinclinic/' },
+      { type: 'instagram', label: '개인 인스타그램', url: 'https://www.instagram.com/drhong3_pr/' },
+      { type: 'instagram', label: '피알남 공식 인스타그램', url: 'https://www.instagram.com/prnam_official/' },
+      { type: 'youtube', label: '유튜브', url: 'https://www.youtube.com/channel/UC908f2Qj4Jz2bs9XzDdPMLg' },
+      { type: 'linktree', label: '링크트리', url: 'https://linktr.ee/VOS.DERMATOLOGY.CLINIC' }
+    ]
   },
   {
     id: 'lee-haeun',
@@ -222,7 +234,14 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['여드름', '기미/색소', '건선', '아토피', '레이저토닝', '리프팅/탄력']
+    treatments: ['여드름', '기미/색소', '건선', '아토피', '레이저토닝', '리프팅/탄력'],
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'http://foretderma.com' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/foretskin_official' },
+      { type: 'instagram', label: '개인 인스타그램', url: 'https://www.instagram.com/dermakitty' },
+      { type: 'youtube', label: '개인 유튜브', url: 'https://www.youtube.com/@drleehaeun' },
+      { type: 'threads', label: '개인 스레드', url: 'https://www.threads.com/@dermakitty' }
+    ]
   },
   {
     id: 'gye-jiwon',
@@ -262,7 +281,12 @@ const MEMBERS = [
       '2023 베스트 렉쳐 선정',
       '2024 베스트 기획자 상'
     ],
-    treatments: ['백반증', '여드름', '기미/색소', '사마귀/무좀', '레이저토닝', '리프팅/탄력']
+    treatments: ['백반증', '여드름', '기미/색소', '사마귀/무좀', '레이저토닝', '리프팅/탄력'],
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'http://humanpt.co.kr' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/pt_human/' },
+      { type: 'youtube', label: '유튜브', url: 'https://www.youtube.com/channel/UCTG-I_EmOuI4n5C5yAu51LA' }
+    ]
   },
   {
     id: 'shin-jiyeon',
@@ -289,7 +313,14 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅']
+    treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅'],
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'https://seoul.hevclinic.com' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/hev_seoul' },
+      { type: 'instagram', label: '개인 인스타그램', url: 'https://www.instagram.com/shinjiyn/' },
+      { type: 'youtube', label: '개인 유튜브', url: 'https://www.youtube.com/@shinjiyn' },
+      { type: 'threads', label: '개인 스레드', url: 'https://www.threads.com/@shinjiyn' }
+    ]
   },
   {
     id: 'jung-hanmi',
@@ -742,43 +773,66 @@ function renderMemberDetail(params) {
   const hospital = getHospital(member.hospitalId);
   const teamDoctors = hospital ? getHospitalDoctors(hospital.id).filter(d => d.id !== member.id) : [];
 
-  app.innerHTML = `
-    <div class="member-detail fade-in">
-      <button class="back-btn" onclick="history.back()">
-        <i class="fas fa-arrow-left"></i> 뒤로가기
-      </button>
+  const snsIconMap = {
+    website: 'fa-solid fa-globe',
+    instagram: 'fa-brands fa-instagram',
+    youtube: 'fa-brands fa-youtube',
+    threads: 'fa-brands fa-threads',
+    linktree: 'fa-solid fa-link'
+  };
 
-      <div class="member-hero">
-        <!-- Photo Section -->
-        <div class="member-photo-section">
-          <div class="member-photo-wrap">
-            <img src="${photoUrl(member.photo)}" alt="${member.name}"
-                 onerror="this.style.background='var(--bg)'">
+  app.innerHTML = `
+    <div class="member-detail-v2 fade-in">
+      <!-- Hero Section -->
+      <section class="member-hero-v2">
+        <button class="back-btn-v2" onclick="history.back()">
+          <i class="fas fa-arrow-left"></i> 뒤로가기
+        </button>
+
+        <div class="member-hero-inner">
+          <div class="member-hero-info">
+            <p class="hero-specialty">피부과</p>
+            <h1 class="hero-name">${member.name}</h1>
+
+            <div class="hero-meta">
+              <span class="hero-meta-label">진료분야</span>
+              <span class="hero-meta-value">${member.treatments && member.treatments.length ? member.treatments.join(' / ') : '-'}</span>
+            </div>
+
             ${member.quote ? `
-              <div class="member-quote">
-                <p>${member.quote}</p>
+              <p class="hero-quote">${member.quote}</p>
+            ` : ''}
+
+            ${hospital ? `
+              <a href="#hospital/${hospital.id}" class="hero-hospital-link">
+                <i class="fas fa-hospital"></i>
+                <span>${hospital.name}</span>
+                <i class="fas fa-chevron-right hero-hospital-arrow"></i>
+              </a>
+            ` : ''}
+
+            ${member.links && member.links.length ? `
+              <div class="hero-sns">
+                ${member.links.map(l => `
+                  <a href="${l.url}" target="_blank" rel="noopener" class="hero-sns-btn" title="${l.label}">
+                    <i class="${snsIconMap[l.type] || 'fa-solid fa-link'}"></i>
+                    <span>${l.label}</span>
+                  </a>
+                `).join('')}
               </div>
             ` : ''}
           </div>
-        </div>
 
-        <!-- Info Section -->
-        <div class="member-info-section">
-          <div class="member-name-area">
-            <p class="member-specialty-label">${member.specialty}</p>
-            <h1 class="member-name">${member.name}</h1>
+          <div class="member-hero-photo">
+            <img src="${photoUrl(member.photo)}" alt="${member.name}"
+                 onerror="this.style.background='var(--bg)'">
           </div>
+        </div>
+      </section>
 
-          ${hospital ? `
-            <a href="#hospital/${hospital.id}" class="hospital-link-card">
-              <i class="fas fa-hospital"></i>
-              <div class="hospital-link-info">
-                <h3>${hospital.name}</h3>
-                <p>${hospital.address}</p>
-              </div>
-              <i class="fas fa-chevron-right arrow"></i>
-            </a>
-          ` : ''}
+      <div class="member-detail-body">
+        <!-- Spacer to keep info-grid container -->
+        <div style="display:none;"></div>
 
           <div class="member-info-grid">
             <!-- Position & Role -->
@@ -854,7 +908,6 @@ function renderMemberDetail(params) {
                 </div>
               </div>
             ` : ''}
-          </div>
         </div>
       </div>
 
