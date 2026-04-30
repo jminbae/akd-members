@@ -596,7 +596,7 @@ function renderHome() {
       <h1 class="home-subtitle home-main-title">우리 동네 피부과의사를 찾아보세요!</h1>
       <div class="search-box">
         <input type="text" class="search-input" id="searchInput"
-               placeholder="의사명, 병원명, 진료과목으로 검색" autocomplete="off">
+               placeholder="의사명, 피부과명, 진료 분야로 검색" autocomplete="off">
         <button class="search-btn" id="searchBtn">
           <i class="fas fa-search"></i>
         </button>
@@ -605,15 +605,15 @@ function renderHome() {
       <div class="home-shortcuts stagger">
         <a href="#dermatologists" class="home-shortcut">
           <i class="fas fa-user-md"></i>
-          <span>피부과전문의</span>
+          <span>피부과 의사</span>
         </a>
         <a href="#hospitals" class="home-shortcut">
           <i class="fas fa-hospital"></i>
-          <span>병원 찾기</span>
+          <span>피부과 소개</span>
         </a>
         <a href="#treatments" class="home-shortcut">
           <i class="fas fa-stethoscope"></i>
-          <span>진료과목</span>
+          <span>주 진료 분야</span>
         </a>
       </div>
     </div>
@@ -691,7 +691,7 @@ function renderMembers() {
   const mainDoctors = MEMBERS.filter(m => m.specialty === '피부과 전문의');
   app.innerHTML = `
     <div class="page-header">
-      <h1>회원 정보</h1>
+      <h1>피부과 의사</h1>
       <p>대한피부과의사회 소속 피부과 전문의를 소개합니다</p>
     </div>
     <div class="members-grid stagger">
@@ -840,7 +840,7 @@ function renderMemberDetail(params) {
             <!-- Treatments -->
             ${member.treatments && member.treatments.length > 0 ? `
               <div class="info-card full-width">
-                <h3 class="info-card-title"><i class="fas fa-stethoscope"></i> 주 진료과목</h3>
+                <h3 class="info-card-title"><i class="fas fa-stethoscope"></i> 주 진료 분야</h3>
                 <div class="treatment-tags">
                   ${member.treatments.map((t, i) => `
                     <a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag color-${i % 12}">${t}</a>
@@ -874,47 +874,153 @@ function renderMemberDetail(params) {
   `;
 }
 
+let hospitalsMap = null;
+let hospitalsMarkers = [];
+
 function renderHospitals() {
   app.innerHTML = `
     <div class="page-header">
-      <h1>근무 병원</h1>
-      <p>대한피부과의사회 회원이 근무하는 병원을 소개합니다</p>
+      <h1>피부과 소개</h1>
+      <p>내 위치에서 가까운 순으로 피부과를 보여드립니다</p>
     </div>
-    <div class="hospitals-grid stagger">
-      ${HOSPITALS.map(h => {
-        const doctors = getHospitalDoctors(h.id);
-        return `
-          <a href="#hospital/${h.id}" class="hospital-card">
-            <div class="hospital-card-header">
-              <h3>${h.name}</h3>
-              <p><i class="fas fa-map-marker-alt"></i> ${h.address}</p>
-            </div>
-            <div class="hospital-card-body">
-              <div class="hospital-card-info">
-                <div class="hospital-card-info-row">
-                  <i class="fas fa-phone"></i>
-                  <span>${h.phone}</span>
-                </div>
-                <div class="hospital-card-info-row">
-                  <i class="fas fa-clock"></i>
-                  <span>${Object.entries(h.hours).map(([k,v]) => `${k}: ${v}`).join(' / ')}</span>
-                </div>
-              </div>
-              <div class="hospital-card-doctors">
-                ${doctors.map(d => `
-                  <img src="${photoUrl(d.photo)}" class="hospital-card-doctor-avatar" alt="${d.name}"
-                       onerror="this.style.background='var(--bg-dark)'">
-                `).join('')}
-                <span class="hospital-card-doctor-count">
-                  ${doctors.map(d => d.name).join(', ')} ${doctors.length > 1 ? '외' : ''} 진료
-                </span>
-              </div>
-            </div>
-          </a>
-        `;
-      }).join('')}
+    <div class="hospitals-page">
+      <div class="hospitals-map-large" id="hospitalsMapLarge"></div>
+      <div class="hospitals-list" id="hospitalsList"></div>
     </div>
   `;
+
+  // Get user location and render
+  if (navigator.geolocation && !userLocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        updateHospitalsView();
+      },
+      () => {
+        userLocation = { lat: 37.5665, lng: 126.9780 };
+        updateHospitalsView();
+      },
+      { timeout: 3000 }
+    );
+  } else {
+    if (!userLocation) userLocation = { lat: 37.5665, lng: 126.9780 };
+    setTimeout(updateHospitalsView, 100);
+  }
+}
+
+function updateHospitalsView() {
+  // Sort by distance from user
+  const sortedHospitals = HOSPITALS.map(h => ({
+    ...h,
+    distance: haversine(userLocation.lat, userLocation.lng, h.lat, h.lng)
+  })).sort((a, b) => a.distance - b.distance);
+
+  // Render list
+  const listEl = document.getElementById('hospitalsList');
+  if (listEl) {
+    listEl.innerHTML = sortedHospitals.map((h, index) => {
+      const doctors = getHospitalDoctors(h.id);
+      return `
+        <a href="#hospital/${h.id}" class="hospital-list-item"
+           onmouseenter="highlightHospitalMarker('${h.id}')"
+           onmouseleave="unhighlightHospitalMarker('${h.id}')">
+          <div class="hospital-list-rank">${index + 1}</div>
+          <div class="hospital-list-content">
+            <h3 class="hospital-list-name">${h.name}</h3>
+            <p class="hospital-list-address"><i class="fas fa-map-marker-alt"></i> ${h.address}</p>
+            <p class="hospital-list-distance"><i class="fas fa-route"></i> 약 ${h.distance.toFixed(1)}km</p>
+            <div class="hospital-list-doctors">
+              ${doctors.map(d => `
+                <img src="${photoUrl(d.photo)}" class="hospital-list-doctor-avatar" alt="${d.name}"
+                     onerror="this.style.background='var(--bg-dark)'">
+              `).join('')}
+              <span class="hospital-list-doctor-names">
+                ${doctors.map(d => d.name).join(', ')} ${doctors.length > 1 ? '외' : ''} 진료
+              </span>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right hospital-list-arrow"></i>
+        </a>
+      `;
+    }).join('');
+  }
+
+  // Render map
+  initHospitalsMap(sortedHospitals);
+}
+
+function initHospitalsMap(hospitals) {
+  const mapEl = document.getElementById('hospitalsMapLarge');
+  if (!mapEl) return;
+
+  if (hospitalsMap) {
+    hospitalsMap.remove();
+  }
+
+  hospitalsMap = L.map('hospitalsMapLarge');
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(hospitalsMap);
+
+  hospitalsMarkers = [];
+  const bounds = [[userLocation.lat, userLocation.lng]];
+
+  // User marker
+  const userIcon = L.divIcon({
+    className: 'custom-marker',
+    html: `<div style="
+      width:20px;height:20px;border-radius:50%;
+      background:#3498db;border:3px solid white;
+      box-shadow:0 0 0 3px rgba(52,152,219,0.4);
+    "></div>`,
+    iconSize: [20, 20],
+    iconAnchor: [10, 10]
+  });
+  L.marker([userLocation.lat, userLocation.lng], { icon: userIcon })
+    .addTo(hospitalsMap)
+    .bindPopup('<div class="map-popup-title">내 위치</div>');
+
+  hospitals.forEach((h, index) => {
+    const icon = L.divIcon({
+      className: 'custom-marker',
+      html: `<div style="
+        width:32px;height:32px;border-radius:50%;
+        background:var(--primary);color:white;
+        display:flex;align-items:center;justify-content:center;
+        font-size:14px;font-weight:700;
+        box-shadow:0 2px 8px rgba(0,0,0,0.3);
+        border:2px solid white;
+      ">${index + 1}</div>`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
+    });
+
+    const marker = L.marker([h.lat, h.lng], { icon }).addTo(hospitalsMap);
+    const doctors = getHospitalDoctors(h.id);
+    marker.bindPopup(`
+      <div class="map-popup-title">${h.name}</div>
+      <div class="map-popup-address">${h.address}</div>
+      <div style="margin-top:6px;font-size:12px;color:#636e72;">
+        ${doctors.map(d => d.name + ' ' + d.role).join(', ')}
+      </div>
+      <a href="#hospital/${h.id}" class="map-popup-link">병원 상세보기 &rarr;</a>
+    `);
+    marker.hospitalId = h.id;
+    hospitalsMarkers.push(marker);
+    bounds.push([h.lat, h.lng]);
+  });
+
+  hospitalsMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+}
+
+function highlightHospitalMarker(hospitalId) {
+  const marker = hospitalsMarkers.find(m => m.hospitalId === hospitalId);
+  if (marker) marker.openPopup();
+}
+
+function unhighlightHospitalMarker(hospitalId) {
+  const marker = hospitalsMarkers.find(m => m.hospitalId === hospitalId);
+  if (marker) marker.closePopup();
 }
 
 function renderHospitalDetail(params) {
@@ -955,7 +1061,7 @@ function renderHospitalDetail(params) {
           </ul>
         </div>
         <div class="info-card full-width">
-          <h3 class="info-card-title"><i class="fas fa-stethoscope"></i> 진료 과목</h3>
+          <h3 class="info-card-title"><i class="fas fa-stethoscope"></i> 주 진료 분야</h3>
           <div class="treatment-tags">
             ${hospital.treatments.map((t, i) => `
               <a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag color-${i % 12}">${t}</a>
@@ -1008,8 +1114,8 @@ function initHospitalMap(hospital) {
 function renderTreatments() {
   app.innerHTML = `
     <div class="page-header">
-      <h1>진료과목별 검색</h1>
-      <p>진료과목을 선택하면 해당 과목을 진료하는 병원과 의료진을 확인할 수 있습니다</p>
+      <h1>주 진료 분야</h1>
+      <p>주 진료 분야를 선택하면 해당 분야를 진료하는 피부과와 의료진을 확인할 수 있습니다</p>
     </div>
     <div class="treatments-page">
       <div class="treatments-categories" id="treatmentCategories">

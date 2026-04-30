@@ -1078,6 +1078,127 @@ ul, ol {
   padding: 0 24px;
 }
 
+/* Hospitals Page */
+.hospitals-page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.hospitals-map-large {
+  height: 600px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 88px;
+}
+
+.hospitals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hospital-list-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.hospital-list-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--secondary);
+  box-shadow: var(--shadow-lg);
+}
+
+.hospital-list-rank {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.hospital-list-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.hospital-list-name {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.hospital-list-address {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.hospital-list-address i, .hospital-list-distance i {
+  margin-right: 4px;
+  color: var(--secondary);
+}
+
+.hospital-list-distance {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.hospital-list-doctors {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.hospital-list-doctor-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+  margin-left: -8px;
+}
+
+.hospital-list-doctor-avatar:first-child {
+  margin-left: 0;
+}
+
+.hospital-list-doctor-names {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-left: 4px;
+}
+
+.hospital-list-arrow {
+  color: var(--text-lighter);
+  flex-shrink: 0;
+}
+
 .treatments-categories {
   display: flex;
   flex-wrap: wrap;
@@ -1335,6 +1456,16 @@ ul, ol {
 
   .treatments-list {
     max-height: none;
+  }
+
+  .hospitals-page {
+    grid-template-columns: 1fr;
+  }
+
+  .hospitals-map-large {
+    height: 350px;
+    position: relative;
+    top: 0;
   }
 }
 
