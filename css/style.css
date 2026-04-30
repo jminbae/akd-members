@@ -546,6 +546,12 @@ ul, ol {
   font-size: 12px;
 }
 
+.member-card-distance {
+  color: var(--accent);
+  font-weight: 600;
+  margin-left: 4px;
+}
+
 .member-card-tags {
   display: flex;
   flex-wrap: wrap;
@@ -592,11 +598,9 @@ ul, ol {
   top: 24px;
   left: 24px;
   z-index: 10;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(8px);
+  background: transparent;
   border: none;
-  padding: 10px 18px;
-  border-radius: 30px;
+  padding: 8px 4px;
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
@@ -609,7 +613,7 @@ ul, ol {
 }
 
 .back-btn-v2:hover {
-  background: white;
+  color: var(--accent);
   transform: translateX(-2px);
 }
 
@@ -618,15 +622,26 @@ ul, ol {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "info-top photo"
+    "info-bottom photo";
   align-items: end;
   min-height: 640px;
   padding: 80px 32px 0;
-  gap: 32px;
+  gap: 0 32px;
 }
 
-.member-hero-info {
-  padding-bottom: 64px;
+.member-hero-info-top {
+  grid-area: info-top;
   color: var(--text);
+  align-self: end;
+  padding-bottom: 16px;
+}
+
+.member-hero-info-bottom {
+  grid-area: info-bottom;
+  color: var(--text);
+  padding-bottom: 64px;
 }
 
 .hero-specialty {
@@ -678,12 +693,10 @@ ul, ol {
   font-size: 16px;
   font-style: italic;
   color: var(--text);
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   max-width: 480px;
   line-height: 1.6;
   position: relative;
-  padding-left: 16px;
-  border-left: 3px solid var(--accent);
 }
 
 .hero-hospital-link {
@@ -766,6 +779,7 @@ ul, ol {
 }
 
 .member-hero-photo {
+  grid-area: photo;
   position: relative;
   height: 100%;
   display: flex;
@@ -1815,26 +1829,37 @@ ul, ol {
 
   .member-hero-inner {
     grid-template-columns: 1fr;
-    padding: 64px 20px 0;
+    grid-template-areas:
+      "info-top"
+      "photo"
+      "info-bottom";
+    padding: 56px 20px 0;
     gap: 0;
     min-height: auto;
   }
 
-  .member-hero-info {
+  .member-hero-info-top {
+    padding-bottom: 12px;
+    text-align: center;
+    align-self: start;
+  }
+
+  .member-hero-info-bottom {
     padding-bottom: 24px;
+    padding-top: 8px;
     text-align: center;
   }
 
   .hero-name {
     font-size: 56px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   .hero-meta {
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
   .hero-meta-value {
@@ -1842,8 +1867,8 @@ ul, ol {
   }
 
   .hero-quote {
-    text-align: left;
-    margin: 0 auto 20px;
+    text-align: center;
+    margin: 0 auto 4px;
   }
 
   .hero-sns {
@@ -1852,17 +1877,18 @@ ul, ol {
 
   .member-hero-photo {
     margin: 0 -20px;
+    align-items: center;
   }
 
   .member-hero-photo img {
-    max-height: 460px;
+    max-height: 420px;
     width: 100%;
   }
 
   .back-btn-v2 {
     top: 12px;
-    left: 12px;
-    padding: 8px 14px;
+    left: 16px;
+    padding: 8px 4px;
     font-size: 13px;
   }
 

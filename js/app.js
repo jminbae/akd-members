@@ -732,42 +732,73 @@ function handleSearch(e) {
 }
 
 function renderMembers() {
-  const mainDoctors = MEMBERS.filter(m => m.specialty === '피부과 전문의');
   app.innerHTML = `
     <div class="page-header">
       <h1>피부과 의사</h1>
-      <p>대한피부과의사회 소속 피부과 전문의를 소개합니다</p>
+      <p>내 위치에서 가까운 피부과 전문의 순으로 보여드립니다</p>
     </div>
-    <div class="members-grid stagger">
-      ${mainDoctors.map(m => {
-        const hospital = getHospital(m.hospitalId);
-        return `
-          <a href="#member/${m.id}" class="member-card">
-            <div class="member-card-photo-wrap">
-              <img src="${photoUrl(m.photo)}" class="member-card-photo" alt="${m.name}"
-                   onerror="this.style.display='none'">
-              <img src="images/badge.jpg" alt="피부과 전문의" class="member-card-badge-img">
-              <span class="sr-only">${m.specialty}</span>
-            </div>
-            <div class="member-card-body">
-              <h3>${m.name}</h3>
-              <p class="member-card-role">${hospital ? hospital.shortName : ''} ${m.role}</p>
-              <div class="member-card-hospital">
-                <i class="fas fa-hospital"></i>
-                ${hospital ? hospital.name : ''}
-              </div>
-              ${m.treatments && m.treatments.length > 0 ? `
-                <div class="member-card-tags">
-                  ${m.treatments.slice(0, 4).map((t, i) => `<span class="member-card-tag">${t}</span>`).join('')}
-                  ${m.treatments.length > 4 ? `<span class="member-card-tag">+${m.treatments.length - 4}</span>` : ''}
-                </div>
-              ` : ''}
-            </div>
-          </a>
-        `;
-      }).join('')}
+    <div class="members-grid stagger" id="membersGrid">
+      <div class="loading">위치 확인 중...</div>
     </div>
   `;
+
+  if (navigator.geolocation && !userLocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        updateMembersView();
+      },
+      () => {
+        userLocation = { lat: 37.5665, lng: 126.9780 };
+        updateMembersView();
+      },
+      { timeout: 3000 }
+    );
+  } else {
+    if (!userLocation) userLocation = { lat: 37.5665, lng: 126.9780 };
+    setTimeout(updateMembersView, 100);
+  }
+}
+
+function updateMembersView() {
+  const mainDoctors = MEMBERS.filter(m => m.specialty === '피부과 전문의');
+
+  // Sort doctors by their hospital's distance from user
+  const sorted = mainDoctors.map(m => {
+    const hospital = getHospital(m.hospitalId);
+    const distance = hospital
+      ? haversine(userLocation.lat, userLocation.lng, hospital.lat, hospital.lng)
+      : Infinity;
+    return { member: m, hospital, distance };
+  }).sort((a, b) => a.distance - b.distance);
+
+  const grid = document.getElementById('membersGrid');
+  if (!grid) return;
+  grid.innerHTML = sorted.map(({ member: m, hospital, distance }) => `
+    <a href="#member/${m.id}" class="member-card">
+      <div class="member-card-photo-wrap">
+        <img src="${photoUrl(m.photo)}" class="member-card-photo" alt="${m.name}"
+             onerror="this.style.display='none'">
+        <img src="images/badge.jpg" alt="피부과 전문의" class="member-card-badge-img">
+        <span class="sr-only">${m.specialty}</span>
+      </div>
+      <div class="member-card-body">
+        <h3>${m.name}</h3>
+        <p class="member-card-role">${hospital ? hospital.shortName : ''} ${m.role}</p>
+        <div class="member-card-hospital">
+          <i class="fas fa-hospital"></i>
+          ${hospital ? hospital.name : ''}
+          ${isFinite(distance) ? `<span class="member-card-distance">· 약 ${distance.toFixed(1)}km</span>` : ''}
+        </div>
+        ${m.treatments && m.treatments.length > 0 ? `
+          <div class="member-card-tags">
+            ${m.treatments.slice(0, 4).map((t, i) => `<span class="member-card-tag">${t}</span>`).join('')}
+            ${m.treatments.length > 4 ? `<span class="member-card-tag">+${m.treatments.length - 4}</span>` : ''}
+          </div>
+        ` : ''}
+      </div>
+    </a>
+  `).join('');
 }
 
 function renderMemberDetail(params) {
@@ -797,7 +828,7 @@ function renderMemberDetail(params) {
         </button>
 
         <div class="member-hero-inner">
-          <div class="member-hero-info">
+          <div class="member-hero-info-top">
             <p class="hero-specialty">피부과</p>
             <h1 class="hero-name">${member.name}</h1>
 
@@ -809,7 +840,9 @@ function renderMemberDetail(params) {
             ${member.quote ? `
               <p class="hero-quote">${member.quote}</p>
             ` : ''}
+          </div>
 
+          <div class="member-hero-info-bottom">
             ${hospital ? `
               <a href="#hospital/${hospital.id}" class="hero-hospital-link">
                 <i class="fas fa-hospital"></i>
