@@ -596,7 +596,7 @@ ul, ol {
 .back-btn-v2 {
   position: absolute;
   top: 24px;
-  left: 24px;
+  left: max(32px, calc((100% - var(--max-width)) / 2 + 32px));
   z-index: 10;
   background: transparent;
   border: none;
@@ -609,12 +609,11 @@ ul, ol {
   align-items: center;
   gap: 6px;
   font-family: 'Noto Sans KR', sans-serif;
-  transition: var(--transition);
+  transition: color 0.2s, transform 0.2s;
 }
 
 .back-btn-v2:hover {
   color: var(--accent);
-  transform: translateX(-2px);
 }
 
 .member-hero-inner {
@@ -1113,7 +1112,9 @@ ul, ol {
 
 /* Team Section */
 .team-section {
-  padding: 40px 0;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 40px 24px;
 }
 
 .team-section h2 {

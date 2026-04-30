@@ -85,10 +85,10 @@ const HOSPITALS = [
     id: 'foret',
     name: '포레피부과의원',
     shortName: '포레피부과',
-    address: '서울특별시 성동구 한림말길 56, 2층 (옥수동)',
+    address: '서울시 강남구 선릉로 153길 12, 포스탐빌딩 3층',
     phone: '02-2294-4888',
-    lat: 37.5428,
-    lng: 127.0175,
+    lat: 37.5240,
+    lng: 127.0490,
     website: 'http://foretderma.com',
     hours: {
       '월·금': '10:00 - 20:00 (야간)',
@@ -96,7 +96,7 @@ const HOSPITALS = [
       '토요일': '09:30 - 14:00',
       '점심시간': '13:00 - 14:00'
     },
-    treatments: ['여드름', '기미/색소', '건선', '아토피', '레이저토닝', '리프팅/탄력', '탈모/모발', '피부암/점'],
+    treatments: ['리프팅/탄력', '써마지', '울쎄라', '티타늄', '모공/흉터', '레이저토닝', '필러', '여드름', '기미/색소', '탈모/모발'],
     doctorIds: ['lee-haeun', 'kim-namwoo'],
     description: '피부과 전문의 이하은 원장과 마취과 전문의 김남우 원장이 함께 진료합니다.'
   }
@@ -234,7 +234,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['여드름', '기미/색소', '건선', '아토피', '레이저토닝', '리프팅/탄력'],
+    treatments: ['리프팅/탄력', '써마지', '울쎄라', '티타늄', '모공/흉터', '레이저토닝', '필러', '여드름', '기미/색소'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'http://foretderma.com' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/foretskin_official' },
