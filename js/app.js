@@ -30,7 +30,7 @@ const HOSPITALS = [
     id: 'human-pyeongtaek',
     name: '휴먼피부과의원 평택점',
     shortName: '휴먼피부과 평택',
-    address: '경기도 평택시 중앙2로 13, 10층 (평택동센텀스카이)',
+    address: '경기도 평택시 중앙2로 13, 9/10층 (평택동 센텀스카이빌딩)',
     phone: '031-655-0031',
     lat: 36.9921,
     lng: 127.0855,
@@ -40,7 +40,7 @@ const HOSPITALS = [
       '토요일': '09:30 - 14:00',
       '일요일·공휴일': '휴무'
     },
-    treatments: ['여드름', '기미/색소', '백반증', '사마귀/무좀', '레이저토닝', '리프팅/탄력', '모공/흉터', '아토피'],
+    treatments: ['기미/색소/선천성모반', '여드름/흉터', '장비/실리프팅', '켈로이드/내향성발톱 수술', '쁘띠성형(필러, 스킨부스터)', '기미/색소', '여드름/모공/흉터', '탈모메조테라피/메조보톡스', '비만/다이어트/체형교정시술', '여성제모'],
     doctorIds: ['gye-jiwon', 'nam-chanhee', 'park-mingi'],
     description: '평택 지역 피부과 전문의 3인 진료 체제로, 정확한 진단과 맞춤 치료를 제공합니다.'
   },
@@ -281,7 +281,7 @@ const MEMBERS = [
       '2023 베스트 렉쳐 선정',
       '2024 베스트 기획자 상'
     ],
-    treatments: ['백반증', '여드름', '기미/색소', '사마귀/무좀', '레이저토닝', '리프팅/탄력'],
+    treatments: ['기미/색소/선천성모반', '여드름/흉터', '장비/실리프팅', '켈로이드/내향성발톱 수술'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'http://humanpt.co.kr' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/pt_human/' },
@@ -351,7 +351,12 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅/탄력']
+    treatments: ['스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅/탄력'],
+    links: [
+      { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/jhanmi__' },
+      { type: 'youtube', label: '유튜브', url: 'https://youtube.com/@pibutenten' },
+      { type: 'website', label: '블로그', url: 'https://blog.naver.com/one_crafter' }
+    ]
   },
   {
     id: 'park-saemi',
@@ -402,7 +407,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['백반증', '여드름', '기미/색소', '아토피', '건선']
+    treatments: ['비만/다이어트/체형교정시술', '여성제모', '기미/색소', '쁘띠성형(필러, 스킨부스터)', '여드름/모공/흉터']
   },
   {
     id: 'park-mingi',
@@ -424,7 +429,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅']
+    treatments: ['쁘띠성형(필러, 스킨부스터)', '기미/색소', '여드름/모공/흉터', '탈모메조테라피/메조보톡스']
   },
   {
     id: 'lee-seolhee',
@@ -522,7 +527,16 @@ const TREATMENT_CATEGORIES = [
   { id: 'oligio', name: '올타이트', icon: 'fa-bullseye', color: '#FFF9C4' },
   { id: 'titanium', name: '티타늄', icon: 'fa-gem', color: '#CFD8DC' },
   { id: 'hilowave', name: '힐로웨이브', icon: 'fa-water', color: '#B3E5FC' },
-  { id: 'juvelook', name: '쥬베룩', icon: 'fa-flask', color: '#F8BBD0' }
+  { id: 'juvelook', name: '쥬베룩', icon: 'fa-flask', color: '#F8BBD0' },
+  { id: 'pigment-nevus', name: '기미/색소/선천성모반', icon: 'fa-circle-half-stroke', color: '#FFD5D5' },
+  { id: 'acne-scar', name: '여드름/흉터', icon: 'fa-bandage', color: '#FFEAA7' },
+  { id: 'device-thread', name: '장비/실리프팅', icon: 'fa-wand-magic-sparkles', color: '#D7CCC8' },
+  { id: 'keloid-toenail', name: '켈로이드/내향성발톱 수술', icon: 'fa-scissors', color: '#FFCCBC' },
+  { id: 'petit', name: '쁘띠성형(필러, 스킨부스터)', icon: 'fa-syringe', color: '#FCE4EC' },
+  { id: 'pore-acne-scar', name: '여드름/모공/흉터', icon: 'fa-spray-can', color: '#FFE0B2' },
+  { id: 'hair-mesotherapy', name: '탈모메조테라피/메조보톡스', icon: 'fa-prescription-bottle-medical', color: '#C5CAE9' },
+  { id: 'diet', name: '비만/다이어트/체형교정시술', icon: 'fa-weight-scale', color: '#C8E6C9' },
+  { id: 'female-hair-removal', name: '여성제모', icon: 'fa-feather', color: '#F8BBD0' }
 ];
 
 // ==========================================
