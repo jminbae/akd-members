@@ -110,7 +110,7 @@ const MEMBERS = [
     hospitalId: 'healhouse-gangnam',
     role: '대표원장',
     specialty: '피부과 전문의',
-    quote: '진심 어린 치료와 꾸준한 연구로 난치성 피부질환 환자들의 영원한 동반자가 되겠습니다.',
+    quote: '백반증 치료의 마지막 피부과가 되겠습니다.',
     positions: [
       '15기 재무이사, 학술위원, 홍보위원',
       '14기 학술이사, 정보위원',
@@ -593,7 +593,7 @@ function renderHome() {
       <div class="home-logo">
         <img src="images/badge.jpg" alt="피부과 전문의" class="home-badge-logo">
       </div>
-      <h1 class="home-subtitle home-main-title">우리 동네 피부과 의사를 찾아볼까요?</h1>
+      <h1 class="home-subtitle home-main-title">우리 동네 피부과의사를 찾아볼까요?</h1>
       <div class="search-box">
         <input type="text" class="search-input" id="searchInput"
                placeholder="의사명, 병원명, 진료과목으로 검색" autocomplete="off">
