@@ -645,7 +645,28 @@ class Router {
 
 const app = document.getElementById('app');
 
+function setPageTitle(title) {
+  document.title = title;
+  // Update OG meta tags for sharing
+  let ogTitle = document.querySelector('meta[property="og:title"]');
+  if (!ogTitle) {
+    ogTitle = document.createElement('meta');
+    ogTitle.setAttribute('property', 'og:title');
+    document.head.appendChild(ogTitle);
+  }
+  ogTitle.setAttribute('content', title);
+
+  let twTitle = document.querySelector('meta[name="twitter:title"]');
+  if (!twTitle) {
+    twTitle = document.createElement('meta');
+    twTitle.setAttribute('name', 'twitter:title');
+    document.head.appendChild(twTitle);
+  }
+  twTitle.setAttribute('content', title);
+}
+
 function renderHome() {
+  setPageTitle('피부과의사 찾기, 대한피부과의사회');
   app.innerHTML = `
     <div class="home-page fade-in">
       <div class="home-logo">
@@ -746,6 +767,7 @@ function handleSearch(e) {
 }
 
 function renderMembers() {
+  setPageTitle('피부과의사 찾기, 대한피부과의사회');
   app.innerHTML = `
     <div class="page-header">
       <h1>피부과 의사</h1>
@@ -852,6 +874,8 @@ function renderMemberDetail(params) {
 
   const hospital = getHospital(member.hospitalId);
   const teamDoctors = hospital ? getHospitalDoctors(hospital.id).filter(d => d.id !== member.id) : [];
+
+  setPageTitle((hospital ? hospital.name + ' ' : '') + member.name);
 
   const snsIconMap = {
     website: 'fa-solid fa-globe',
@@ -1017,6 +1041,7 @@ let hospitalsMap = null;
 let hospitalsMarkers = [];
 
 function renderHospitals() {
+  setPageTitle('피부과 소개, 대한피부과의사회');
   app.innerHTML = `
     <div class="page-header">
       <h1>피부과 소개</h1>
@@ -1180,6 +1205,8 @@ function renderHospitalDetail(params) {
 
   const doctors = getHospitalDoctors(hospital.id);
 
+  setPageTitle(hospital.name);
+
   app.innerHTML = `
     <div class="hospital-detail fade-in">
       <div class="hospital-hero">
@@ -1260,6 +1287,17 @@ function initHospitalMap(hospital) {
 }
 
 function renderTreatments() {
+  setPageTitle('피부과의사 찾기, 대한피부과의사회');
+
+  // Sort categories by doctor count (desc), then 가나다 (Korean alphabetical)
+  const sortedCategories = TREATMENT_CATEGORIES.map(cat => ({
+    ...cat,
+    count: MEMBERS.filter(m => m.treatments && m.treatments.includes(cat.name)).length
+  })).sort((a, b) => {
+    if (b.count !== a.count) return b.count - a.count;
+    return a.name.localeCompare(b.name, 'ko');
+  });
+
   app.innerHTML = `
     <div class="page-header">
       <h1>주 진료 분야</h1>
@@ -1267,7 +1305,7 @@ function renderTreatments() {
     </div>
     <div class="treatments-page">
       <div class="treatments-categories" id="treatmentCategories">
-        ${TREATMENT_CATEGORIES.map((cat, i) => `
+        ${sortedCategories.map((cat, i) => `
           <button class="treatment-category-btn ${i === 0 ? 'active' : ''}"
                   data-treatment="${cat.name}"
                   onclick="selectTreatment('${cat.name}')">
@@ -1282,9 +1320,9 @@ function renderTreatments() {
     </div>
   `;
 
-  // Initialize with first category
+  // Initialize with first category (most popular)
   setTimeout(() => {
-    selectTreatment(TREATMENT_CATEGORIES[0].name);
+    selectTreatment(sortedCategories[0].name);
   }, 100);
 }
 
