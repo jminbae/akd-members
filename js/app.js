@@ -824,7 +824,7 @@ function renderMemberDetail(params) {
           </div>
 
           <div class="member-hero-photo">
-            <img src="${photoUrl(member.photo)}" alt="${member.name}"
+            <img src="${photoUrl(member.photo.replace('회원 프로필 사진/', '회원 프로필 사진_누끼/').replace('.jpg', '.png'))}" alt="${member.name}"
                  onerror="this.style.background='var(--bg)'">
           </div>
         </div>

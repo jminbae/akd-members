@@ -581,10 +581,10 @@ ul, ol {
 .member-hero-v2 {
   position: relative;
   width: 100%;
-  background: linear-gradient(180deg, #d4d8dc 0%, #b6bcc2 60%, #a3a9af 100%);
+  background: radial-gradient(ellipse at 70% 30%, #e8ecef 0%, #c8cfd5 45%, #a3aab1 100%);
   overflow: hidden;
   margin-bottom: 48px;
-  min-height: 580px;
+  min-height: 640px;
 }
 
 .back-btn-v2 {
@@ -619,7 +619,7 @@ ul, ol {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: end;
-  min-height: 580px;
+  min-height: 640px;
   padding: 80px 32px 0;
   gap: 32px;
 }
@@ -774,12 +774,12 @@ ul, ol {
 }
 
 .member-hero-photo img {
-  max-height: 580px;
+  max-height: 640px;
   max-width: 100%;
   width: auto;
   object-fit: contain;
   object-position: bottom center;
-  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.18));
+  filter: drop-shadow(0 16px 28px rgba(0,0,0,0.28)) drop-shadow(0 4px 8px rgba(0,0,0,0.15));
 }
 
 .member-detail-body {
