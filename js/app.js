@@ -954,7 +954,8 @@ function initHospitalsMap(hospitals) {
   if (!mapEl) return;
 
   if (hospitalsMap) {
-    hospitalsMap.remove();
+    try { hospitalsMap.remove(); } catch (e) {}
+    hospitalsMap = null;
   }
 
   hospitalsMap = L.map('hospitalsMapLarge');
@@ -1011,6 +1012,14 @@ function initHospitalsMap(hospitals) {
   });
 
   hospitalsMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+
+  // Ensure correct rendering when container size changes
+  setTimeout(() => {
+    if (hospitalsMap) {
+      hospitalsMap.invalidateSize();
+      hospitalsMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+    }
+  }, 250);
 }
 
 function highlightHospitalMarker(hospitalId) {
