@@ -770,7 +770,7 @@ function renderMembers() {
   setPageTitle('피부과의사 찾기, 대한피부과의사회');
   app.innerHTML = `
     <div class="page-header">
-      <h1>피부과 의사</h1>
+      <h1>피부과의사를 소개합니다</h1>
       <p>내 위치에서 가까운 피부과 전문의 순으로 보여드립니다</p>
     </div>
     <div class="members-grid stagger" id="membersGrid">
@@ -1044,7 +1044,7 @@ function renderHospitals() {
   setPageTitle('피부과 소개, 대한피부과의사회');
   app.innerHTML = `
     <div class="page-header">
-      <h1>피부과 소개</h1>
+      <h1>피부과를 소개합니다</h1>
       <p>내 위치에서 가까운 순으로 피부과를 보여드립니다</p>
     </div>
     <div class="hospitals-page">
@@ -1304,14 +1304,23 @@ function renderTreatments() {
       <p>주 진료 분야를 선택하면 해당 분야를 진료하는 피부과와 의료진을 확인할 수 있습니다</p>
     </div>
     <div class="treatments-page">
-      <div class="treatments-categories" id="treatmentCategories">
-        ${sortedCategories.map((cat, i) => `
-          <button class="treatment-category-btn ${i === 0 ? 'active' : ''}"
-                  data-treatment="${cat.name}"
-                  onclick="selectTreatment('${cat.name}')">
-            <i class="fas ${cat.icon}"></i> ${cat.name}
+      <div class="treatments-categories-wrap">
+        <div class="treatments-categories collapsed" id="treatmentCategories">
+          ${sortedCategories.map((cat, i) => `
+            <button class="treatment-category-btn ${i === 0 ? 'active' : ''}"
+                    data-treatment="${cat.name}"
+                    onclick="selectTreatment('${cat.name}')">
+              <i class="fas ${cat.icon}"></i>${cat.name}
+            </button>
+          `).join('')}
+        </div>
+        <div class="treatments-categories-fade"></div>
+        ${sortedCategories.length > 12 ? `
+          <button class="treatments-toggle-btn" id="treatmentsToggleBtn" onclick="toggleTreatmentCategories()">
+            <span class="toggle-text">더보기</span>
+            <i class="fas fa-chevron-down toggle-icon"></i>
           </button>
-        `).join('')}
+        ` : ''}
       </div>
       <div class="treatments-content">
         <div class="treatments-map" id="treatmentsMap"></div>
@@ -1324,6 +1333,16 @@ function renderTreatments() {
   setTimeout(() => {
     selectTreatment(sortedCategories[0].name);
   }, 100);
+}
+
+function toggleTreatmentCategories() {
+  const cats = document.getElementById('treatmentCategories');
+  const btn = document.getElementById('treatmentsToggleBtn');
+  if (!cats || !btn) return;
+  const collapsed = cats.classList.toggle('collapsed');
+  btn.querySelector('.toggle-text').textContent = collapsed ? '더보기' : '접기';
+  btn.querySelector('.toggle-icon').classList.toggle('fa-chevron-down', collapsed);
+  btn.querySelector('.toggle-icon').classList.toggle('fa-chevron-up', !collapsed);
 }
 
 let treatmentMap = null;
