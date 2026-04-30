@@ -58,7 +58,7 @@ const HOSPITALS = [
       '토요일': '10:00 - 15:00',
       '일요일·공휴일': '휴무'
     },
-    treatments: ['여드름', '기미/색소', '리프팅/탄력', '레이저토닝', '모공/흉터', '탈모/모발', '아토피'],
+    treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅'],
     doctorIds: ['shin-jiyeon', 'lee-seolhee', 'jung-jongheon'],
     description: '피부과 전문의 3인이 진료하며, 진료 접근성과 맞춤 진료를 제공합니다.'
   },
@@ -289,7 +289,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['여드름', '기미/색소', '리프팅/탄력', '레이저토닝', '모공/흉터']
+    treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅']
   },
   {
     id: 'jung-hanmi',
@@ -393,7 +393,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['여드름', '기미/색소', '레이저토닝', '사마귀/무좀']
+    treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅']
   },
   {
     id: 'lee-seolhee',
@@ -420,7 +420,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['아토피', '여드름', '기미/색소', '레이저토닝']
+    treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅']
   },
   {
     id: 'jung-jongheon',
@@ -478,7 +478,13 @@ const TREATMENT_CATEGORIES = [
   { id: 'warts', name: '사마귀/무좀', icon: 'fa-virus', color: '#F8BBD0' },
   { id: 'pores', name: '모공/흉터', icon: 'fa-circle-dot', color: '#D1C4E9' },
   { id: 'hair', name: '탈모/모발', icon: 'fa-head-side', color: '#FFCCBC' },
-  { id: 'cancer', name: '피부암/점', icon: 'fa-microscope', color: '#B3E5FC' }
+  { id: 'cancer', name: '피부암/점', icon: 'fa-microscope', color: '#B3E5FC' },
+  { id: 'stemcell', name: '줄기세포', icon: 'fa-dna', color: '#FFCDD2' },
+  { id: 'mct', name: 'MCT', icon: 'fa-syringe', color: '#F0F4C3' },
+  { id: 'prp', name: 'PRP', icon: 'fa-droplet', color: '#FFE0B2' },
+  { id: 'oxygen', name: '고압산소', icon: 'fa-wind', color: '#B2EBF2' },
+  { id: 'filler', name: '필러', icon: 'fa-circle-nodes', color: '#FFCCBC' },
+  { id: 'thread', name: '실리프팅', icon: 'fa-arrows-up-to-line', color: '#D7CCC8' }
 ];
 
 // ==========================================
