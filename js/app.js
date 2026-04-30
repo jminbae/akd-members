@@ -12,7 +12,7 @@ const HOSPITALS = [
     id: 'healhouse-gangnam',
     name: '힐하우스피부과의원 강남점',
     shortName: '힐하우스피부과 강남',
-    address: '서울특별시 강남구 강남대로 518, 4·5층 (논현동)',
+    address: '서울특별시 강남구 강남대로 518, 4·5층',
     phone: '02-6951-5761',
     lat: 37.5090,
     lng: 127.0235,
