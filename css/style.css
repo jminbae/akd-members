@@ -622,9 +622,7 @@ ul, ol {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-areas:
-    "info-top photo"
-    "info-bottom photo";
+  grid-template-areas: "info photo";
   align-items: end;
   min-height: 640px;
   padding: 80px 32px 0;
@@ -632,16 +630,37 @@ ul, ol {
 }
 
 .member-hero-info-top {
-  grid-area: info-top;
+  grid-area: info;
   color: var(--text);
   align-self: end;
-  padding-bottom: 16px;
+  padding-bottom: 96px;
 }
 
-.member-hero-info-bottom {
-  grid-area: info-bottom;
-  color: var(--text);
-  padding-bottom: 64px;
+.hero-hospital-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-light);
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(6px);
+  border-radius: 30px;
+  transition: var(--transition);
+}
+
+.hero-hospital-name:hover {
+  background: white;
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.hero-hospital-name i {
+  font-size: 13px;
+  color: var(--accent);
 }
 
 .hero-specialty {
@@ -776,6 +795,69 @@ ul, ol {
 
 .hero-sns-btn .fa-globe {
   color: var(--secondary);
+}
+
+/* SNS Balloons - scattered around photo */
+.hero-sns-balloons {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.hero-sns-balloon {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  text-decoration: none;
+  color: var(--text);
+  font-size: 11.5px;
+  font-weight: 600;
+  pointer-events: auto;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+  transform: translate(-50%, -50%);
+  animation: balloonFloat 4.5s ease-in-out infinite, balloonAppear 0.6s ease-out backwards;
+  white-space: nowrap;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.hero-sns-balloon:hover {
+  background: white;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.hero-sns-balloon i {
+  font-size: 13px;
+}
+
+.hero-sns-balloon .fa-instagram { color: #E4405F; }
+.hero-sns-balloon .fa-youtube { color: #FF0000; }
+.hero-sns-balloon .fa-threads { color: #000; }
+.hero-sns-balloon .fa-globe { color: var(--secondary); }
+.hero-sns-balloon .balloon-label { line-height: 1; }
+
+@keyframes balloonFloat {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+  50% { transform: translate(-50%, -50%) translateY(-6px); }
+}
+
+@keyframes balloonAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 .member-hero-photo {
@@ -1830,40 +1912,22 @@ ul, ol {
   .member-hero-inner {
     grid-template-columns: 1fr;
     grid-template-areas:
-      "info-top"
-      "photo"
-      "info-bottom";
+      "info"
+      "photo";
     padding: 56px 20px 0;
     gap: 0;
     min-height: auto;
   }
 
   .member-hero-info-top {
-    padding-bottom: 12px;
+    padding-bottom: 16px;
     text-align: center;
     align-self: start;
   }
 
-  .member-hero-info-bottom {
-    padding-bottom: 24px;
-    padding-top: 8px;
-    text-align: center;
-  }
-
   .hero-name {
     font-size: 56px;
-    margin-bottom: 20px;
-  }
-
-  .hero-meta {
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
     margin-bottom: 16px;
-  }
-
-  .hero-meta-value {
-    text-align: center;
   }
 
   .hero-quote {
@@ -1871,18 +1935,32 @@ ul, ol {
     margin: 0 auto 4px;
   }
 
-  .hero-sns {
-    justify-content: center;
+  .hero-hospital-name {
+    margin: 0 auto 12px;
   }
 
   .member-hero-photo {
     margin: 0 -20px;
-    align-items: center;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
   }
 
   .member-hero-photo img {
     max-height: 420px;
     width: 100%;
+    object-position: bottom center;
+  }
+
+  /* Mobile balloons - smaller and tighter */
+  .hero-sns-balloon {
+    padding: 5px 9px;
+    font-size: 10.5px;
+    gap: 4px;
+  }
+
+  .hero-sns-balloon i {
+    font-size: 11px;
   }
 
   .back-btn-v2 {

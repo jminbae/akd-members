@@ -801,6 +801,34 @@ function updateMembersView() {
   `).join('');
 }
 
+// Generate scattered "balloon" positions around the photo (avoiding center where face is)
+function generateBalloonPositions(count) {
+  if (count === 0) return [];
+  // Each zone: [topMin, topMax, leftMin, leftMax]
+  // Keep balloons safely inside the photo container (15-85% horizontal range when accounting for translate -50%)
+  const zones = [
+    [6, 16, 18, 32],    // top-left
+    [4, 12, 64, 80],    // top-right
+    [24, 36, 16, 26],   // upper-left
+    [22, 34, 72, 84],   // upper-right
+    [48, 62, 14, 24],   // mid-left
+    [52, 66, 76, 86],   // mid-right
+    [76, 88, 22, 34],   // bottom-left
+    [80, 90, 64, 80]    // bottom-right
+  ];
+  const shuffled = [...zones].sort(() => Math.random() - 0.5);
+  return Array.from({ length: count }, (_, i) => {
+    const z = shuffled[i % shuffled.length];
+    const top = z[0] + Math.random() * (z[1] - z[0]);
+    const left = z[2] + Math.random() * (z[3] - z[2]);
+    return {
+      top: top.toFixed(1) + '%',
+      left: left.toFixed(1) + '%',
+      delay: (Math.random() * 0.6).toFixed(2)
+    };
+  });
+}
+
 function renderMemberDetail(params) {
   const member = getMember(params.id);
   if (!member) {
@@ -819,6 +847,9 @@ function renderMemberDetail(params) {
     linktree: 'fa-solid fa-link'
   };
 
+  // Generate random positions for SNS balloons
+  const balloonPositions = generateBalloonPositions(member.links ? member.links.length : 0);
+
   app.innerHTML = `
     <div class="member-detail-v2 fade-in">
       <!-- Hero Section -->
@@ -829,43 +860,38 @@ function renderMemberDetail(params) {
 
         <div class="member-hero-inner">
           <div class="member-hero-info-top">
-            <p class="hero-specialty">피부과</p>
-            <h1 class="hero-name">${member.name}</h1>
-
-            <div class="hero-meta">
-              <span class="hero-meta-label">진료분야</span>
-              <span class="hero-meta-value">${member.treatments && member.treatments.length ? member.treatments.join(' / ') : '-'}</span>
-            </div>
-
-            ${member.quote ? `
-              <p class="hero-quote">${member.quote}</p>
-            ` : ''}
-          </div>
-
-          <div class="member-hero-info-bottom">
             ${hospital ? `
-              <a href="#hospital/${hospital.id}" class="hero-hospital-link">
+              <a href="#hospital/${hospital.id}" class="hero-hospital-name">
                 <i class="fas fa-hospital"></i>
                 <span>${hospital.name}</span>
-                <i class="fas fa-chevron-right hero-hospital-arrow"></i>
               </a>
             ` : ''}
-
-            ${member.links && member.links.length ? `
-              <div class="hero-sns">
-                ${member.links.map(l => `
-                  <a href="${l.url}" target="_blank" rel="noopener" class="hero-sns-btn" title="${l.label}">
-                    <i class="${snsIconMap[l.type] || 'fa-solid fa-link'}"></i>
-                    <span>${l.label}</span>
-                  </a>
-                `).join('')}
-              </div>
+            <h1 class="hero-name">${member.name}</h1>
+            ${member.quote ? `
+              <p class="hero-quote">${member.quote}</p>
             ` : ''}
           </div>
 
           <div class="member-hero-photo">
             <img src="${photoUrl(member.photo.replace('회원 프로필 사진/', '회원 프로필 사진_누끼/').replace('.jpg', '.png'))}" alt="${member.name}"
                  onerror="this.style.background='var(--bg)'">
+
+            ${member.links && member.links.length ? `
+              <div class="hero-sns-balloons">
+                ${member.links.map((l, i) => {
+                  const pos = balloonPositions[i] || { top: '50%', left: '50%', delay: 0 };
+                  return `
+                  <a href="${l.url}" target="_blank" rel="noopener"
+                     class="hero-sns-balloon"
+                     style="top:${pos.top};left:${pos.left};animation-delay:${pos.delay}s"
+                     title="${l.label}">
+                    <i class="${snsIconMap[l.type] || 'fa-solid fa-link'}"></i>
+                    <span class="balloon-label">${l.label}</span>
+                  </a>
+                  `;
+                }).join('')}
+              </div>
+            ` : ''}
           </div>
         </div>
       </section>
