@@ -22,7 +22,7 @@ const HOSPITALS = [
       '토요일': '10:00 - 16:00',
       '일요일·공휴일': '휴무'
     },
-    treatments: ['기미/색소', '백반증', '건선', '아토피', '여드름', '피부암/점', '레이저토닝', '리프팅/탄력'],
+    treatments: ['백반증', '스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅/탄력', '힐로웨이브'],
     doctorIds: ['bae-jungmin', 'jung-hanmi', 'park-saemi'],
     description: '피부과전문의 1:1 맞춤 상담을 제공하며, 커스텀 리프팅, 스킨부스터, 콜라겐부스터 등 다양한 시술을 시행합니다.'
   },
@@ -77,7 +77,7 @@ const HOSPITALS = [
       '토요일': '10:00 - 16:00',
       '일요일·공휴일': '휴무'
     },
-    treatments: ['여드름', '기미/색소', '리프팅/탄력', '레이저토닝', '탈모/모발', '모공/흉터', '사마귀/무좀'],
+    treatments: ['리프팅/탄력', '쥬베룩', '탈모/모발', '모공/흉터'],
     doctorIds: ['kim-hongseok'],
     description: '피부과 전문의 김홍석 원장이 직접 진료하며, 여드름, 기미, 항노화 분야 전문입니다.'
   },
@@ -147,7 +147,7 @@ const MEMBERS = [
       '2023 베스트 렉쳐 선정',
       '2024 베스트 기획자 상'
     ],
-    treatments: ['백반증', '건선', '아토피', '여드름', '기미/색소', '피부암/점', '레이저토닝'],
+    treatments: ['백반증'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'https://www.healhouseskin.com' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/healhouseskin/' }
@@ -194,7 +194,7 @@ const MEMBERS = [
       '2022 베스트렉처 수상',
       '대한피부과의사회 홍보이사'
     ],
-    treatments: ['여드름', '기미/색소', '리프팅/탄력', '레이저토닝', '탈모/모발'],
+    treatments: ['리프팅/탄력', '쥬베룩', '탈모/모발', '모공/흉터'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'https://vos.co.kr' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/vos_skinclinic/' },
@@ -351,7 +351,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['여드름', '기미/색소', '아토피', '건선', '레이저토닝']
+    treatments: ['스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅/탄력']
   },
   {
     id: 'park-saemi',
@@ -371,7 +371,7 @@ const MEMBERS = [
     memberships: [],
     lectures: [],
     awards: [],
-    treatments: ['여드름', '기미/색소', '레이저토닝', '리프팅/탄력']
+    treatments: ['써마지', '울쎄라', '올타이트', '티타늄', '힐로웨이브']
   },
   {
     id: 'nam-chanhee',
@@ -515,7 +515,14 @@ const TREATMENT_CATEGORIES = [
   { id: 'prp', name: 'PRP', icon: 'fa-droplet', color: '#FFE0B2' },
   { id: 'oxygen', name: '고압산소', icon: 'fa-wind', color: '#B2EBF2' },
   { id: 'filler', name: '필러', icon: 'fa-circle-nodes', color: '#FFCCBC' },
-  { id: 'thread', name: '실리프팅', icon: 'fa-arrows-up-to-line', color: '#D7CCC8' }
+  { id: 'thread', name: '실리프팅', icon: 'fa-arrows-up-to-line', color: '#D7CCC8' },
+  { id: 'sculptra', name: '스컬트라', icon: 'fa-vial', color: '#FCE4EC' },
+  { id: 'thermage', name: '써마지', icon: 'fa-fire', color: '#FFCCBC' },
+  { id: 'ulthera', name: '울쎄라', icon: 'fa-wave-square', color: '#C5CAE9' },
+  { id: 'oligio', name: '올타이트', icon: 'fa-bullseye', color: '#FFF9C4' },
+  { id: 'titanium', name: '티타늄', icon: 'fa-gem', color: '#CFD8DC' },
+  { id: 'hilowave', name: '힐로웨이브', icon: 'fa-water', color: '#B3E5FC' },
+  { id: 'juvelook', name: '쥬베룩', icon: 'fa-flask', color: '#F8BBD0' }
 ];
 
 // ==========================================
