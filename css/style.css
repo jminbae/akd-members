@@ -1604,6 +1604,7 @@ ul, ol {
 .treatments-categories {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 5px;
   max-height: 200px;
   overflow-y: auto;
