@@ -1537,11 +1537,11 @@ body[data-page="treatments"] .page-header {
 
 .treatment-group-tab {
   flex: 1;
-  padding: 10px 4px;
+  padding: 13px 4px;
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-light);
   cursor: pointer;
@@ -1618,8 +1618,8 @@ body[data-page="treatments"] .page-header {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 5px;
-  max-height: 200px;
+  gap: 6px;
+  max-height: 240px;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 10px;
@@ -1650,11 +1650,11 @@ body[data-page="treatments"] .page-header {
 }
 
 .treatment-category-btn {
-  padding: 5px 11px;
+  padding: 7px 14px;
   border: 1.5px solid var(--border);
-  border-radius: 6px;
+  border-radius: 7px;
   background: var(--card);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition);
