@@ -840,6 +840,8 @@ ul, ol {
 .hero-sns-balloon .fa-instagram { color: #E4405F; }
 .hero-sns-balloon .fa-youtube { color: #FF0000; }
 .hero-sns-balloon .fa-threads { color: #000; }
+.hero-sns-balloon .fa-tiktok { color: #000; }
+.hero-sns-balloon .fa-link { color: #2E86DE; }
 .hero-sns-balloon .fa-globe { color: var(--secondary); }
 .hero-sns-balloon .balloon-label { line-height: 1; }
 

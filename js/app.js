@@ -77,7 +77,7 @@ const HOSPITALS = [
       '토요일': '10:00 - 16:00',
       '일요일·공휴일': '휴무'
     },
-    treatments: ['리프팅', '탄력', '쥬베룩', '탈모', '모공', '흉터'],
+    treatments: ['항노화', '리프팅', '탄력', '울쎄라', '소프웨이브', '피부결', '모공', '필러', '쥬베룩', '레디어스'],
     doctorIds: ['kim-hongseok'],
     description: '피부과 전문의 김홍석 원장이 직접 진료하며, 여드름, 기미, 항노화 분야 전문입니다.'
   },
@@ -194,13 +194,15 @@ const MEMBERS = [
       '2022 베스트렉처 수상',
       '대한피부과의사회 홍보이사'
     ],
-    treatments: ['리프팅', '탄력', '쥬베룩', '탈모', '모공', '흉터'],
+    treatments: ['항노화', '리프팅', '탄력', '울쎄라', '소프웨이브', '피부결', '모공', '필러', '쥬베룩', '레디어스'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'https://vos.co.kr' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/vos_skinclinic/' },
+      { type: 'youtube', label: '병원 유튜브', url: 'https://www.youtube.com/channel/UCGkBcBOvxmQdR36QUc1Rb-A' },
       { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/drhong3_pr/' },
       { type: 'instagram', label: '피알남 공식 인스타그램', url: 'https://www.instagram.com/prnam_official/' },
       { type: 'youtube', label: '유튜브', url: 'https://www.youtube.com/channel/UC908f2Qj4Jz2bs9XzDdPMLg' },
+      { type: 'tiktok', label: '틱톡', url: 'https://www.tiktok.com/@drhongskin' },
       { type: 'linktree', label: '링크트리', url: 'https://linktr.ee/VOS.DERMATOLOGY.CLINIC' }
     ]
   },
@@ -240,6 +242,7 @@ const MEMBERS = [
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/foretskin_official' },
       { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/dermakitty' },
       { type: 'youtube', label: '유튜브', url: 'https://www.youtube.com/@drleehaeun' },
+      { type: 'tiktok', label: '틱톡', url: 'https://www.tiktok.com/@dermakitty' },
       { type: 'threads', label: '스레드', url: 'https://www.threads.com/@dermakitty' }
     ]
   },
@@ -522,13 +525,13 @@ const TREATMENT_GROUPS = [
     id: 'lifting',
     name: '리프팅',
     icon: 'fa-arrow-up-from-bracket',
-    items: ['리프팅', '탄력', '써마지', '울쎄라', '올타이트', '티타늄']
+    items: ['리프팅', '탄력', '써마지', '울쎄라', '올타이트', '티타늄', '소프웨이브']
   },
   {
     id: 'aesthetic',
     name: '피부시술',
     icon: 'fa-syringe',
-    items: ['쁘띠성형', '필러', '스킨부스터', '스컬트라', '실리프팅', '힐로웨이브', '쥬베룩', '쥬브젠', '줄기세포', 'MCT', 'PRP', '메조보톡스']
+    items: ['쁘띠성형', '필러', '스킨부스터', '스컬트라', '실리프팅', '힐로웨이브', '쥬베룩', '쥬브젠', '줄기세포', 'MCT', 'PRP', '메조보톡스', '항노화', '피부결', '레디어스']
   },
   {
     id: 'body',
@@ -899,6 +902,7 @@ function renderMemberDetail(params) {
     instagram: 'fa-brands fa-instagram',
     youtube: 'fa-brands fa-youtube',
     threads: 'fa-brands fa-threads',
+    tiktok: 'fa-brands fa-tiktok',
     linktree: 'fa-solid fa-link'
   };
 
