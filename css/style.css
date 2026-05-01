@@ -1561,6 +1561,14 @@ body[data-page="treatments"] .page-header {
   border-bottom-color: var(--primary);
 }
 
+/* Group-specific active colors for tabs */
+.treatment-group-tab[data-group="medical"].active { color: #B52840; border-bottom-color: #B52840; }
+.treatment-group-tab[data-group="laser"].active { color: #B5740F; border-bottom-color: #B5740F; }
+.treatment-group-tab[data-group="lifting"].active { color: #2E5BB7; border-bottom-color: #2E5BB7; }
+.treatment-group-tab[data-group="aesthetic"].active { color: #6A4DAE; border-bottom-color: #6A4DAE; }
+.treatment-group-tab[data-group="body"].active { color: #2E7D4F; border-bottom-color: #2E7D4F; }
+.treatment-group-tab[data-group="other"].active { color: #4A5560; border-bottom-color: #4A5560; }
+
 .treatment-group-tab i {
   display: none;
 }
@@ -1679,6 +1687,23 @@ body[data-page="treatments"] .page-header {
   color: white;
   border-color: var(--primary);
 }
+
+/* Group-specific active state for category items */
+.treatment-category-btn.group-medical.active { background: #B52840; border-color: #B52840; }
+.treatment-category-btn.group-laser.active { background: #B5740F; border-color: #B5740F; }
+.treatment-category-btn.group-lifting.active { background: #2E5BB7; border-color: #2E5BB7; }
+.treatment-category-btn.group-aesthetic.active { background: #6A4DAE; border-color: #6A4DAE; }
+.treatment-category-btn.group-body.active { background: #2E7D4F; border-color: #2E7D4F; }
+.treatment-category-btn.group-other.active { background: #4A5560; border-color: #4A5560; }
+
+/* Group-specific hover hint */
+.treatment-category-btn.group-medical:hover { border-color: #B52840; color: #B52840; }
+.treatment-category-btn.group-laser:hover { border-color: #B5740F; color: #B5740F; }
+.treatment-category-btn.group-lifting:hover { border-color: #2E5BB7; color: #2E5BB7; }
+.treatment-category-btn.group-aesthetic:hover { border-color: #6A4DAE; color: #6A4DAE; }
+.treatment-category-btn.group-body:hover { border-color: #2E7D4F; color: #2E7D4F; }
+.treatment-category-btn.group-other:hover { border-color: #4A5560; color: #4A5560; }
+.treatment-category-btn.active:hover { color: white; }
 
 .treatments-content {
   display: grid;
