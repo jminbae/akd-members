@@ -129,7 +129,7 @@ ul, ol {
 }
 
 .logo-akd-img {
-  height: 42px;
+  height: 48px;
   width: auto;
   object-fit: contain;
 }
@@ -2021,7 +2021,7 @@ body[data-page="treatments"] .page-header {
   }
 
   .logo-akd-img {
-    height: 36px;
+    height: 42px;
   }
 
   /* Home */
@@ -2141,7 +2141,7 @@ body[data-page="treatments"] .page-header {
   }
 
   .member-hero-photo img {
-    max-height: 580px;
+    max-height: 520px;
     width: 100%;
     object-position: bottom center;
   }
