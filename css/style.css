@@ -892,6 +892,7 @@ body[data-page="treatments"] .page-header {
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  overflow: hidden;
 }
 
 .member-hero-photo img {
