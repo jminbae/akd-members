@@ -587,10 +587,36 @@ function photoUrl(path) {
 // ROUTER
 // ==========================================
 
+// Site base path (GitHub Pages project path)
+const SITE_BASE = '/akd-members';
+
+// Convert path-based URL to internal hash route
+function pathToHash() {
+  let p = window.location.pathname;
+  if (p.startsWith(SITE_BASE)) p = p.slice(SITE_BASE.length);
+  p = p.replace(/^\/+|\/+$/g, '');
+  if (!p) return null;
+  const memMatch = p.match(/^member\/([^/]+)$/);
+  if (memMatch) return '#member/' + memMatch[1];
+  const clinicMatch = p.match(/^clinic\/([^/]+)$/);
+  if (clinicMatch) return '#hospital/' + clinicMatch[1];
+  return null;
+}
+
+// Convert internal hash route to path-based URL (for sharing)
+function hashToPath(hash) {
+  const memMatch = hash.match(/^#member\/(.+)$/);
+  if (memMatch) return SITE_BASE + '/member/' + memMatch[1] + '/';
+  const hospMatch = hash.match(/^#hospital\/(.+)$/);
+  if (hospMatch) return SITE_BASE + '/clinic/' + hospMatch[1] + '/';
+  return null;
+}
+
 class Router {
   constructor() {
     this.routes = [];
     window.addEventListener('hashchange', () => this.handle());
+    window.addEventListener('popstate', () => this.handle());
     window.addEventListener('load', () => this.handle());
   }
 
@@ -599,17 +625,29 @@ class Router {
   }
 
   handle() {
-    const hash = window.location.hash || '#home';
+    let hash = window.location.hash;
+    if (!hash) {
+      const fromPath = pathToHash();
+      if (fromPath) hash = fromPath;
+    }
+    if (!hash) hash = '#home';
     for (const route of this.routes) {
       const match = this.match(route.pattern, hash);
       if (match !== null) {
+        // Sync URL: for member/hospital, use path; otherwise clean to base + hash
+        const pathUrl = hashToPath(hash);
+        if (pathUrl && window.location.pathname + window.location.hash !== pathUrl) {
+          history.replaceState(null, '', pathUrl);
+        } else if (!pathUrl && window.location.pathname !== SITE_BASE + '/' && window.location.pathname !== SITE_BASE) {
+          // For non-member/hospital pages while on a /member or /clinic path → clean to base
+          history.replaceState(null, '', SITE_BASE + '/' + hash);
+        }
         route.handler(match);
         this.updateNav(hash);
         window.scrollTo(0, 0);
         return;
       }
     }
-    // Default to home
     window.location.hash = '#home';
   }
 
