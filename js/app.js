@@ -981,7 +981,7 @@ function renderMemberDetail(params) {
             ` : ''}
           </div>
 
-          <div class="member-hero-photo">
+          <div class="member-hero-photo${DOCTORS_WITH_TWO_PHOTOS.has(member.id) ? ' has-multi' : ''}">
             ${(() => {
               const photos = [`회원 프로필 사진_누끼/${member.id}.png`];
               if (DOCTORS_WITH_TWO_PHOTOS.has(member.id)) {
