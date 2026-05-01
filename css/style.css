@@ -436,6 +436,19 @@ ul, ol {
   text-align: center;
 }
 
+/* Per-page header color variations (similar tone, different hue) */
+body[data-page="dermatologists"] .page-header {
+  background: linear-gradient(135deg, #1B4965 0%, #3E7CA1 100%);
+}
+
+body[data-page="hospitals"] .page-header {
+  background: linear-gradient(135deg, #1F5D5C 0%, #4FA095 100%);
+}
+
+body[data-page="treatments"] .page-header {
+  background: linear-gradient(135deg, #3B3B6D 0%, #6E73B5 100%);
+}
+
 .page-header h1 {
   font-size: 28px;
   font-weight: 700;

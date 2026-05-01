@@ -654,6 +654,12 @@ class Router {
         (linkPage === 'hospitals' && page === 'hospital') ||
         (linkPage === 'treatments' && page === 'treatment'));
     });
+    // Set body data-page for per-page styling
+    let topPage = page;
+    if (page === 'member') topPage = 'dermatologists';
+    else if (page === 'hospital') topPage = 'hospitals';
+    else if (page === 'treatment') topPage = 'treatments';
+    document.body.dataset.page = topPage;
     // Close mobile menu
     document.getElementById('navMenu').classList.remove('open');
   }
@@ -695,7 +701,7 @@ function renderHome() {
       <h1 class="home-subtitle home-main-title">가까운 피부과를 찾아보세요!</h1>
       <div class="search-box">
         <input type="text" class="search-input" id="searchInput"
-               placeholder="의사명, 피부과명, 진료 분야로 검색" autocomplete="off">
+               placeholder="의사명, 피부과명, 진료분야로 검색" autocomplete="off">
         <button class="search-btn" id="searchBtn">
           <i class="fas fa-search"></i>
         </button>
@@ -712,7 +718,7 @@ function renderHome() {
         </a>
         <a href="#treatments" class="home-shortcut">
           <i class="fas fa-stethoscope"></i>
-          <span>진료 분야 검색</span>
+          <span>진료분야 찾기</span>
         </a>
       </div>
     </div>
@@ -1021,7 +1027,7 @@ function renderMemberDetail(params) {
             <!-- Treatments -->
             ${member.treatments && member.treatments.length > 0 ? `
               <div class="info-card full-width">
-                <h3 class="info-card-title"><i class="fas fa-stethoscope"></i> 진료 분야</h3>
+                <h3 class="info-card-title"><i class="fas fa-stethoscope"></i> 진료분야</h3>
                 <div class="treatment-tags">
                   ${member.treatments.map((t, i) => `
                     <a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag group-${getTreatmentGroup(t)}">${t}</a>
@@ -1268,7 +1274,7 @@ function renderHospitalDetail(params) {
       </div>
 
       <div class="hospital-treatments-section">
-        <h2><i class="fas fa-stethoscope"></i> 진료 분야</h2>
+        <h2><i class="fas fa-stethoscope"></i> 진료분야</h2>
         <p class="hospital-treatments-desc">소속 원장님들이 진료하는 분야입니다</p>
         <div class="treatment-tags">
           ${TREATMENT_GROUPS.flatMap(g =>
@@ -1325,8 +1331,8 @@ function renderTreatments() {
 
   app.innerHTML = `
     <div class="page-header">
-      <h1>진료 분야 찾기</h1>
-      <p>진료 분야를 선택하면 해당 분야를 진료하는 가까운 피부과를 찾을 수 있습니다.</p>
+      <h1>진료분야 찾기</h1>
+      <p>해당 분야를 진료하는 가까운 피부과를 찾을 수 있습니다.</p>
     </div>
     <div class="treatments-page">
       <div class="treatment-group-tabs" id="treatmentGroupTabs">
