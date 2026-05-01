@@ -727,7 +727,7 @@ function renderHome() {
       <div class="home-logo">
         <img src="images/badge.jpg" alt="피부과 전문의" class="home-badge-logo">
       </div>
-      <h1 class="home-subtitle home-main-title">가까운 피부과를 찾아보세요!</h1>
+      <h1 class="home-subtitle home-main-title">믿을 수 있는 피부과를 찾아보세요!</h1>
       <div class="search-box">
         <input type="text" class="search-input" id="searchInput"
                placeholder="의사명, 피부과명, 진료분야로 검색" autocomplete="off">
