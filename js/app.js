@@ -893,6 +893,25 @@ function updateMembersView() {
 }
 
 // Generate scattered "balloon" positions around the photo (avoiding center where face is)
+// Doctors with two photos for hero cross-fade
+const DOCTORS_WITH_TWO_PHOTOS = new Set([
+  'bae-jungmin', 'kim-hongseok', 'lee-haeun', 'gye-jiwon',
+  'shin-jiyeon', 'jung-hanmi', 'park-saemi', 'park-mingi'
+]);
+
+let _heroPhotoTimer = null;
+function startHeroPhotoCycle() {
+  if (_heroPhotoTimer) { clearInterval(_heroPhotoTimer); _heroPhotoTimer = null; }
+  const imgs = document.querySelectorAll('.hero-photo-img');
+  if (imgs.length < 2) return;
+  let idx = 0;
+  _heroPhotoTimer = setInterval(() => {
+    imgs[idx].classList.remove('active');
+    idx = (idx + 1) % imgs.length;
+    imgs[idx].classList.add('active');
+  }, 3000);
+}
+
 function generateBalloonPositions(count) {
   if (count === 0) return [];
   // Each zone: [topMin, topMax, leftMin, leftMax]
@@ -963,8 +982,17 @@ function renderMemberDetail(params) {
           </div>
 
           <div class="member-hero-photo">
-            <img src="${photoUrl(member.photo.replace('회원 프로필 사진/', '회원 프로필 사진_누끼/').replace('.jpg', '.png'))}" alt="${member.name}"
-                 onerror="this.style.background='var(--bg)'">
+            ${(() => {
+              const photos = [`회원 프로필 사진_누끼/${member.id}.png`];
+              if (DOCTORS_WITH_TWO_PHOTOS.has(member.id)) {
+                photos.push(`회원 프로필 사진_누끼/${member.id}_2.png`);
+              }
+              return photos.map((p, i) => `
+                <img src="${photoUrl(p)}" alt="${member.name}"
+                     class="hero-photo-img${i === 0 ? ' active' : ''}"
+                     onerror="this.style.display='none'">
+              `).join('');
+            })()}
 
             ${member.links && member.links.length ? `
               <div class="hero-sns-balloons">
@@ -1087,6 +1115,9 @@ function renderMemberDetail(params) {
       ` : ''}
     </div>
   `;
+
+  // Start cross-fade for hero photos (if 2 exist)
+  setTimeout(startHeroPhotoCycle, 100);
 }
 
 let hospitalsMap = null;
