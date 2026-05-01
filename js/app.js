@@ -596,7 +596,7 @@ function pathToHash() {
   if (p.startsWith(SITE_BASE)) p = p.slice(SITE_BASE.length);
   p = p.replace(/^\/+|\/+$/g, '');
   if (!p) return null;
-  const memMatch = p.match(/^member\/([^/]+)$/);
+  const memMatch = p.match(/^dermatologist\/([^/]+)$/);
   if (memMatch) return '#member/' + memMatch[1];
   const clinicMatch = p.match(/^clinic\/([^/]+)$/);
   if (clinicMatch) return '#hospital/' + clinicMatch[1];
@@ -606,7 +606,7 @@ function pathToHash() {
 // Convert internal hash route to path-based URL (for sharing)
 function hashToPath(hash) {
   const memMatch = hash.match(/^#member\/(.+)$/);
-  if (memMatch) return SITE_BASE + '/member/' + memMatch[1] + '/';
+  if (memMatch) return SITE_BASE + '/dermatologist/' + memMatch[1] + '/';
   const hospMatch = hash.match(/^#hospital\/(.+)$/);
   if (hospMatch) return SITE_BASE + '/clinic/' + hospMatch[1] + '/';
   return null;
