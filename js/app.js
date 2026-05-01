@@ -149,8 +149,8 @@ const MEMBERS = [
     ],
     treatments: ['백반증', '백반증수술', '고압산소'],
     links: [
-      { type: 'website', label: '병원 홈페이지', url: 'https://www.healhouseskin.com' },
-      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/healhouseskin/' },
+      { type: 'website', label: '병원 홈페이지', url: 'https://healhousegn.com/' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/healhouseskin_gangnam' },
       { type: 'website', label: '힐링백반증', url: 'https://healingvitiligo.org/' }
     ]
   },
@@ -389,7 +389,11 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['써마지', '울쎄라', '올타이트', '티타늄', '힐로웨이브', '고압산소', '주름', '쥬브젠', '리프팅', '탄력', '텐써마', '스컬트라', '쥬베룩', '레디어스', '필러', '스킨부스터', '기미/색소', '여드름', '모공', '흉터']
+    treatments: ['써마지', '울쎄라', '올타이트', '티타늄', '힐로웨이브', '고압산소', '주름', '쥬브젠', '리프팅', '탄력', '텐써마', '스컬트라', '쥬베룩', '레디어스', '필러', '스킨부스터', '기미/색소', '여드름', '모공', '흉터'],
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'https://healhousegn.com/' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/healhouseskin_gangnam' }
+    ]
   },
   {
     id: 'nam-chanhee',
