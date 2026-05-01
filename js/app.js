@@ -357,8 +357,11 @@ const MEMBERS = [
     awards: [],
     treatments: ['스컬트라', '쥬브젠', '얼굴윤곽', '더엘주사', '필러', '주름', '탄력', '리프팅', '써마지', '울쎄라', '올타이트', '티타늄', '스킨부스터', '리바이브', '힐로웨이브', '레디어스', '고압산소', '여드름흉터', '문신제거'],
     links: [
+      { type: 'website', label: '병원 홈페이지', url: 'https://healhousegn.com/' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/healhouseskin_gangnam' },
       { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/jhanmi__' },
       { type: 'youtube', label: '유튜브', url: 'https://youtube.com/@pibutenten' },
+      { type: 'threads', label: '스레드', url: 'https://www.threads.com/@jhanmi__' },
       { type: 'website', label: '블로그', url: 'https://blog.naver.com/one_crafter' }
     ]
   },
