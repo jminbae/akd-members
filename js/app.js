@@ -1305,7 +1305,7 @@ function renderTreatments() {
     </div>
     <div class="treatments-page">
       <div class="treatments-categories-wrap">
-        <div class="treatments-categories collapsed" id="treatmentCategories">
+        <div class="treatments-categories" id="treatmentCategories">
           ${sortedCategories.map((cat, i) => `
             <button class="treatment-category-btn ${i === 0 ? 'active' : ''}"
                     data-treatment="${cat.name}"
@@ -1314,13 +1314,6 @@ function renderTreatments() {
             </button>
           `).join('')}
         </div>
-        <div class="treatments-categories-fade"></div>
-        ${sortedCategories.length > 12 ? `
-          <button class="treatments-toggle-btn" id="treatmentsToggleBtn" onclick="toggleTreatmentCategories()">
-            <span class="toggle-text">더보기</span>
-            <i class="fas fa-chevron-down toggle-icon"></i>
-          </button>
-        ` : ''}
       </div>
       <div class="treatments-content">
         <div class="treatments-map" id="treatmentsMap"></div>
@@ -1335,15 +1328,6 @@ function renderTreatments() {
   }, 100);
 }
 
-function toggleTreatmentCategories() {
-  const cats = document.getElementById('treatmentCategories');
-  const btn = document.getElementById('treatmentsToggleBtn');
-  if (!cats || !btn) return;
-  const collapsed = cats.classList.toggle('collapsed');
-  btn.querySelector('.toggle-text').textContent = collapsed ? '더보기' : '접기';
-  btn.querySelector('.toggle-icon').classList.toggle('fa-chevron-down', collapsed);
-  btn.querySelector('.toggle-icon').classList.toggle('fa-chevron-up', !collapsed);
-}
 
 let treatmentMap = null;
 let treatmentMarkers = [];

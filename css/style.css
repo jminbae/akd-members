@@ -1514,59 +1514,41 @@ ul, ol {
 
 .treatments-categories-wrap {
   position: relative;
-  padding: 24px 0 8px;
+  padding: 24px 0 16px;
 }
 
 .treatments-categories {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  max-height: none;
-  overflow: hidden;
-  transition: max-height 0.4s ease;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+  align-content: flex-start;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 90%, transparent 100%);
+          mask-image: linear-gradient(to bottom, black 0%, black 90%, transparent 100%);
 }
 
-.treatments-categories.collapsed {
-  max-height: 240px; /* approx 6 rows of compact buttons */
+.treatments-categories::-webkit-scrollbar {
+  width: 6px;
 }
 
-.treatments-categories-fade {
-  position: absolute;
-  bottom: 36px;
-  left: 0;
-  right: 0;
-  height: 56px;
-  background: linear-gradient(to bottom, transparent, var(--bg) 90%);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
+.treatments-categories::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
 }
 
-.treatments-categories.collapsed + .treatments-categories-fade {
-  opacity: 1;
+.treatments-categories::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+  transition: background 0.2s;
 }
 
-.treatments-toggle-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin: 12px auto 0;
-  padding: 8px 22px;
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 30px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  cursor: pointer;
-  font-family: 'Noto Sans KR', sans-serif;
-  transition: var(--transition);
-}
-
-.treatments-toggle-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
+.treatments-categories::-webkit-scrollbar-thumb:hover {
+  background: var(--text-light);
 }
 
 .treatment-category-btn {
@@ -2050,10 +2032,7 @@ ul, ol {
   /* Treatments */
   .treatments-categories {
     gap: 4px;
-  }
-
-  .treatments-categories.collapsed {
-    max-height: 200px;
+    max-height: 170px;
   }
 
   .treatment-category-btn {
