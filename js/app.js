@@ -22,7 +22,7 @@ const HOSPITALS = [
       '토요일': '10:00 - 16:00',
       '일요일·공휴일': '휴무'
     },
-    treatments: ['백반증', '스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅/탄력', '힐로웨이브'],
+    treatments: ['백반증', '스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅/탄력', '힐로웨이브', '고압산소', '주름', '쥬브젠'],
     doctorIds: ['bae-jungmin', 'jung-hanmi', 'park-saemi'],
     description: '피부과전문의 1:1 맞춤 상담을 제공하며, 커스텀 리프팅, 스킨부스터, 콜라겐부스터 등 다양한 시술을 시행합니다.'
   },
@@ -147,7 +147,7 @@ const MEMBERS = [
       '2023 베스트 렉쳐 선정',
       '2024 베스트 기획자 상'
     ],
-    treatments: ['백반증'],
+    treatments: ['백반증', '고압산소'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'https://www.healhouseskin.com' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/healhouseskin/' }
@@ -351,7 +351,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅/탄력'],
+    treatments: ['스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅/탄력', '고압산소', '주름', '쥬브젠'],
     links: [
       { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/jhanmi__' },
       { type: 'youtube', label: '유튜브', url: 'https://youtube.com/@pibutenten' },
@@ -376,7 +376,7 @@ const MEMBERS = [
     memberships: [],
     lectures: [],
     awards: [],
-    treatments: ['써마지', '울쎄라', '올타이트', '티타늄', '힐로웨이브']
+    treatments: ['써마지', '울쎄라', '올타이트', '티타늄', '힐로웨이브', '고압산소', '주름', '쥬브젠']
   },
   {
     id: 'nam-chanhee',
@@ -536,7 +536,9 @@ const TREATMENT_CATEGORIES = [
   { id: 'pore-acne-scar', name: '여드름/모공/흉터', icon: 'fa-spray-can', color: '#FFE0B2' },
   { id: 'hair-mesotherapy', name: '탈모메조테라피/메조보톡스', icon: 'fa-prescription-bottle-medical', color: '#C5CAE9' },
   { id: 'diet', name: '비만/다이어트/체형교정시술', icon: 'fa-weight-scale', color: '#C8E6C9' },
-  { id: 'female-hair-removal', name: '여성제모', icon: 'fa-feather', color: '#F8BBD0' }
+  { id: 'female-hair-removal', name: '여성제모', icon: 'fa-feather', color: '#F8BBD0' },
+  { id: 'wrinkle', name: '주름', icon: 'fa-chart-line', color: '#E1BEE7' },
+  { id: 'jubzen', name: '쥬브젠', icon: 'fa-vials', color: '#B2DFDB' }
 ];
 
 // ==========================================
