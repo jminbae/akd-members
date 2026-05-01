@@ -654,28 +654,29 @@ class Router {
 
 const app = document.getElementById('app');
 
-function setPageTitle(title) {
+function setPageTitle(title, ogImageName) {
   document.title = title;
-  // Update OG meta tags for sharing
-  let ogTitle = document.querySelector('meta[property="og:title"]');
-  if (!ogTitle) {
-    ogTitle = document.createElement('meta');
-    ogTitle.setAttribute('property', 'og:title');
-    document.head.appendChild(ogTitle);
+  const setMeta = (sel, attr, value) => {
+    let el = document.querySelector(sel);
+    if (!el) {
+      el = document.createElement('meta');
+      const [a, n] = attr;
+      el.setAttribute(a, n);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', value);
+  };
+  setMeta('meta[property="og:title"]', ['property', 'og:title'], title);
+  setMeta('meta[name="twitter:title"]', ['name', 'twitter:title'], title);
+  if (ogImageName) {
+    const url = 'https://jminbae.github.io/akd-members/images/og/' + ogImageName;
+    setMeta('meta[property="og:image"]', ['property', 'og:image'], url);
+    setMeta('meta[name="twitter:image"]', ['name', 'twitter:image'], url);
   }
-  ogTitle.setAttribute('content', title);
-
-  let twTitle = document.querySelector('meta[name="twitter:title"]');
-  if (!twTitle) {
-    twTitle = document.createElement('meta');
-    twTitle.setAttribute('name', 'twitter:title');
-    document.head.appendChild(twTitle);
-  }
-  twTitle.setAttribute('content', title);
 }
 
 function renderHome() {
-  setPageTitle('피부과의사 찾기, 대한피부과의사회');
+  setPageTitle('피부과의사 찾기, 대한피부과의사회', 'default.jpg');
   app.innerHTML = `
     <div class="home-page fade-in">
       <div class="home-logo">
@@ -776,7 +777,7 @@ function handleSearch(e) {
 }
 
 function renderMembers() {
-  setPageTitle('피부과의사 찾기, 대한피부과의사회');
+  setPageTitle('피부과의사 찾기, 대한피부과의사회', 'default.jpg');
   app.innerHTML = `
     <div class="page-header">
       <h1>피부과의사 찾기</h1>
@@ -884,7 +885,7 @@ function renderMemberDetail(params) {
   const hospital = getHospital(member.hospitalId);
   const teamDoctors = hospital ? getHospitalDoctors(hospital.id).filter(d => d.id !== member.id) : [];
 
-  setPageTitle((hospital ? hospital.name + ' ' : '') + member.name);
+  setPageTitle((hospital ? hospital.name + ' ' : '') + member.name, 'member-' + member.id + '.jpg');
 
   const snsIconMap = {
     website: 'fa-solid fa-globe',
@@ -1047,7 +1048,7 @@ let hospitalsMap = null;
 let hospitalsMarkers = [];
 
 function renderHospitals() {
-  setPageTitle('피부과 소개, 대한피부과의사회');
+  setPageTitle('피부과 소개, 대한피부과의사회', 'default.jpg');
   app.innerHTML = `
     <div class="page-header">
       <h1>피부과의원 찾기</h1>
@@ -1211,7 +1212,7 @@ function renderHospitalDetail(params) {
 
   const doctors = getHospitalDoctors(hospital.id);
 
-  setPageTitle(hospital.name);
+  setPageTitle(hospital.name, 'hospital-' + hospital.id + '.jpg');
 
   app.innerHTML = `
     <div class="hospital-detail fade-in">
@@ -1293,7 +1294,7 @@ function initHospitalMap(hospital) {
 }
 
 function renderTreatments() {
-  setPageTitle('피부과의사 찾기, 대한피부과의사회');
+  setPageTitle('피부과의사 찾기, 대한피부과의사회', 'default.jpg');
 
   // Compute counts for each item, sorted by count + 가나다 within group
   const sortedGroups = TREATMENT_GROUPS.map(g => {
