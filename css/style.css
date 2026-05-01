@@ -2135,18 +2135,18 @@ body[data-page="treatments"] .page-header {
 
   .member-hero-photo {
     margin: 0 -20px;
-    height: 440px;
+    height: 500px;
     align-items: flex-end;
     justify-content: center;
     overflow: hidden;
   }
 
   .member-hero-photo img {
-    max-height: 580px;
+    max-height: 520px;
     width: 100%;
     object-position: bottom center;
   }
-  /* For multi-photo: first img absolute-bottom too, so container height controls */
+  /* For multi-photo on mobile: stack at container bottom */
   .member-hero-photo.has-multi .hero-photo-img {
     position: absolute;
     bottom: 0;
