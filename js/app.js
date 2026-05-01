@@ -689,7 +689,7 @@ function renderHome() {
       <div class="home-logo">
         <img src="images/badge.jpg" alt="피부과 전문의" class="home-badge-logo">
       </div>
-      <h1 class="home-subtitle home-main-title">가까운 피부과의사를 찾아보세요!</h1>
+      <h1 class="home-subtitle home-main-title">가까운 피부과를 찾아보세요!</h1>
       <div class="search-box">
         <input type="text" class="search-input" id="searchInput"
                placeholder="의사명, 피부과명, 진료 분야로 검색" autocomplete="off">
@@ -701,15 +701,15 @@ function renderHome() {
       <div class="home-shortcuts stagger">
         <a href="#dermatologists" class="home-shortcut">
           <i class="fas fa-user-md"></i>
-          <span>피부과 의사</span>
+          <span>피부과의사 찾기</span>
         </a>
         <a href="#hospitals" class="home-shortcut">
           <i class="fas fa-hospital"></i>
-          <span>피부과 소개</span>
+          <span>피부과 찾기</span>
         </a>
         <a href="#treatments" class="home-shortcut">
           <i class="fas fa-stethoscope"></i>
-          <span>진료 분야</span>
+          <span>진료 분야 검색</span>
         </a>
       </div>
     </div>

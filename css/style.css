@@ -450,8 +450,8 @@ ul, ol {
 
 .members-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
   padding: 40px 24px;
   max-width: var(--max-width);
   margin: 0 auto;
@@ -1991,8 +1991,8 @@ ul, ol {
 
   /* Members */
   .members-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
     padding: 24px 16px;
   }
 
