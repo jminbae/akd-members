@@ -2051,17 +2051,22 @@ ul, ol {
 
   /* Treatments */
   .treatments-categories {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
   }
 
   .treatments-categories.collapsed {
-    max-height: 384px; /* 6 rows on mobile (2 cols) */
+    max-height: 226px; /* ~6 rows on mobile (4 cols) */
   }
 
   .treatment-category-btn {
     padding: 7px 4px;
-    font-size: 11.5px;
+    font-size: 10.5px;
+    border-radius: 8px;
+    line-height: 1.25;
+    white-space: normal;
+    min-height: 32px;
+    word-break: keep-all;
   }
 
   .treatment-category-btn i {
