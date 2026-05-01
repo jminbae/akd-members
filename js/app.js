@@ -108,7 +108,7 @@ const MEMBERS = [
     name: '배정민',
     photo: '회원 프로필 사진/배정민.jpg',
     hospitalId: 'healhouse-gangnam',
-    role: '대표원장',
+    role: '원장',
     specialty: '피부과 전문의',
     quote: '백반증 치료의 마지막 피부과가 되겠습니다.',
     positions: [
@@ -158,7 +158,7 @@ const MEMBERS = [
     name: '김홍석',
     photo: '회원 프로필 사진/김홍석.jpg',
     hospitalId: 'vos',
-    role: '대표원장',
+    role: '원장',
     specialty: '피부과 전문의',
     quote: '피부과전문의의 오랜 경험과 노하우로 완성된 맞춤형 피부 재생 솔루션을 제공합니다.',
     positions: [
@@ -198,7 +198,7 @@ const MEMBERS = [
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'https://vos.co.kr' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/vos_skinclinic/' },
-      { type: 'instagram', label: '개인 인스타그램', url: 'https://www.instagram.com/drhong3_pr/' },
+      { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/drhong3_pr/' },
       { type: 'instagram', label: '피알남 공식 인스타그램', url: 'https://www.instagram.com/prnam_official/' },
       { type: 'youtube', label: '유튜브', url: 'https://www.youtube.com/channel/UC908f2Qj4Jz2bs9XzDdPMLg' },
       { type: 'linktree', label: '링크트리', url: 'https://linktr.ee/VOS.DERMATOLOGY.CLINIC' }
@@ -209,7 +209,7 @@ const MEMBERS = [
     name: '이하은',
     photo: '회원 프로필 사진/이하은.jpg',
     hospitalId: 'foret',
-    role: '대표원장',
+    role: '원장',
     specialty: '피부과 전문의',
     quote: '건강한 피부와 힐링을 드리는 피부 주치의가 되겠습니다.',
     positions: [
@@ -238,9 +238,9 @@ const MEMBERS = [
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'http://foretderma.com' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/foretskin_official' },
-      { type: 'instagram', label: '개인 인스타그램', url: 'https://www.instagram.com/dermakitty' },
-      { type: 'youtube', label: '개인 유튜브', url: 'https://www.youtube.com/@drleehaeun' },
-      { type: 'threads', label: '개인 스레드', url: 'https://www.threads.com/@dermakitty' }
+      { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/dermakitty' },
+      { type: 'youtube', label: '유튜브', url: 'https://www.youtube.com/@drleehaeun' },
+      { type: 'threads', label: '스레드', url: 'https://www.threads.com/@dermakitty' }
     ]
   },
   {
@@ -248,7 +248,7 @@ const MEMBERS = [
     name: '계지원',
     photo: '회원 프로필 사진/계지원.jpg',
     hospitalId: 'human-pyeongtaek',
-    role: '대표원장',
+    role: '원장',
     specialty: '피부과 전문의',
     quote: '정확한 진단과 근거 있는 치료로 환자 한 분 한 분에게 최선을 다하겠습니다.',
     positions: [
@@ -293,7 +293,7 @@ const MEMBERS = [
     name: '신지연',
     photo: '회원 프로필 사진/신지연2.jpg',
     hospitalId: 'hev-sinsa',
-    role: '대표원장',
+    role: '원장',
     specialty: '피부과 전문의',
     quote: '안전한 정품·정량 시술과 개인 맞춤형 진료로 자연스러운 결과를 약속합니다.',
     positions: [
@@ -317,9 +317,9 @@ const MEMBERS = [
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'https://seoul.hevclinic.com' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/hev_seoul' },
-      { type: 'instagram', label: '개인 인스타그램', url: 'https://www.instagram.com/shinjiyn/' },
-      { type: 'youtube', label: '개인 유튜브', url: 'https://www.youtube.com/@shinjiyn' },
-      { type: 'threads', label: '개인 스레드', url: 'https://www.threads.com/@shinjiyn' }
+      { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/shinjiyn/' },
+      { type: 'youtube', label: '유튜브', url: 'https://www.youtube.com/@shinjiyn' },
+      { type: 'threads', label: '스레드', url: 'https://www.threads.com/@shinjiyn' }
     ]
   },
   {
@@ -709,7 +709,7 @@ function renderHome() {
         </a>
         <a href="#treatments" class="home-shortcut">
           <i class="fas fa-stethoscope"></i>
-          <span>주 진료 분야</span>
+          <span>진료 분야</span>
         </a>
       </div>
     </div>
@@ -787,8 +787,8 @@ function renderMembers() {
   setPageTitle('피부과의사 찾기, 대한피부과의사회');
   app.innerHTML = `
     <div class="page-header">
-      <h1>피부과의사를 소개합니다</h1>
-      <p>내 위치에서 가까운 피부과 전문의 순으로 보여드립니다</p>
+      <h1>피부과의사 찾기</h1>
+      <p>내 위치에서 가까운 피부과 전문의를 찾아드립니다.</p>
     </div>
     <div class="members-grid stagger" id="membersGrid">
       <div class="loading">위치 확인 중...</div>
@@ -1017,7 +1017,7 @@ function renderMemberDetail(params) {
             <!-- Treatments -->
             ${member.treatments && member.treatments.length > 0 ? `
               <div class="info-card full-width">
-                <h3 class="info-card-title"><i class="fas fa-stethoscope"></i> 주 진료 분야</h3>
+                <h3 class="info-card-title"><i class="fas fa-stethoscope"></i> 진료 분야</h3>
                 <div class="treatment-tags">
                   ${member.treatments.map((t, i) => `
                     <a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag group-${getTreatmentGroup(t)}">${t}</a>
@@ -1057,8 +1057,8 @@ function renderHospitals() {
   setPageTitle('피부과 소개, 대한피부과의사회');
   app.innerHTML = `
     <div class="page-header">
-      <h1>피부과를 소개합니다</h1>
-      <p>내 위치에서 가까운 순으로 피부과를 보여드립니다</p>
+      <h1>피부과의원 찾기</h1>
+      <p>내 위치에서 가까운 피부과를 보여드립니다.</p>
     </div>
     <div class="hospitals-page">
       <div class="hospitals-map-large" id="hospitalsMapLarge"></div>
@@ -1264,22 +1264,15 @@ function renderHospitalDetail(params) {
       </div>
 
       <div class="hospital-treatments-section">
-        <h2><i class="fas fa-stethoscope"></i> 주 진료 분야</h2>
+        <h2><i class="fas fa-stethoscope"></i> 진료 분야</h2>
         <p class="hospital-treatments-desc">소속 원장님들이 진료하는 분야입니다</p>
-        ${TREATMENT_GROUPS.map(g => {
-          const groupTreatments = hospital.treatments.filter(t => g.items.includes(t));
-          if (groupTreatments.length === 0) return '';
-          return `
-            <div class="hospital-treatments-group">
-              <h4 class="hospital-treatments-group-name"><i class="fas ${g.icon}"></i> ${g.name}</h4>
-              <div class="treatment-tags">
-                ${groupTreatments.map(t => `
-                  <a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag group-${g.id}">${t}</a>
-                `).join('')}
-              </div>
-            </div>
-          `;
-        }).join('')}
+        <div class="treatment-tags">
+          ${TREATMENT_GROUPS.flatMap(g =>
+            hospital.treatments
+              .filter(t => g.items.includes(t))
+              .map(t => `<a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag group-${g.id}">${t}</a>`)
+          ).join('')}
+        </div>
       </div>
     </div>
   `;
@@ -1323,14 +1316,13 @@ function renderTreatments() {
     return { ...g, items };
   });
 
-  // Find first group with at least one doctor and pick first item
+  // Find first group with at least one doctor (show all items selected by default)
   const firstGroup = sortedGroups.find(g => g.items.some(i => i.count > 0)) || sortedGroups[0];
-  const firstItem = (firstGroup.items.find(i => i.count > 0) || firstGroup.items[0]).name;
 
   app.innerHTML = `
     <div class="page-header">
-      <h1>주 진료 분야</h1>
-      <p>주 진료 분야를 선택하면 해당 분야를 진료하는 피부과와 의료진을 확인할 수 있습니다</p>
+      <h1>진료 분야 찾기</h1>
+      <p>진료 분야를 선택하면 해당 분야를 진료하는 가까운 피부과를 찾을 수 있습니다.</p>
     </div>
     <div class="treatments-page">
       <div class="treatment-group-tabs" id="treatmentGroupTabs">
@@ -1345,7 +1337,7 @@ function renderTreatments() {
       <div class="treatments-categories-wrap">
         <div class="treatments-categories" id="treatmentCategories">
           ${sortedGroups.map(g => g.items.map(item => `
-            <button class="treatment-category-btn ${item.name === firstItem ? 'active' : ''} group-${item.group}"
+            <button class="treatment-category-btn group-${item.group}"
                     data-treatment="${item.name}"
                     data-group="${item.group}"
                     style="${item.group === firstGroup.id ? '' : 'display:none'}"
@@ -1362,9 +1354,9 @@ function renderTreatments() {
     </div>
   `;
 
-  // Initialize with first item (most popular in first group)
+  // Initialize with all items in first group (no specific item active)
   setTimeout(() => {
-    selectTreatment(firstItem);
+    selectTreatmentGroup(firstGroup.id);
   }, 100);
 }
 
@@ -1373,52 +1365,60 @@ function selectTreatmentGroup(groupId) {
   document.querySelectorAll('.treatment-group-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.group === groupId);
   });
-  // Show items of this group
+  // Show items of this group, deselect any active item (group-wide selection)
   document.querySelectorAll('.treatment-category-btn').forEach(btn => {
     btn.style.display = btn.dataset.group === groupId ? '' : 'none';
+    btn.classList.remove('active');
   });
-  // Auto-select first visible item with active count
-  const visibleBtns = Array.from(document.querySelectorAll('.treatment-category-btn'))
-    .filter(b => b.dataset.group === groupId);
-  if (visibleBtns.length > 0) {
-    selectTreatment(visibleBtns[0].dataset.treatment);
-  }
+  // Show all hospitals/doctors for any item in this group
+  const group = TREATMENT_GROUPS.find(g => g.id === groupId);
+  const items = group ? group.items : [];
+  showTreatmentResults(items);
 }
-
 
 let treatmentMap = null;
 let treatmentMarkers = [];
 let userLocation = null;
 
 function selectTreatment(treatmentName) {
-  // Update active button
+  // Mark only this item as active
   document.querySelectorAll('.treatment-category-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.treatment === treatmentName);
   });
+  showTreatmentResults([treatmentName]);
+}
 
-  const hospitals = getHospitalsByTreatment(treatmentName);
+// Show map and list for one or many treatment names (any-match)
+function showTreatmentResults(treatmentNames) {
+  // Collect hospitals matching any of the treatments
+  const hospitalSet = new Set();
+  treatmentNames.forEach(t => {
+    getHospitalsByTreatment(t).forEach(h => hospitalSet.add(h));
+  });
+  const hospitals = Array.from(hospitalSet);
 
-  // Try to get user location for distance sorting
   if (navigator.geolocation && !userLocation) {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        updateTreatmentView(treatmentName, hospitals);
+        updateTreatmentView(treatmentNames, hospitals);
       },
       () => {
-        // Default to Seoul City Hall
         userLocation = { lat: 37.5665, lng: 126.9780 };
-        updateTreatmentView(treatmentName, hospitals);
+        updateTreatmentView(treatmentNames, hospitals);
       },
       { timeout: 3000 }
     );
   } else {
     if (!userLocation) userLocation = { lat: 37.5665, lng: 126.9780 };
-    updateTreatmentView(treatmentName, hospitals);
+    updateTreatmentView(treatmentNames, hospitals);
   }
 }
 
-function updateTreatmentView(treatmentName, hospitals) {
+function updateTreatmentView(treatmentNames, hospitals) {
+  // Normalize: accept array or single string for backward compatibility
+  const treatments = Array.isArray(treatmentNames) ? treatmentNames : [treatmentNames];
+
   // Sort by distance
   const sortedHospitals = hospitals.map(h => ({
     ...h,
@@ -1430,7 +1430,7 @@ function updateTreatmentView(treatmentName, hospitals) {
   listDiv.innerHTML = sortedHospitals.map((h, index) => {
     const doctors = h.doctorIds
       .map(id => getMember(id))
-      .filter(d => d && d.treatments && d.treatments.includes(treatmentName));
+      .filter(d => d && d.treatments && d.treatments.some(t => treatments.includes(t)));
 
     return `
       <div class="treatment-hospital-item" data-hospital-id="${h.id}"
@@ -1461,10 +1461,11 @@ function updateTreatmentView(treatmentName, hospitals) {
   }).join('');
 
   // Update map
-  initTreatmentMap(sortedHospitals, treatmentName);
+  initTreatmentMap(sortedHospitals, treatments);
 }
 
-function initTreatmentMap(hospitals, treatmentName) {
+function initTreatmentMap(hospitals, treatmentNames) {
+  const treatments = Array.isArray(treatmentNames) ? treatmentNames : [treatmentNames];
   const mapEl = document.getElementById('treatmentsMap');
   if (!mapEl) return;
 
@@ -1506,7 +1507,7 @@ function initTreatmentMap(hospitals, treatmentName) {
 
     const doctors = h.doctorIds
       .map(id => getMember(id))
-      .filter(d => d && d.treatments && d.treatments.includes(treatmentName));
+      .filter(d => d && d.treatments && d.treatments.some(t => treatments.includes(t)));
 
     marker.bindPopup(`
       <div class="map-popup-title">${h.name}</div>
@@ -1579,9 +1580,14 @@ router.add('#hospitals', renderHospitals);
 router.add('#hospital/:id', renderHospitalDetail);
 router.add('#treatments', renderTreatments);
 router.add('#treatment/:id', (params) => {
-  // Redirect to treatments page and select the category
+  // Redirect to treatments page and select the specific treatment item
+  const treatmentName = decodeURIComponent(params.id);
   renderTreatments();
   setTimeout(() => {
-    selectTreatment(decodeURIComponent(params.id));
+    // Find which group this treatment belongs to and switch to it
+    const groupId = getTreatmentGroup(treatmentName);
+    selectTreatmentGroup(groupId);
+    // Then select the specific item
+    setTimeout(() => selectTreatment(treatmentName), 50);
   }, 200);
 });
