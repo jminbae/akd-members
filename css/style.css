@@ -2108,7 +2108,7 @@ body[data-page="treatments"] .page-header {
     grid-template-areas:
       "info"
       "photo";
-    padding: 56px 20px 0;
+    padding: 32px 20px 0;
     gap: 0;
     min-height: auto;
   }
@@ -2135,15 +2135,23 @@ body[data-page="treatments"] .page-header {
 
   .member-hero-photo {
     margin: 0 -20px;
+    height: 440px;
     align-items: flex-end;
     justify-content: center;
     overflow: hidden;
   }
 
   .member-hero-photo img {
-    max-height: 440px;
+    max-height: 580px;
     width: 100%;
     object-position: bottom center;
+  }
+  /* For multi-photo: first img absolute-bottom too, so container height controls */
+  .member-hero-photo.has-multi .hero-photo-img {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   /* Mobile balloons - smaller and tighter */
