@@ -147,7 +147,7 @@ const MEMBERS = [
       '2023 베스트 렉쳐 선정',
       '2024 베스트 기획자 상'
     ],
-    treatments: ['백반증', '백반증수술', '고압산소', '엑시머레이저', '팔라스레이저', '광선치료', '자외선치료', '백반증탈색치료'],
+    treatments: ['백반증', '백반증수술', '엑시머레이저', '팔라스레이저', '광선치료', '자외선치료', '백반증탈색치료', '고압산소'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'https://healhousegn.com/' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/healhouseskin_gangnam' },
