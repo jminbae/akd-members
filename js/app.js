@@ -854,14 +854,28 @@ function renderMembers() {
 function updateMembersView() {
   const mainDoctors = MEMBERS.filter(m => m.specialty === '피부과 전문의');
 
-  // Sort doctors by their hospital's distance from user
-  const sorted = mainDoctors.map(m => {
+  // Sort doctors by distance, but bucket within ±1km and randomize within bucket
+  // (so same-hospital doctors and nearby-distance doctors appear in different order each visit)
+  const BUCKET_KM = 1.0;
+  const withDistance = mainDoctors.map(m => {
     const hospital = getHospital(m.hospitalId);
     const distance = hospital
       ? haversine(userLocation.lat, userLocation.lng, hospital.lat, hospital.lng)
       : Infinity;
-    return { member: m, hospital, distance };
-  }).sort((a, b) => a.distance - b.distance);
+    return { member: m, hospital, distance, _rand: Math.random() };
+  });
+  // Step 1: sort ascending by distance
+  withDistance.sort((a, b) => a.distance - b.distance);
+  // Step 2: assign each entry a bucket index = floor(distance / BUCKET_KM)
+  // so entries within the same 1km bucket are interchangeable
+  withDistance.forEach(e => {
+    e._bucket = Number.isFinite(e.distance) ? Math.floor(e.distance / BUCKET_KM) : Infinity;
+  });
+  // Step 3: re-sort by (bucket asc, random tiebreaker) so within a bucket order is random
+  const sorted = withDistance.sort((a, b) => {
+    if (a._bucket !== b._bucket) return a._bucket - b._bucket;
+    return a._rand - b._rand;
+  });
 
   const grid = document.getElementById('membersGrid');
   if (!grid) return;
