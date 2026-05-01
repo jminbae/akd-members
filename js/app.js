@@ -22,7 +22,7 @@ const HOSPITALS = [
       '토요일': '10:00 - 16:00',
       '일요일·공휴일': '휴무'
     },
-    treatments: ['백반증', '스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅/탄력', '힐로웨이브', '고압산소', '주름', '쥬브젠'],
+    treatments: ['백반증', '고압산소', '스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅', '탄력', '주름', '쥬브젠', '힐로웨이브'],
     doctorIds: ['bae-jungmin', 'jung-hanmi', 'park-saemi'],
     description: '피부과전문의 1:1 맞춤 상담을 제공하며, 커스텀 리프팅, 스킨부스터, 콜라겐부스터 등 다양한 시술을 시행합니다.'
   },
@@ -36,11 +36,11 @@ const HOSPITALS = [
     lng: 127.0855,
     website: 'http://humanpt.co.kr',
     hours: {
-      '평일 (월~금)': '09:30 - 18:30',
-      '토요일': '09:30 - 14:00',
+      '평일 (월~금)': '10:00 - 20:30 (진료마감 20:00)',
+      '토요일': '10:00 - 16:30 (진료마감 16:00)',
       '일요일·공휴일': '휴무'
     },
-    treatments: ['기미/색소/선천성모반', '여드름/흉터', '장비/실리프팅', '켈로이드/내향성발톱 수술', '쁘띠성형(필러, 스킨부스터)', '기미/색소', '여드름/모공/흉터', '탈모메조테라피/메조보톡스', '비만/다이어트/체형교정시술', '여성제모'],
+    treatments: ['기미/색소', '선천성모반', '여드름', '흉터', '실리프팅', '켈로이드', '내향성발톱', '비만', '다이어트', '체형교정', '여성제모', '쁘띠성형', '필러', '스킨부스터', '모공', '탈모메조테라피', '메조보톡스'],
     doctorIds: ['gye-jiwon', 'nam-chanhee', 'park-mingi'],
     description: '평택 지역 피부과 전문의 3인 진료 체제로, 정확한 진단과 맞춤 치료를 제공합니다.'
   },
@@ -77,7 +77,7 @@ const HOSPITALS = [
       '토요일': '10:00 - 16:00',
       '일요일·공휴일': '휴무'
     },
-    treatments: ['리프팅/탄력', '쥬베룩', '탈모/모발', '모공/흉터'],
+    treatments: ['리프팅', '탄력', '쥬베룩', '탈모', '모공', '흉터'],
     doctorIds: ['kim-hongseok'],
     description: '피부과 전문의 김홍석 원장이 직접 진료하며, 여드름, 기미, 항노화 분야 전문입니다.'
   },
@@ -96,7 +96,7 @@ const HOSPITALS = [
       '토요일': '09:30 - 14:00',
       '점심시간': '13:00 - 14:00'
     },
-    treatments: ['리프팅/탄력', '써마지', '울쎄라', '티타늄', '모공/흉터', '레이저토닝', '필러', '여드름', '기미/색소', '탈모/모발'],
+    treatments: ['리프팅', '탄력', '써마지', '울쎄라', '티타늄', '모공', '흉터', '레이저토닝', '필러', '여드름', '기미/색소', '탈모'],
     doctorIds: ['lee-haeun', 'kim-namwoo'],
     description: '피부과 전문의 이하은 원장과 마취과 전문의 김남우 원장이 함께 진료합니다.'
   }
@@ -194,7 +194,7 @@ const MEMBERS = [
       '2022 베스트렉처 수상',
       '대한피부과의사회 홍보이사'
     ],
-    treatments: ['리프팅/탄력', '쥬베룩', '탈모/모발', '모공/흉터'],
+    treatments: ['리프팅', '탄력', '쥬베룩', '탈모', '모공', '흉터'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'https://vos.co.kr' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/vos_skinclinic/' },
@@ -234,7 +234,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['리프팅/탄력', '써마지', '울쎄라', '티타늄', '모공/흉터', '레이저토닝', '필러', '여드름', '기미/색소'],
+    treatments: ['리프팅', '탄력', '써마지', '울쎄라', '티타늄', '모공', '흉터', '레이저토닝', '필러', '여드름', '기미/색소'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'http://foretderma.com' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/foretskin_official' },
@@ -281,7 +281,7 @@ const MEMBERS = [
       '2023 베스트 렉쳐 선정',
       '2024 베스트 기획자 상'
     ],
-    treatments: ['기미/색소/선천성모반', '여드름/흉터', '장비/실리프팅', '켈로이드/내향성발톱 수술'],
+    treatments: ['기미/색소', '선천성모반', '여드름', '흉터', '실리프팅', '켈로이드', '내향성발톱'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'http://humanpt.co.kr' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/pt_human/' },
@@ -351,7 +351,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅/탄력', '고압산소', '주름', '쥬브젠'],
+    treatments: ['스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅', '탄력', '고압산소', '주름', '쥬브젠'],
     links: [
       { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/jhanmi__' },
       { type: 'youtube', label: '유튜브', url: 'https://youtube.com/@pibutenten' },
@@ -407,7 +407,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['비만/다이어트/체형교정시술', '여성제모', '기미/색소', '쁘띠성형(필러, 스킨부스터)', '여드름/모공/흉터']
+    treatments: ['비만', '다이어트', '체형교정', '여성제모', '기미/색소', '쁘띠성형', '필러', '스킨부스터', '여드름', '모공', '흉터']
   },
   {
     id: 'park-mingi',
@@ -429,7 +429,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['쁘띠성형(필러, 스킨부스터)', '기미/색소', '여드름/모공/흉터', '탈모메조테라피/메조보톡스']
+    treatments: ['쁘띠성형', '필러', '스킨부스터', '기미/색소', '여드름', '모공', '흉터', '탈모메조테라피', '메조보톡스']
   },
   {
     id: 'lee-seolhee',
@@ -481,7 +481,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['여드름', '기미/색소', '리프팅/탄력', '레이저토닝', '탈모/모발']
+    treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅']
   },
   {
     id: 'kim-namwoo',
@@ -499,51 +499,66 @@ const MEMBERS = [
     memberships: [],
     lectures: [],
     awards: [],
-    treatments: []
+    treatments: ['여드름', '기미/색소', '리프팅', '탄력', '레이저토닝', '탈모']
   }
 ];
 
-const TREATMENT_CATEGORIES = [
-  { id: 'acne', name: '여드름', icon: 'fa-face-frown-open', color: '#FFEAA7' },
-  { id: 'pigment', name: '기미/색소', icon: 'fa-sun', color: '#FFD5D5' },
-  { id: 'vitiligo', name: '백반증', icon: 'fa-hand-dots', color: '#BBDEFB' },
-  { id: 'psoriasis', name: '건선', icon: 'fa-shield-halved', color: '#C8E6C9' },
-  { id: 'atopy', name: '아토피', icon: 'fa-allergies', color: '#E1BEE7' },
-  { id: 'lifting', name: '리프팅/탄력', icon: 'fa-arrow-up', color: '#FFE0B2' },
-  { id: 'laser', name: '레이저토닝', icon: 'fa-bolt', color: '#B2DFDB' },
-  { id: 'warts', name: '사마귀/무좀', icon: 'fa-virus', color: '#F8BBD0' },
-  { id: 'pores', name: '모공/흉터', icon: 'fa-circle-dot', color: '#D1C4E9' },
-  { id: 'hair', name: '탈모/모발', icon: 'fa-head-side', color: '#FFCCBC' },
-  { id: 'cancer', name: '피부암/점', icon: 'fa-microscope', color: '#B3E5FC' },
-  { id: 'stemcell', name: '줄기세포', icon: 'fa-dna', color: '#FFCDD2' },
-  { id: 'mct', name: 'MCT', icon: 'fa-syringe', color: '#F0F4C3' },
-  { id: 'prp', name: 'PRP', icon: 'fa-droplet', color: '#FFE0B2' },
-  { id: 'oxygen', name: '고압산소', icon: 'fa-wind', color: '#B2EBF2' },
-  { id: 'filler', name: '필러', icon: 'fa-circle-nodes', color: '#FFCCBC' },
-  { id: 'thread', name: '실리프팅', icon: 'fa-arrows-up-to-line', color: '#D7CCC8' },
-  { id: 'sculptra', name: '스컬트라', icon: 'fa-vial', color: '#FCE4EC' },
-  { id: 'thermage', name: '써마지', icon: 'fa-fire', color: '#FFCCBC' },
-  { id: 'ulthera', name: '울쎄라', icon: 'fa-wave-square', color: '#C5CAE9' },
-  { id: 'oligio', name: '올타이트', icon: 'fa-bullseye', color: '#FFF9C4' },
-  { id: 'titanium', name: '티타늄', icon: 'fa-gem', color: '#CFD8DC' },
-  { id: 'hilowave', name: '힐로웨이브', icon: 'fa-water', color: '#B3E5FC' },
-  { id: 'juvelook', name: '쥬베룩', icon: 'fa-flask', color: '#F8BBD0' },
-  { id: 'pigment-nevus', name: '기미/색소/선천성모반', icon: 'fa-circle-half-stroke', color: '#FFD5D5' },
-  { id: 'acne-scar', name: '여드름/흉터', icon: 'fa-bandage', color: '#FFEAA7' },
-  { id: 'device-thread', name: '장비/실리프팅', icon: 'fa-wand-magic-sparkles', color: '#D7CCC8' },
-  { id: 'keloid-toenail', name: '켈로이드/내향성발톱 수술', icon: 'fa-scissors', color: '#FFCCBC' },
-  { id: 'petit', name: '쁘띠성형(필러, 스킨부스터)', icon: 'fa-syringe', color: '#FCE4EC' },
-  { id: 'pore-acne-scar', name: '여드름/모공/흉터', icon: 'fa-spray-can', color: '#FFE0B2' },
-  { id: 'hair-mesotherapy', name: '탈모메조테라피/메조보톡스', icon: 'fa-prescription-bottle-medical', color: '#C5CAE9' },
-  { id: 'diet', name: '비만/다이어트/체형교정시술', icon: 'fa-weight-scale', color: '#C8E6C9' },
-  { id: 'female-hair-removal', name: '여성제모', icon: 'fa-feather', color: '#F8BBD0' },
-  { id: 'wrinkle', name: '주름', icon: 'fa-chart-line', color: '#E1BEE7' },
-  { id: 'jubzen', name: '쥬브젠', icon: 'fa-vials', color: '#B2DFDB' }
+// 카테고리 그룹 + 하위 항목 트리 구조
+// 사용자가 보는 모든 진료분야는 items의 평면 리스트
+const TREATMENT_GROUPS = [
+  {
+    id: 'medical',
+    name: '피부질환',
+    icon: 'fa-stethoscope',
+    items: ['여드름', '모공', '백반증', '건선', '아토피', '사마귀', '무좀', '탈모', '피부암', '켈로이드', '내향성발톱', '선천성모반', '주름', '탈모메조테라피']
+  },
+  {
+    id: 'laser',
+    name: '레이저',
+    icon: 'fa-bolt',
+    items: ['레이저토닝', '기미/색소', '흉터', '점', '여성제모']
+  },
+  {
+    id: 'lifting',
+    name: '리프팅',
+    icon: 'fa-arrow-up-from-bracket',
+    items: ['리프팅', '탄력', '써마지', '울쎄라', '올타이트', '티타늄']
+  },
+  {
+    id: 'aesthetic',
+    name: '피부시술',
+    icon: 'fa-syringe',
+    items: ['쁘띠성형', '필러', '스킨부스터', '스컬트라', '실리프팅', '힐로웨이브', '쥬베룩', '쥬브젠', '줄기세포', 'MCT', 'PRP', '메조보톡스']
+  },
+  {
+    id: 'body',
+    name: '바디',
+    icon: 'fa-person',
+    items: ['비만', '다이어트', '체형교정']
+  },
+  {
+    id: 'other',
+    name: '기타',
+    icon: 'fa-ellipsis',
+    items: ['고압산소']
+  }
 ];
+
+// 기존 호환을 위한 평면 리스트 (이름만 사용하던 코드 지원)
+const TREATMENT_CATEGORIES = TREATMENT_GROUPS.flatMap(g =>
+  g.items.map(name => ({ id: name, name, icon: g.icon, group: g.id }))
+);
 
 // ==========================================
 // UTILITY FUNCTIONS
 // ==========================================
+
+function getTreatmentGroup(treatmentName) {
+  for (const g of TREATMENT_GROUPS) {
+    if (g.items.includes(treatmentName)) return g.id;
+  }
+  return 'other';
+}
 
 function getMember(id) {
   return MEMBERS.find(m => m.id === id);
@@ -894,10 +909,6 @@ function renderMemberDetail(params) {
     <div class="member-detail-v2 fade-in">
       <!-- Hero Section -->
       <section class="member-hero-v2">
-        <button class="back-btn-v2" onclick="history.back()">
-          <i class="fas fa-arrow-left"></i> 뒤로가기
-        </button>
-
         <div class="member-hero-inner">
           <div class="member-hero-info-top">
             ${hospital ? `
@@ -1009,7 +1020,7 @@ function renderMemberDetail(params) {
                 <h3 class="info-card-title"><i class="fas fa-stethoscope"></i> 주 진료 분야</h3>
                 <div class="treatment-tags">
                   ${member.treatments.map((t, i) => `
-                    <a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag color-${i % 12}">${t}</a>
+                    <a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag group-${getTreatmentGroup(t)}">${t}</a>
                   `).join('')}
                 </div>
               </div>
@@ -1216,10 +1227,6 @@ function renderHospitalDetail(params) {
         <p>${hospital.description}</p>
       </div>
 
-      <button class="back-btn" onclick="history.back()">
-        <i class="fas fa-arrow-left"></i> 뒤로가기
-      </button>
-
       <div class="hospital-info-grid">
         <div class="info-card">
           <h3 class="info-card-title"><i class="fas fa-info-circle"></i> 병원 정보</h3>
@@ -1236,14 +1243,6 @@ function renderHospitalDetail(params) {
               <li><strong>${day}:</strong> ${time}</li>
             `).join('')}
           </ul>
-        </div>
-        <div class="info-card full-width">
-          <h3 class="info-card-title"><i class="fas fa-stethoscope"></i> 주 진료 분야</h3>
-          <div class="treatment-tags">
-            ${hospital.treatments.map((t, i) => `
-              <a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag color-${i % 12}">${t}</a>
-            `).join('')}
-          </div>
         </div>
         <div class="hospital-map-container" id="hospitalMap"></div>
       </div>
@@ -1262,6 +1261,25 @@ function renderHospitalDetail(params) {
             </a>
           `).join('')}
         </div>
+      </div>
+
+      <div class="hospital-treatments-section">
+        <h2><i class="fas fa-stethoscope"></i> 주 진료 분야</h2>
+        <p class="hospital-treatments-desc">소속 원장님들이 진료하는 분야입니다</p>
+        ${TREATMENT_GROUPS.map(g => {
+          const groupTreatments = hospital.treatments.filter(t => g.items.includes(t));
+          if (groupTreatments.length === 0) return '';
+          return `
+            <div class="hospital-treatments-group">
+              <h4 class="hospital-treatments-group-name"><i class="fas ${g.icon}"></i> ${g.name}</h4>
+              <div class="treatment-tags">
+                ${groupTreatments.map(t => `
+                  <a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag group-${g.id}">${t}</a>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }).join('')}
       </div>
     </div>
   `;
@@ -1291,14 +1309,23 @@ function initHospitalMap(hospital) {
 function renderTreatments() {
   setPageTitle('피부과의사 찾기, 대한피부과의사회');
 
-  // Sort categories by doctor count (desc), then 가나다 (Korean alphabetical)
-  const sortedCategories = TREATMENT_CATEGORIES.map(cat => ({
-    ...cat,
-    count: MEMBERS.filter(m => m.treatments && m.treatments.includes(cat.name)).length
-  })).sort((a, b) => {
-    if (b.count !== a.count) return b.count - a.count;
-    return a.name.localeCompare(b.name, 'ko');
+  // Compute counts for each item, sorted by count + 가나다 within group
+  const sortedGroups = TREATMENT_GROUPS.map(g => {
+    const items = g.items.map(name => ({
+      name,
+      group: g.id,
+      icon: g.icon,
+      count: MEMBERS.filter(m => m.treatments && m.treatments.includes(name)).length
+    })).sort((a, b) => {
+      if (b.count !== a.count) return b.count - a.count;
+      return a.name.localeCompare(b.name, 'ko');
+    });
+    return { ...g, items };
   });
+
+  // Find first group with at least one doctor and pick first item
+  const firstGroup = sortedGroups.find(g => g.items.some(i => i.count > 0)) || sortedGroups[0];
+  const firstItem = (firstGroup.items.find(i => i.count > 0) || firstGroup.items[0]).name;
 
   app.innerHTML = `
     <div class="page-header">
@@ -1306,15 +1333,26 @@ function renderTreatments() {
       <p>주 진료 분야를 선택하면 해당 분야를 진료하는 피부과와 의료진을 확인할 수 있습니다</p>
     </div>
     <div class="treatments-page">
+      <div class="treatment-group-tabs" id="treatmentGroupTabs">
+        ${sortedGroups.map((g, i) => `
+          <button class="treatment-group-tab ${g.id === firstGroup.id ? 'active' : ''}"
+                  data-group="${g.id}"
+                  onclick="selectTreatmentGroup('${g.id}')">
+            <i class="fas ${g.icon}"></i> ${g.name}
+          </button>
+        `).join('')}
+      </div>
       <div class="treatments-categories-wrap">
         <div class="treatments-categories" id="treatmentCategories">
-          ${sortedCategories.map((cat, i) => `
-            <button class="treatment-category-btn ${i === 0 ? 'active' : ''}"
-                    data-treatment="${cat.name}"
-                    onclick="selectTreatment('${cat.name}')">
-              <i class="fas ${cat.icon}"></i>${cat.name}
+          ${sortedGroups.map(g => g.items.map(item => `
+            <button class="treatment-category-btn ${item.name === firstItem ? 'active' : ''} group-${item.group}"
+                    data-treatment="${item.name}"
+                    data-group="${item.group}"
+                    style="${item.group === firstGroup.id ? '' : 'display:none'}"
+                    onclick="selectTreatment('${item.name}')">
+              ${item.name}
             </button>
-          `).join('')}
+          `).join('')).join('')}
         </div>
       </div>
       <div class="treatments-content">
@@ -1324,10 +1362,27 @@ function renderTreatments() {
     </div>
   `;
 
-  // Initialize with first category (most popular)
+  // Initialize with first item (most popular in first group)
   setTimeout(() => {
-    selectTreatment(sortedCategories[0].name);
+    selectTreatment(firstItem);
   }, 100);
+}
+
+function selectTreatmentGroup(groupId) {
+  // Update tab active state
+  document.querySelectorAll('.treatment-group-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.group === groupId);
+  });
+  // Show items of this group
+  document.querySelectorAll('.treatment-category-btn').forEach(btn => {
+    btn.style.display = btn.dataset.group === groupId ? '' : 'none';
+  });
+  // Auto-select first visible item with active count
+  const visibleBtns = Array.from(document.querySelectorAll('.treatment-category-btn'))
+    .filter(b => b.dataset.group === groupId);
+  if (visibleBtns.length > 0) {
+    selectTreatment(visibleBtns[0].dataset.treatment);
+  }
 }
 
 

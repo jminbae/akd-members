@@ -1075,40 +1075,37 @@ ul, ol {
   font-size: 16px;
 }
 
-/* Treatment Tags */
+/* Treatment Tags - subtle group-colored chips */
 .treatment-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 5px;
 }
 
 .treatment-tag {
-  padding: 6px 16px;
-  border-radius: 50px;
-  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition);
+  background: #F2F4F6;
+  color: #4A5560;
+  border: 1px solid #E3E7EB;
+  text-decoration: none;
+  line-height: 1.3;
 }
 
 .treatment-tag:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: #E8ECF0;
 }
 
-/* Treatment color variations */
-.treatment-tag.color-0 { background: #FFEAA7; color: #6C5B00; }
-.treatment-tag.color-1 { background: #DFE6E9; color: #2D3436; }
-.treatment-tag.color-2 { background: #FFD5D5; color: #8B0000; }
-.treatment-tag.color-3 { background: #C8E6C9; color: #1B5E20; }
-.treatment-tag.color-4 { background: #BBDEFB; color: #0D47A1; }
-.treatment-tag.color-5 { background: #E1BEE7; color: #4A148C; }
-.treatment-tag.color-6 { background: #FFE0B2; color: #E65100; }
-.treatment-tag.color-7 { background: #B2DFDB; color: #004D40; }
-.treatment-tag.color-8 { background: #F8BBD0; color: #880E4F; }
-.treatment-tag.color-9 { background: #D1C4E9; color: #311B92; }
-.treatment-tag.color-10 { background: #FFCCBC; color: #BF360C; }
-.treatment-tag.color-11 { background: #B3E5FC; color: #01579B; }
+.treatment-tag.group-medical { background: #FFF3F4; color: #B52840; border-color: #FAD7DA; }
+.treatment-tag.group-laser { background: #FFF8EC; color: #B5740F; border-color: #F8E5BD; }
+.treatment-tag.group-lifting { background: #F1F5FF; color: #2E5BB7; border-color: #D6E2F8; }
+.treatment-tag.group-aesthetic { background: #F4F0FA; color: #6A4DAE; border-color: #DFD3F1; }
+.treatment-tag.group-body { background: #EEF7EF; color: #2E7D4F; border-color: #C8E0CD; }
+.treatment-tag.group-other { background: #F2F4F6; color: #4A5560; border-color: #E3E7EB; }
 
 /* Team Section */
 .team-section {
@@ -1512,9 +1509,95 @@ ul, ol {
   flex-shrink: 0;
 }
 
+/* Treatment Group Tabs */
+.treatment-group-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 24px 0 4px;
+  justify-content: center;
+}
+
+.treatment-group-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: var(--transition);
+}
+
+.treatment-group-tab:hover {
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+.treatment-group-tab.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.treatment-group-tab i {
+  font-size: 12px;
+}
+
 .treatments-categories-wrap {
   position: relative;
-  padding: 24px 0 16px;
+  padding: 12px 0 16px;
+}
+
+/* Hospital Treatments Section */
+.hospital-treatments-section {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.hospital-treatments-section h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hospital-treatments-section h2 i {
+  color: var(--secondary);
+}
+
+.hospital-treatments-desc {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+.hospital-treatments-group {
+  margin-bottom: 16px;
+}
+
+.hospital-treatments-group-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hospital-treatments-group-name i {
+  font-size: 11px;
+  color: var(--text-lighter);
 }
 
 .treatments-categories {
