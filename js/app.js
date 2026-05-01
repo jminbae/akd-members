@@ -22,7 +22,7 @@ const HOSPITALS = [
       '토요일': '10:00 - 16:00',
       '일요일·공휴일': '휴무'
     },
-    treatments: ['백반증', '고압산소', '스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅', '탄력', '주름', '쥬브젠', '힐로웨이브'],
+    treatments: ['백반증', '백반증수술', '고압산소', '스컬트라', '써마지', '울쎄라', '올타이트', '티타늄', '리프팅', '탄력', '주름', '쥬브젠', '힐로웨이브'],
     doctorIds: ['bae-jungmin', 'jung-hanmi', 'park-saemi'],
     description: '피부과전문의 1:1 맞춤 상담을 제공하며, 커스텀 리프팅, 스킨부스터, 콜라겐부스터 등 다양한 시술을 시행합니다.'
   },
@@ -96,9 +96,9 @@ const HOSPITALS = [
       '토요일': '09:30 - 14:00',
       '점심시간': '13:00 - 14:00'
     },
-    treatments: ['리프팅', '탄력', '써마지', '울쎄라', '티타늄', '모공', '흉터', '레이저토닝', '필러', '여드름', '기미/색소', '탈모'],
-    doctorIds: ['lee-haeun', 'kim-namwoo'],
-    description: '피부과 전문의 이하은 원장과 마취과 전문의 김남우 원장이 함께 진료합니다.'
+    treatments: ['리프팅', '탄력', '써마지', '울쎄라', '티타늄', '소프웨이브', '모공', '흉터', '레이저토닝', '필러', '실리프팅', '스킨부스터', '리바이브', '여드름', '기미/색소', '문신제거', '스킨보톡스', '쥬베룩', '힐로웨이브'],
+    doctorIds: ['lee-haeun'],
+    description: '피부과 전문의 이하은 원장이 진료합니다.'
   }
 ];
 
@@ -147,10 +147,11 @@ const MEMBERS = [
       '2023 베스트 렉쳐 선정',
       '2024 베스트 기획자 상'
     ],
-    treatments: ['백반증', '고압산소'],
+    treatments: ['백반증', '백반증수술', '고압산소'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'https://www.healhouseskin.com' },
-      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/healhouseskin/' }
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/healhouseskin/' },
+      { type: 'website', label: '힐링백반증', url: 'https://healingvitiligo.org/' }
     ]
   },
   {
@@ -236,7 +237,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['리프팅', '탄력', '써마지', '울쎄라', '티타늄', '모공', '흉터', '레이저토닝', '필러', '여드름', '기미/색소'],
+    treatments: ['리프팅', '탄력', '써마지', '울쎄라', '티타늄', '소프웨이브', '모공', '흉터', '레이저토닝', '필러', '실리프팅', '스킨부스터', '리바이브', '여드름', '기미/색소', '문신제거', '스킨보톡스', '쥬베룩', '힐로웨이브'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'http://foretderma.com' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/foretskin_official' },
@@ -485,24 +486,6 @@ const MEMBERS = [
     lectures: [],
     awards: [],
     treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅']
-  },
-  {
-    id: 'kim-namwoo',
-    name: '김남우',
-    photo: '회원 프로필 사진/김남우.jpg',
-    hospitalId: 'foret',
-    role: '원장',
-    specialty: '마취과 전문의',
-    quote: '',
-    positions: [],
-    career: [
-      '마취과 전문의',
-      '포레피부과의원 원장'
-    ],
-    memberships: [],
-    lectures: [],
-    awards: [],
-    treatments: ['여드름', '기미/색소', '리프팅', '탄력', '레이저토닝', '탈모']
   }
 ];
 
@@ -513,13 +496,13 @@ const TREATMENT_GROUPS = [
     id: 'medical',
     name: '피부질환',
     icon: 'fa-stethoscope',
-    items: ['여드름', '모공', '백반증', '건선', '아토피', '사마귀', '무좀', '탈모', '피부암', '켈로이드', '내향성발톱', '선천성모반', '주름', '탈모메조테라피']
+    items: ['여드름', '모공', '백반증', '백반증수술', '건선', '아토피', '사마귀', '무좀', '탈모', '피부암', '켈로이드', '내향성발톱', '선천성모반', '주름', '탈모메조테라피']
   },
   {
     id: 'laser',
     name: '레이저',
     icon: 'fa-bolt',
-    items: ['레이저토닝', '기미/색소', '흉터', '점', '여성제모']
+    items: ['레이저토닝', '기미/색소', '흉터', '점', '여성제모', '문신제거']
   },
   {
     id: 'lifting',
@@ -531,7 +514,7 @@ const TREATMENT_GROUPS = [
     id: 'aesthetic',
     name: '피부시술',
     icon: 'fa-syringe',
-    items: ['쁘띠성형', '필러', '스킨부스터', '스컬트라', '실리프팅', '힐로웨이브', '쥬베룩', '쥬브젠', '줄기세포', 'MCT', 'PRP', '메조보톡스', '항노화', '피부결', '레디어스']
+    items: ['쁘띠성형', '필러', '스킨부스터', '스컬트라', '실리프팅', '힐로웨이브', '쥬베룩', '쥬브젠', '줄기세포', 'MCT', 'PRP', '메조보톡스', '항노화', '피부결', '레디어스', '리바이브', '스킨보톡스']
   },
   {
     id: 'body',

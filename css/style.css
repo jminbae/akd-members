@@ -1825,7 +1825,8 @@ body[data-page="treatments"] .page-header {
 .footer-content {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  text-align: center;
 }
 
 .footer-logo {
