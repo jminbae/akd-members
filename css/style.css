@@ -904,19 +904,19 @@ body[data-page="treatments"] .page-header {
   filter: drop-shadow(0 16px 28px rgba(0,0,0,0.28)) drop-shadow(0 4px 8px rgba(0,0,0,0.15));
 }
 
-/* Cross-fade hero photos (when 2 photos for one doctor) */
+/* Cross-fade hero photos (only when 2 photos for one doctor) */
 .hero-photo-img {
-  opacity: 0;
   transition: opacity 1.4s ease-in-out;
-}
-.hero-photo-img.active {
-  opacity: 1;
 }
 .member-hero-photo:has(.hero-photo-img:nth-child(2)) .hero-photo-img {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
+  opacity: 0;
+}
+.member-hero-photo:has(.hero-photo-img:nth-child(2)) .hero-photo-img.active {
+  opacity: 1;
 }
 
 .member-detail-body {
