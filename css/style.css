@@ -908,15 +908,19 @@ body[data-page="treatments"] .page-header {
 .hero-photo-img {
   transition: opacity 1.4s ease-in-out;
 }
+/* First image keeps natural layout (defines container height);
+   subsequent images stack on top via absolute positioning */
 .member-hero-photo.has-multi .hero-photo-img {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
   opacity: 0;
 }
 .member-hero-photo.has-multi .hero-photo-img.active {
   opacity: 1;
+}
+.member-hero-photo.has-multi .hero-photo-img:not(:first-child) {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .member-detail-body {
