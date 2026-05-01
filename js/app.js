@@ -568,7 +568,15 @@ function getHospitalDoctors(hospitalId) {
 }
 
 function getHospitalsByTreatment(treatmentName) {
-  return HOSPITALS.filter(h => h.treatments.includes(treatmentName));
+  // 병원 자체 treatments 또는 소속 의사 중 한 명이라도 해당 진료를 하면 포함
+  // (의사가 새 진료를 추가하면 자동으로 병원도 매칭되도록)
+  return HOSPITALS.filter(h => {
+    if (h.treatments && h.treatments.includes(treatmentName)) return true;
+    return (h.doctorIds || []).some(id => {
+      const m = getMember(id);
+      return m && m.treatments && m.treatments.includes(treatmentName);
+    });
+  });
 }
 
 function getMembersByTreatment(treatmentName) {
@@ -854,9 +862,9 @@ function renderMembers() {
 function updateMembersView() {
   const mainDoctors = MEMBERS.filter(m => m.specialty === '피부과 전문의');
 
-  // Sort doctors by distance, but bucket within ±1km and randomize within bucket
+  // Sort doctors by distance, but bucket within ±2km and randomize within bucket
   // (so same-hospital doctors and nearby-distance doctors appear in different order each visit)
-  const BUCKET_KM = 1.0;
+  const BUCKET_KM = 2.0;
   const withDistance = mainDoctors.map(m => {
     const hospital = getHospital(m.hospitalId);
     const distance = hospital
@@ -883,8 +891,10 @@ function updateMembersView() {
     <a href="#member/${m.id}" class="member-card">
       <div class="member-card-photo-wrap">
         <img src="${photoUrl(m.photo)}" class="member-card-photo" alt="${m.name}"
+             loading="lazy" decoding="async"
              onerror="this.style.display='none'">
-        <img src="images/badge.jpg" alt="피부과 전문의" class="member-card-badge-img">
+        <img src="images/badge.jpg" alt="피부과 전문의" class="member-card-badge-img"
+             loading="lazy" decoding="async">
         <span class="sr-only">${m.specialty}</span>
       </div>
       <div class="member-card-body">
@@ -924,6 +934,22 @@ function startHeroPhotoCycle() {
     idx = (idx + 1) % imgs.length;
     imgs[idx].classList.add('active');
   }, 3000);
+}
+
+let _balloonReposTimer = null;
+function startBalloonReposition() {
+  if (_balloonReposTimer) { clearInterval(_balloonReposTimer); _balloonReposTimer = null; }
+  const balloons = Array.from(document.querySelectorAll('.hero-sns-balloon'));
+  if (balloons.length < 2) return;
+  _balloonReposTimer = setInterval(() => {
+    const positions = generateBalloonPositions(balloons.length);
+    balloons.forEach((b, i) => {
+      const p = positions[i];
+      if (!p) return;
+      b.style.top = p.top;
+      b.style.left = p.left;
+    });
+  }, 5000);
 }
 
 function generateBalloonPositions(count) {
@@ -1132,6 +1158,8 @@ function renderMemberDetail(params) {
 
   // Start cross-fade for hero photos (if 2 exist)
   setTimeout(startHeroPhotoCycle, 100);
+  // Start periodic random repositioning of SNS balloons (independent of photo cycle)
+  setTimeout(startBalloonReposition, 100);
 }
 
 let hospitalsMap = null;
