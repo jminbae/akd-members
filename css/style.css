@@ -534,14 +534,14 @@ body[data-page="treatments"] .page-header {
 }
 
 .member-card-body h3 {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   margin-bottom: 4px;
   color: var(--text);
 }
 
 .member-card-body .member-card-role {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-light);
   margin-bottom: 12px;
 }
@@ -550,7 +550,7 @@ body[data-page="treatments"] .page-header {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--primary);
   font-weight: 500;
 }
@@ -573,8 +573,8 @@ body[data-page="treatments"] .page-header {
 }
 
 .member-card-tag {
-  font-size: 11px;
-  padding: 3px 10px;
+  font-size: 12px;
+  padding: 4px 11px;
   border-radius: 50px;
   background: var(--bg);
   color: var(--text-light);
@@ -999,11 +999,11 @@ body[data-page="treatments"] .page-header {
 }
 
 .info-card-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--primary);
-  margin-bottom: 16px;
-  padding-bottom: 10px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
   border-bottom: 2px solid var(--bg);
   display: flex;
   align-items: center;
@@ -1011,20 +1011,20 @@ body[data-page="treatments"] .page-header {
 }
 
 .info-card-title i {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--secondary);
 }
 
 .info-card ul {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .info-card li {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.65;
   padding-left: 14px;
   position: relative;
 }
@@ -1098,9 +1098,9 @@ body[data-page="treatments"] .page-header {
 }
 
 .treatment-tag {
-  padding: 4px 10px;
+  padding: 6px 13px;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 13.5px;
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition);
@@ -1572,9 +1572,7 @@ body[data-page="treatments"] .page-header {
 
 /* Hospital Treatments Section */
 .hospital-treatments-section {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 32px 24px;
+  padding: 32px 0;
 }
 
 .hospital-treatments-section h2 {
