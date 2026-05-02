@@ -832,25 +832,37 @@ function renderHome() {
     clearAllPending();
     const searchBox = document.querySelector('.search-box');
     if (searchBox) {
-      const targetTop = 60; // navbar 56 + 4 px gap
+      const targetTop = 80; // navbar 56 + 24 px gap (slight breathing room)
       const rect = searchBox.getBoundingClientRect();
-      const shift = Math.min(0, -(rect.top - targetTop)); // negative px (move up)
+      const shift = Math.min(0, -(rect.top - targetTop));
       homePage.style.setProperty('--search-shift', shift + 'px');
     }
     homePage.classList.add('search-focused');
   });
+  // On blur: keep the slid-up state if the user typed something (so they
+  // can tap a suggestion). Only revert (smoothly slide back) when the input
+  // is empty.
+  const tryRevertIfEmpty = () => {
+    if (document.activeElement === searchInput) return;
+    if (searchInput.value.trim()) return; // keep state while query is present
+    homePage?.classList.remove('search-focused');
+    removeClassTimer = setTimeout(() => {
+      homePage?.style.removeProperty('--search-shift');
+      removeClassTimer = null;
+    }, 400);
+  };
   searchInput.addEventListener('blur', () => {
     blurDelayTimer = setTimeout(() => {
-      if (document.activeElement !== searchInput) {
-        homePage?.classList.remove('search-focused');
-        // Clear the CSS var after the transition has played
-        removeClassTimer = setTimeout(() => {
-          homePage?.style.removeProperty('--search-shift');
-          removeClassTimer = null;
-        }, 400);
-      }
+      tryRevertIfEmpty();
       blurDelayTimer = null;
     }, 100);
+  });
+  // If the user clears the field while it's blurred, revert immediately.
+  searchInput.addEventListener('input', () => {
+    if (window.innerWidth > 768) return;
+    if (!searchInput.value.trim() && document.activeElement !== searchInput) {
+      tryRevertIfEmpty();
+    }
   });
 }
 
@@ -901,11 +913,53 @@ function highlightMatch(label, query) {
   if (!query) return label;
   const lcLabel = label.toLowerCase();
   const lcQuery = query.toLowerCase();
-  const idx = lcLabel.indexOf(lcQuery);
-  if (idx === -1) return label;
+  let idx = lcLabel.indexOf(lcQuery);
+  let matchLen = query.length;
+  if (idx === -1) {
+    // Fuzzy: try strip-final form
+    const sfLabel = stripKoreanFinal(lcLabel);
+    const sfQuery = stripKoreanFinal(lcQuery);
+    idx = sfLabel.indexOf(sfQuery);
+    if (idx === -1) return label;
+    matchLen = sfQuery.length;
+  }
   return label.slice(0, idx) +
-    '<mark class="search-suggest-mark">' + label.slice(idx, idx + query.length) + '</mark>' +
-    label.slice(idx + query.length);
+    '<mark class="search-suggest-mark">' + label.slice(idx, idx + matchLen) + '</mark>' +
+    label.slice(idx + matchLen);
+}
+
+// Strip the final consonant (jongseong) from each Korean syllable so queries
+// like "배" also match "백반증" (백 → 배), "신" → "신지연" / "심" / "싱" etc.
+function stripKoreanFinal(s) {
+  let out = '';
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i);
+    if (c >= 0xAC00 && c <= 0xD7A3) {
+      const offset = c - 0xAC00;
+      out += String.fromCharCode(0xAC00 + (offset - (offset % 28)));
+    } else {
+      out += s[i];
+    }
+  }
+  return out;
+}
+
+// Match priority score (lower is higher priority):
+//   0 = label starts with exact query
+//   1 = label starts with strip-final-equivalent of query
+//   2 = label contains exact query
+//   3 = label contains strip-final-equivalent of query
+//  -1 = no match
+function fuzzyMatchScore(label, query) {
+  const lcLabel = label.toLowerCase();
+  const lcQuery = query.toLowerCase();
+  if (lcLabel.startsWith(lcQuery)) return 0;
+  const sfLabel = stripKoreanFinal(lcLabel);
+  const sfQuery = stripKoreanFinal(lcQuery);
+  if (sfLabel.startsWith(sfQuery)) return 1;
+  if (lcLabel.includes(lcQuery)) return 2;
+  if (sfLabel.includes(sfQuery)) return 3;
+  return -1;
 }
 
 function handleSearch(e) {
@@ -917,15 +971,12 @@ function handleSearch(e) {
     return;
   }
 
-  const lcQuery = query.toLowerCase();
-
-  // Build a unified suggestion list (matched ITEM names, not cards)
-  // Each suggestion: { type, label, sub, href, sortKey }
   const suggestions = [];
 
-  // Doctors — match by name
+  // Doctors — fuzzy match on name
   MEMBERS.forEach(m => {
-    if (m.name.toLowerCase().includes(lcQuery)) {
+    const score = fuzzyMatchScore(m.name, query);
+    if (score >= 0) {
       const hospital = getHospital(m.hospitalId);
       suggestions.push({
         type: 'member',
@@ -934,16 +985,18 @@ function handleSearch(e) {
         label: m.name,
         sub: hospital ? `${hospital.shortName} ${m.role}` : (m.role || ''),
         href: `#member/${m.id}`,
-        startsWith: m.name.toLowerCase().startsWith(lcQuery)
+        score
       });
     }
   });
 
-  // Hospitals — match by name / shortName / address
+  // Hospitals — fuzzy match on name / shortName, fallback to address (no fuzzy)
   HOSPITALS.forEach(h => {
-    const matchedName = h.name.toLowerCase().includes(lcQuery) || h.shortName.toLowerCase().includes(lcQuery);
-    const matchedAddr = h.address.toLowerCase().includes(lcQuery);
-    if (matchedName) {
+    const nameScore = Math.min(
+      fuzzyMatchScore(h.name, query) === -1 ? 999 : fuzzyMatchScore(h.name, query),
+      fuzzyMatchScore(h.shortName, query) === -1 ? 999 : fuzzyMatchScore(h.shortName, query)
+    );
+    if (nameScore < 999) {
       suggestions.push({
         type: 'hospital',
         typeLabel: '병원',
@@ -951,10 +1004,9 @@ function handleSearch(e) {
         label: h.name,
         sub: h.address,
         href: `#hospital/${h.id}`,
-        startsWith: h.name.toLowerCase().startsWith(lcQuery) || h.shortName.toLowerCase().startsWith(lcQuery)
+        score: nameScore
       });
-    } else if (matchedAddr) {
-      // Address-only match: still show as hospital with address highlighted in sub
+    } else if (h.address.toLowerCase().includes(query.toLowerCase())) {
       suggestions.push({
         type: 'hospital',
         typeLabel: '병원',
@@ -963,18 +1015,18 @@ function handleSearch(e) {
         sub: h.address,
         subHighlight: true,
         href: `#hospital/${h.id}`,
-        startsWith: false
+        score: 4 // address match: lowest priority
       });
     }
   });
 
-  // Treatments — match by name (only items registered in TREATMENT_GROUPS)
+  // Treatments — fuzzy match on name
   const treatmentSet = new Set();
   TREATMENT_GROUPS.forEach(g => {
     g.items.forEach(name => {
-      if (name.toLowerCase().includes(lcQuery) && !treatmentSet.has(name)) {
+      const score = fuzzyMatchScore(name, query);
+      if (score >= 0 && !treatmentSet.has(name)) {
         treatmentSet.add(name);
-        // Count how many doctors offer this
         const count = MEMBERS.filter(m => m.treatments && m.treatments.includes(name)).length;
         suggestions.push({
           type: 'treatment',
@@ -983,18 +1035,20 @@ function handleSearch(e) {
           label: name,
           sub: count > 0 ? `${g.name} · ${count}명의 의사` : g.name,
           href: `#treatment/${encodeURIComponent(name)}`,
-          startsWith: name.toLowerCase().startsWith(lcQuery)
+          score
         });
       }
     });
   });
 
-  // Sort: startsWith matches first (per type), then alphabetical
-  // Group order: 진료분야 → 의사 → 병원 (most likely intent for short queries)
-  const typeOrder = { treatment: 0, member: 1, hospital: 2 };
+  // Sort by (score asc, type group, alphabetical) so:
+  //   1) Exact prefix matches across all types come first
+  //   2) Strip-final prefix matches (받침 다른 글자로 시작) come next
+  //   3) Contains matches at the bottom
+  const typeOrder = { member: 0, treatment: 1, hospital: 2 };
   suggestions.sort((a, b) => {
+    if (a.score !== b.score) return a.score - b.score;
     if (typeOrder[a.type] !== typeOrder[b.type]) return typeOrder[a.type] - typeOrder[b.type];
-    if (a.startsWith !== b.startsWith) return a.startsWith ? -1 : 1;
     return a.label.localeCompare(b.label, 'ko');
   });
 
