@@ -837,7 +837,15 @@ function renderHome() {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
     if (homePage.classList.contains('search-focused')) return;
-    // Compute & cache shift on first focus (pristine layout)
+    // CRITICAL: force-reset transform to identity FIRST, then measure.
+    // Otherwise, if a previous revert transition is still mid-flight (or
+    // window.resize from keyboard already nulled the cache), measurement
+    // would happen against a transformed state and produce a wrong shift.
+    homePage.style.transition = 'none';
+    homePage.style.transform = 'translate3d(0, 0, 0)';
+    homePage.style.removeProperty('--search-shift');
+    void homePage.offsetHeight; // flush layout & paint at identity
+    // Now safe to measure if cache is empty
     if (cachedShiftPx === null) {
       const searchBox = document.querySelector('.search-box');
       if (searchBox) {
@@ -846,17 +854,11 @@ function renderHome() {
         cachedShiftPx = Math.min(0, -(rect.top - targetTop));
       }
     }
-    if (cachedShiftPx === null) return;
-    // Force a clean starting state so the slide ALWAYS begins from translateY(0)
-    // regardless of any in-flight revert transition.
-    // (1) kill transition, (2) snap inline transform to identity,
-    // (3) reflow, (4) restore transition, (5) remove inline transform,
-    // (6) apply var + class to trigger fresh 0 → target transition.
-    homePage.style.transition = 'none';
-    homePage.style.transform = 'translate3d(0, 0, 0)';
-    void homePage.offsetHeight; // flush layout & paint
+    // Restore transition + remove inline transform so class rule controls it
     homePage.style.transition = '';
-    homePage.style.transform = ''; // remove inline so class rule takes effect
+    homePage.style.transform = '';
+    if (cachedShiftPx === null) return;
+    // Apply target (triggers full 0 → target transition)
     homePage.style.setProperty('--search-shift', cachedShiftPx + 'px');
     homePage.classList.add('search-focused');
   });
