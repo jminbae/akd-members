@@ -786,29 +786,59 @@ function renderHome() {
   const homePage = document.querySelector('.home-page');
   const NAV_HEIGHT = 56;
   const NAV_GAP = 8; // small gap between navbar bottom and search box top
+  // Track pending timers so we can cancel them when state flips quickly.
+  let blurDelayTimer = null;
+  let removeClassTimer = null;
+  let scrollTimer1 = null, scrollTimer2 = null;
+  const clearAllPending = () => {
+    clearTimeout(blurDelayTimer);
+    clearTimeout(removeClassTimer);
+    clearTimeout(scrollTimer1);
+    clearTimeout(scrollTimer2);
+    blurDelayTimer = removeClassTimer = scrollTimer1 = scrollTimer2 = null;
+  };
+
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
+    // Cancel any pending blur/collapse timers so re-focusing keeps the
+    // expanded layout and re-runs the auto-scroll cleanly.
+    clearAllPending();
     homePage.classList.add('search-focused');
-    // Force a synchronous layout reflow so the new flex-start / min-height
-    // styles take effect, then measure the input's new position and scroll.
+    // Force a layout reflow so the new flex-start / min-height take effect.
     void homePage.offsetHeight;
-    setTimeout(() => {
-      // Read after another tick + force reflow again, just to be safe
+    const searchBox = document.querySelector('.search-box');
+    const doScroll = () => {
+      if (!homePage.classList.contains('search-focused')) return;
       void homePage.offsetHeight;
       const inputRect = searchInput.getBoundingClientRect();
       const targetScrollY = window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP);
       window.scrollTo({ top: Math.max(targetScrollY, 0), behavior: 'smooth' });
-    }, 60);
+    };
+    // Try multiple times to overcome iOS Safari race conditions where layout
+    // hasn't settled or the browser's own keyboard scroll fights us.
+    doScroll();
+    scrollTimer1 = setTimeout(doScroll, 80);
+    scrollTimer2 = setTimeout(doScroll, 250);
   });
+
   const collapseSearchFocused = () => {
     if (!homePage?.classList.contains('search-focused')) return;
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    // Remove class after scroll-back so layout shift is not visible
-    setTimeout(() => homePage.classList.remove('search-focused'), 400);
+    removeClassTimer = setTimeout(() => {
+      // Only remove if input still isn't focused (user didn't re-tap)
+      if (document.activeElement !== searchInput) {
+        homePage.classList.remove('search-focused');
+      }
+      removeClassTimer = null;
+    }, 400);
   };
   searchInput.addEventListener('blur', () => {
-    // Slight delay so a tap on a suggestion (which blurs the input) navigates first
-    setTimeout(collapseSearchFocused, 200);
+    // Slight delay so a tap on a suggestion (which blurs the input)
+    // navigates first. Track timer so re-focus can cancel it.
+    blurDelayTimer = setTimeout(() => {
+      collapseSearchFocused();
+      blurDelayTimer = null;
+    }, 200);
   });
   // iOS Safari sometimes doesn't fire blur when the keyboard is dismissed.
   // Use visualViewport as a fallback to detect keyboard close.

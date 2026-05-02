@@ -2200,9 +2200,11 @@ body[data-page="treatments"] .page-header {
     /* Top-align content so it doesn't re-center when min-height grows */
     justify-content: flex-start;
     padding-top: 16px;
-    /* Make page taller than viewport so window.scrollTo can position the
-       search box near the top, and so user can freely scroll. */
-    min-height: calc(100vh + 320px);
+    /* Make page much taller than viewport so window.scrollTo can position
+       the search box near the top regardless of how the on-screen keyboard
+       reduces visible viewport. User can scroll freely. */
+    min-height: calc(100vh + 600px);
+    padding-bottom: 80px;
   }
   /* Shortcuts stay visible while search is focused — dropdown overlays
      them via the higher z-index on .search-results. */
