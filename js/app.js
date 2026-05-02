@@ -831,32 +831,50 @@ function renderHome() {
   // prevents wrong measurements when user re-focuses mid-transition (where
   // search-box rect.top is between original and target, leading to a
   // smaller shift on subsequent slides).
+  // Debug overlay so you can SEE the measurements per cycle (remove later).
+  let __dbgDiv = null;
+  let __dbgCycle = 0;
+  const __dbgShow = (msg) => {
+    if (!__dbgDiv) {
+      __dbgDiv = document.createElement('div');
+      __dbgDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#000c;color:#0f0;font:11px/1.3 monospace;padding:6px 10px;white-space:pre-wrap;pointer-events:none;';
+      document.body.appendChild(__dbgDiv);
+    }
+    __dbgDiv.textContent = msg;
+  };
+
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
     if (homePage.classList.contains('search-focused')) return;
     const searchBox = document.querySelector('.search-box');
     if (!searchBox) return;
-    // STEP 1: Reset to true identity (no transform) so getBoundingClientRect
-    // returns the natural, layout-determined position.
-    //   - Setting `transform = 'none'` removes any inline transform.
-    //   - Class is already not search-focused (we returned early above), so
-    //     CSS rule doesn't add transform.
-    //   - `transition: none` ensures the snap is instant (no animation).
+    __dbgCycle++;
+    // Capture state BEFORE reset for debug
+    const beforeRect = searchBox.getBoundingClientRect();
+    const beforeTransform = getComputedStyle(homePage).transform;
+    // STEP 1: Reset to true identity
     homePage.style.transition = 'none';
     homePage.style.transform = 'none';
-    void homePage.offsetHeight; // force synchronous layout flush
-    // STEP 2: Measure search-box's natural position (now reset).
+    void homePage.offsetHeight;
+    // STEP 2: Measure
     const rect = searchBox.getBoundingClientRect();
     const shift = Math.min(0, -(rect.top - 80));
+    // Show on screen
+    __dbgShow(
+      `Cycle ${__dbgCycle}\n` +
+      `BEFORE: rect.top=${beforeRect.top.toFixed(1)}  tx=${beforeTransform.slice(0, 50)}\n` +
+      `AFTER RESET: rect.top=${rect.top.toFixed(1)}\n` +
+      `shift=${shift.toFixed(1)}  innerH=${window.innerHeight}` +
+      (window.visualViewport ? `  vvH=${window.visualViewport.height.toFixed(0)}` : '')
+    );
     if (shift === 0) {
-      // Already at or above target — nothing to do
       homePage.style.transition = '';
       homePage.style.transform = '';
       homePage.classList.add('search-focused');
       return;
     }
-    // STEP 3: Re-enable transition, animate from 0 → shift via inline transform.
+    // STEP 3: Animate
     homePage.style.transition = '';
     homePage.style.transform = `translate3d(0, ${shift}px, 0)`;
     homePage.classList.add('search-focused');
