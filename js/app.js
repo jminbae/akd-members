@@ -847,14 +847,16 @@ function renderHome() {
       }
     }
     if (cachedShiftPx === null) return;
-    // Force a clean starting state for the slide so re-focus during a
-    // running revert transition still produces a full, smooth slide.
-    // (1) Disable transition, (2) reset transform to identity, (3) reflow,
-    // (4) re-enable transition, (5) apply final transform via class+var.
+    // Force a clean starting state so the slide ALWAYS begins from translateY(0)
+    // regardless of any in-flight revert transition.
+    // (1) kill transition, (2) snap inline transform to identity,
+    // (3) reflow, (4) restore transition, (5) remove inline transform,
+    // (6) apply var + class to trigger fresh 0 → target transition.
     homePage.style.transition = 'none';
-    homePage.style.removeProperty('--search-shift');
-    void homePage.offsetHeight; // flush
+    homePage.style.transform = 'translate3d(0, 0, 0)';
+    void homePage.offsetHeight; // flush layout & paint
     homePage.style.transition = '';
+    homePage.style.transform = ''; // remove inline so class rule takes effect
     homePage.style.setProperty('--search-shift', cachedShiftPx + 'px');
     homePage.classList.add('search-focused');
   });
