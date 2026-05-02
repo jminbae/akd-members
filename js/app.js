@@ -831,8 +831,31 @@ function renderHome() {
   // prevents wrong measurements when user re-focuses mid-transition (where
   // search-box rect.top is between original and target, leading to a
   // smaller shift on subsequent slides).
+  // Pre-compute the slide-up offset BEFORE the keyboard ever opens. On
+  // Android, the keyboard shrinks the layout viewport, which would change
+  // input's natural position and produce a smaller shift. By measuring
+  // once at page-load (pristine layout) and reusing, every slide cycle
+  // moves exactly the same distance.
+  // Invalidate ONLY when innerWidth changes (orientation change). Keyboard
+  // open/close changes innerHeight only — we deliberately ignore that.
   let cachedShiftPx = null;
-  window.addEventListener('resize', () => { cachedShiftPx = null; });
+  let cachedWidth = window.innerWidth;
+  const measureShiftNow = () => {
+    if (window.innerWidth > 768) return;
+    const searchBox = document.querySelector('.search-box');
+    if (!searchBox) return;
+    if (homePage?.classList.contains('search-focused')) return;
+    const rect = searchBox.getBoundingClientRect();
+    cachedShiftPx = Math.min(0, -(rect.top - 80));
+  };
+  setTimeout(measureShiftNow, 100);
+  window.addEventListener('resize', () => {
+    if (window.innerWidth !== cachedWidth) {
+      cachedWidth = window.innerWidth;
+      cachedShiftPx = null;
+      setTimeout(measureShiftNow, 200);
+    }
+  });
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
