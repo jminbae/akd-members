@@ -218,6 +218,9 @@ ul, ol {
 
 .nav-link i {
   font-size: 13px;
+  width: 18px;
+  text-align: center;
+  display: inline-block;
 }
 
 .nav-toggle {
@@ -558,6 +561,9 @@ ul, ol {
 .home-shortcut i {
   font-size: 24px;
   color: var(--primary);
+  width: 32px;
+  text-align: center;
+  display: inline-block;
 }
 
 .home-shortcut span {
@@ -2193,11 +2199,15 @@ body[data-page="treatments"] .page-header {
     will-change: transform;
   }
   .home-page.search-focused {
-    transform: translateY(-160px);
+    transform: translateY(-220px);
+  }
+  /* shortcuts: hide while focused, fade back when not */
+  .home-shortcuts {
+    transition: opacity 0.25s ease, visibility 0.25s ease;
   }
   .home-page.search-focused .home-shortcuts {
     opacity: 0;
-    transition: opacity 0.2s ease;
+    visibility: hidden;
     pointer-events: none;
   }
 

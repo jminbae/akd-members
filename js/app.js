@@ -755,7 +755,7 @@ function renderHome() {
         </a>
         <a href="#treatments" class="home-shortcut">
           <i class="fas fa-wand-magic-sparkles"></i>
-          <span>진료분야 찾기</span>
+          <span>진료분야로 찾기</span>
         </a>
       </div>
     </div>
@@ -790,13 +790,12 @@ function renderHome() {
     homePage?.classList.add('search-focused');
   });
   searchInput.addEventListener('blur', () => {
-    // Only collapse back when input is empty (so user can still see results
-    // with keyboard collapsed via "Done" or scroll without losing layout).
+    // Always restore layout when keyboard is dismissed so the shortcut
+    // buttons reappear. Small delay so a suggestion click (which causes
+    // blur) navigates first.
     setTimeout(() => {
-      if (!searchInput.value.trim()) {
-        homePage?.classList.remove('search-focused');
-      }
-    }, 100);
+      homePage?.classList.remove('search-focused');
+    }, 150);
   });
 }
 
@@ -1574,7 +1573,7 @@ function renderTreatments() {
 
   app.innerHTML = `
     <div class="page-header">
-      <h1>진료분야 찾기</h1>
+      <h1>진료분야로 찾기</h1>
       <p>해당 분야를 진료하는 가까운 피부과를 찾을 수 있습니다.</p>
     </div>
     <div class="treatments-page">
