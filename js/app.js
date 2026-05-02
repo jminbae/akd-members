@@ -826,12 +826,19 @@ function renderHome() {
       manualSmoothScrollTo(targetScrollY, 320);
     }
   };
+  // Expand the document's body to give scroll room, without altering
+  // home-page's own layout (which would visually jump the input).
+  const expandDocForScroll = () => {
+    document.body.style.minHeight = 'calc(100vh + 480px)';
+  };
+  const collapseDoc = () => {
+    document.body.style.minHeight = '';
+  };
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
     homePage.classList.add('search-focused');
-    // Brief delay so the on-screen keyboard has time to start opening (which
-    // shrinks the visual viewport, giving us scroll room) before we animate.
+    expandDocForScroll();
     setTimeout(scrollSearchToTop, 100);
   });
   searchInput.addEventListener('blur', () => {
@@ -840,6 +847,7 @@ function renderHome() {
       removeClassTimer = setTimeout(() => {
         if (document.activeElement !== searchInput) {
           homePage?.classList.remove('search-focused');
+          collapseDoc();
         }
         removeClassTimer = null;
       }, 360);
