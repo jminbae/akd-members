@@ -785,14 +785,18 @@ function renderHome() {
   // keyboard is dismissed, smoothly scroll back to top.
   const homePage = document.querySelector('.home-page');
   const NAV_HEIGHT = 56;
-  const NAV_GAP = 24; // gap between navbar bottom and search box top
+  const NAV_GAP = 8; // small gap between navbar bottom and search box top
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     homePage.classList.add('search-focused');
+    // Two animation frames: first lets the new layout (flex-start, taller
+    // min-height) settle, second measures the now-correct input position.
     requestAnimationFrame(() => {
-      const inputRect = searchInput.getBoundingClientRect();
-      const targetScrollY = window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP);
-      window.scrollTo({ top: Math.max(targetScrollY, 0), behavior: 'smooth' });
+      requestAnimationFrame(() => {
+        const inputRect = searchInput.getBoundingClientRect();
+        const targetScrollY = window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP);
+        window.scrollTo({ top: Math.max(targetScrollY, 0), behavior: 'smooth' });
+      });
     });
   });
   const collapseSearchFocused = () => {
