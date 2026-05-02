@@ -2199,17 +2199,10 @@ body[data-page="treatments"] .page-header {
     will-change: transform;
   }
   .home-page.search-focused {
-    transform: translateY(-220px);
+    transform: translateY(-280px);
   }
-  /* shortcuts: hide while focused, fade back when not */
-  .home-shortcuts {
-    transition: opacity 0.25s ease, visibility 0.25s ease;
-  }
-  .home-page.search-focused .home-shortcuts {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
+  /* Shortcuts stay visible while search is focused — dropdown overlays
+     them via the higher z-index on .search-results. */
 
   /* Page header */
   .page-header {

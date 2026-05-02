@@ -1828,6 +1828,17 @@ document.addEventListener('focusin', (e) => {
     navMenu.classList.remove('open');
   }
 });
+// Close on scroll or any touch on the body content
+window.addEventListener('scroll', () => {
+  const navMenu = document.getElementById('navMenu');
+  if (navMenu?.classList.contains('open')) navMenu.classList.remove('open');
+}, { passive: true });
+document.addEventListener('touchstart', (e) => {
+  const navMenu = document.getElementById('navMenu');
+  if (!navMenu?.classList.contains('open')) return;
+  if (e.target.closest('#navMenu') || e.target.closest('#navToggle')) return;
+  navMenu.classList.remove('open');
+}, { passive: true });
 
 // Navbar scroll effect
 window.addEventListener('scroll', () => {
