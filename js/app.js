@@ -508,7 +508,7 @@ const TREATMENT_GROUPS = [
   {
     id: 'medical',
     name: '피부질환',
-    icon: 'fa-stethoscope',
+    icon: 'fa-wand-magic-sparkles',
     items: ['여드름', '모공', '백반증', '백반증수술', '엑시머레이저', '팔라스레이저', '광선치료', '자외선치료', '백반증탈색치료', '켈로이드', '내향성발톱', '선천성모반', '주름', '탈모메조테라피']
   },
   {
@@ -754,7 +754,7 @@ function renderHome() {
           <span>피부과 찾기</span>
         </a>
         <a href="#treatments" class="home-shortcut">
-          <i class="fas fa-stethoscope"></i>
+          <i class="fas fa-wand-magic-sparkles"></i>
           <span>진료분야 찾기</span>
         </a>
       </div>
@@ -851,7 +851,7 @@ function handleSearch(e) {
         suggestions.push({
           type: 'treatment',
           typeLabel: '진료분야',
-          icon: 'fa-stethoscope',
+          icon: 'fa-wand-magic-sparkles',
           label: name,
           sub: count > 0 ? `${g.name} · ${count}명의 의사` : g.name,
           href: `#treatment/${encodeURIComponent(name)}`,
@@ -1191,7 +1191,7 @@ function renderMemberDetail(params) {
             <!-- Treatments -->
             ${member.treatments && member.treatments.length > 0 ? `
               <div class="info-card full-width">
-                <h3 class="info-card-title"><i class="fas fa-stethoscope"></i> 진료분야</h3>
+                <h3 class="info-card-title"><i class="fas fa-wand-magic-sparkles"></i> 진료분야</h3>
                 <div class="treatment-tags">
                   ${member.treatments.map((t, i) => `
                     <a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag group-${getTreatmentGroup(t)}">${t}</a>
@@ -1443,7 +1443,7 @@ function renderHospitalDetail(params) {
       </div>
 
       <div class="hospital-treatments-section">
-        <h2><i class="fas fa-stethoscope"></i> 진료분야</h2>
+        <h2><i class="fas fa-wand-magic-sparkles"></i> 진료분야</h2>
         <p class="hospital-treatments-desc">소속 원장님들이 진료하는 분야입니다</p>
         <div class="treatment-tags">
           ${TREATMENT_GROUPS.flatMap(g =>
