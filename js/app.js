@@ -787,7 +787,14 @@ function renderHome() {
   const homePage = document.querySelector('.home-page');
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768) return;
-    homePage?.classList.add('search-focused');
+    if (!homePage) return;
+    // Compute the exact slide distance: how far down is the input now,
+    // and how far we'd like it (just below the navbar).
+    const navHeight = 56;
+    const inputRect = searchInput.getBoundingClientRect();
+    const offset = Math.max(inputRect.top - (navHeight + 8), 0);
+    homePage.style.setProperty('--home-search-offset', offset + 'px');
+    homePage.classList.add('search-focused');
   });
   searchInput.addEventListener('blur', () => {
     // Always restore layout when keyboard is dismissed so the shortcut

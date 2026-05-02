@@ -2198,8 +2198,10 @@ body[data-page="treatments"] .page-header {
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
   }
+  /* Translation amount is computed by JS at focus time (--home-search-offset)
+     so it adapts to any viewport / content height. Fallback: 320px. */
   .home-page.search-focused {
-    transform: translateY(-280px);
+    transform: translateY(calc(-1 * var(--home-search-offset, 320px)));
   }
   /* Shortcuts stay visible while search is focused — dropdown overlays
      them via the higher z-index on .search-results. */
