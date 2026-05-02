@@ -788,8 +788,9 @@ function renderHome() {
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768) return;
     if (!homePage) return;
-    // Compute the exact slide distance: how far down is the input now,
-    // and how far we'd like it (just below the navbar).
+    // The .fade-in entry animation locks `transform: translateY(0)` via
+    // animation-fill-mode: forwards — strip it so our static transform applies.
+    homePage.classList.remove('fade-in');
     const navHeight = 56;
     const inputRect = searchInput.getBoundingClientRect();
     const offset = Math.max(inputRect.top - (navHeight + 8), 0);
