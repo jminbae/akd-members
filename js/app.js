@@ -764,6 +764,17 @@ function renderHome() {
   const searchInput = document.getElementById('searchInput');
   searchInput.addEventListener('input', handleSearch);
   searchInput.addEventListener('keydown', handleSearchKeydown);
+  // Search button (magnifier) acts the same as Enter
+  const searchBtn = document.getElementById('searchBtn');
+  searchBtn?.addEventListener('click', () => {
+    const items = document.querySelectorAll('#searchResults .search-suggest-item');
+    const active = document.querySelector('#searchResults .search-suggest-item.search-suggest-active');
+    const target = active || items[0];
+    if (target) {
+      const href = target.getAttribute('href');
+      if (href) window.location.hash = href;
+    }
+  });
   // Auto-focus on desktop only (avoid forcing virtual keyboard on mobile)
   if (window.innerWidth > 768) {
     setTimeout(() => searchInput.focus({ preventScroll: true }), 50);
@@ -817,20 +828,13 @@ function handleSearchKeydown(e) {
     e.preventDefault();
     moveSearchActive(-1);
   } else if (e.key === 'Enter') {
+    // Priority: highlighted item > first matching item > nothing
     const active = document.querySelector('#searchResults .search-suggest-item.search-suggest-active');
-    if (active) {
+    const target = active || items[0];
+    if (target) {
       e.preventDefault();
-      // Navigate via the anchor's href
-      const href = active.getAttribute('href');
-      if (href) window.location.hash = href.startsWith('#') ? href : ('#' + href.replace(/^#?\/*/, ''));
-    } else if (items.length === 1) {
-      // Single suggestion: auto-select on Enter
-      e.preventDefault();
-      const href = items[0].getAttribute('href');
+      const href = target.getAttribute('href');
       if (href) window.location.hash = href;
-    } else {
-      // Fallback: re-run search (no-op since input handler already ran)
-      handleSearch(e);
     }
   } else if (e.key === 'Escape') {
     e.target.value = '';
