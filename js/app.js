@@ -843,14 +843,45 @@ function renderHome() {
       blurDelayTimer = null;
     }, 200);
   });
-  // iOS Safari sometimes doesn't fire blur when the keyboard is dismissed.
-  // Use visualViewport as a fallback to detect keyboard close.
+  // Re-run scroll when user taps the already-focused input. iOS Safari
+  // sometimes keeps focus after keyboard is dismissed; tapping the input
+  // again opens keyboard but does NOT fire 'focus' since it's already focused.
+  // Listen to pointerdown / click as belt-and-suspenders.
+  const reTriggerScroll = () => {
+    if (window.innerWidth > 768 || !homePage) return;
+    if (document.activeElement !== searchInput) return;
+    clearAllPending();
+    if (!homePage.classList.contains('search-focused')) {
+      homePage.classList.add('search-focused');
+    }
+    void homePage.offsetHeight;
+    const inputRect = searchInput.getBoundingClientRect();
+    const targetScrollY = Math.max(window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP), 0);
+    if (Math.abs(targetScrollY - window.scrollY) > 4) {
+      manualSmoothScrollTo(targetScrollY, 280);
+    }
+  };
+  searchInput.addEventListener('pointerdown', () => {
+    // Defer until after pointerdown completes / focus settles
+    setTimeout(reTriggerScroll, 30);
+  });
+  searchInput.addEventListener('click', () => setTimeout(reTriggerScroll, 30));
+
+  // visualViewport: detect keyboard open/close.
+  // - close: collapse layout
+  // - re-open while still focused: re-scroll (iOS quirk where focus is kept)
   if (window.visualViewport) {
     let lastKeyboardOpen = false;
     window.visualViewport.addEventListener('resize', () => {
       const vv = window.visualViewport;
       const keyboardOpen = (window.innerHeight - vv.height) > 100;
-      if (lastKeyboardOpen && !keyboardOpen) collapseSearchFocused();
+      if (lastKeyboardOpen && !keyboardOpen) {
+        // keyboard just closed
+        collapseSearchFocused();
+      } else if (!lastKeyboardOpen && keyboardOpen && document.activeElement === searchInput) {
+        // keyboard just re-opened while input still focused — re-scroll
+        setTimeout(reTriggerScroll, 50);
+      }
       lastKeyboardOpen = keyboardOpen;
     });
   }
