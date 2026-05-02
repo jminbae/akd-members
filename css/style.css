@@ -2197,16 +2197,9 @@ body[data-page="treatments"] .page-header {
      positions the search box near the top is done by JS via
      window.scrollTo({behavior: 'smooth'}). User can also scroll freely
      by hand at any time. */
-  .home-page.search-focused {
-    /* Top-align content so it doesn't re-center when min-height grows */
-    justify-content: flex-start;
-    padding-top: 16px;
-    /* Make page much taller than viewport so window.scrollTo can position
-       the search box near the top regardless of how the on-screen keyboard
-       reduces visible viewport. User can scroll freely. */
-    min-height: calc(100vh + 600px);
-    padding-bottom: 80px;
-  }
+  /* No layout change while focused — the on-screen keyboard naturally
+     shrinks the visual viewport, which provides scroll room without any
+     layout jump. The .search-focused class is now informational only. */
   /* Shortcuts stay visible while search is focused — dropdown overlays
      them via the higher z-index on .search-results. */
 

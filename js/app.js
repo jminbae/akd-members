@@ -815,72 +815,55 @@ function renderHome() {
     blurDelayTimer = removeClassTimer = null;
   };
 
+  // Mobile flow without layout change. The on-screen keyboard naturally
+  // shrinks the visual viewport, providing scroll room. So a single smooth
+  // scroll moves the input to the top — no second-stage jump from layout.
+  const scrollSearchToTop = () => {
+    if (scrollAnim) { cancelAnimationFrame(scrollAnim); scrollAnim = null; }
+    const inputRect = searchInput.getBoundingClientRect();
+    const targetScrollY = Math.max(window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP), 0);
+    if (Math.abs(targetScrollY - window.scrollY) > 2) {
+      manualSmoothScrollTo(targetScrollY, 320);
+    }
+  };
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
     homePage.classList.add('search-focused');
-    // Force synchronous layout reflow so new flex-start / min-height apply.
-    void homePage.offsetHeight;
-    // Measure input position in the new layout, then animate scroll.
-    const inputRect = searchInput.getBoundingClientRect();
-    const targetScrollY = Math.max(window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP), 0);
-    manualSmoothScrollTo(targetScrollY, 280);
+    // Brief delay so the on-screen keyboard has time to start opening (which
+    // shrinks the visual viewport, giving us scroll room) before we animate.
+    setTimeout(scrollSearchToTop, 100);
   });
-
-  const collapseSearchFocused = () => {
-    if (!homePage?.classList.contains('search-focused')) return;
-    manualSmoothScrollTo(0, 280);
-    removeClassTimer = setTimeout(() => {
-      if (document.activeElement !== searchInput) {
-        homePage.classList.remove('search-focused');
-      }
-      removeClassTimer = null;
-    }, 320);
-  };
   searchInput.addEventListener('blur', () => {
     blurDelayTimer = setTimeout(() => {
-      collapseSearchFocused();
+      manualSmoothScrollTo(0, 320);
+      removeClassTimer = setTimeout(() => {
+        if (document.activeElement !== searchInput) {
+          homePage?.classList.remove('search-focused');
+        }
+        removeClassTimer = null;
+      }, 360);
       blurDelayTimer = null;
-    }, 200);
+    }, 150);
   });
-  // Re-run scroll when user taps the already-focused input. iOS Safari
-  // sometimes keeps focus after keyboard is dismissed; tapping the input
-  // again opens keyboard but does NOT fire 'focus' since it's already focused.
-  // Listen to pointerdown / click as belt-and-suspenders.
-  const reTriggerScroll = () => {
-    if (window.innerWidth > 768 || !homePage) return;
-    if (document.activeElement !== searchInput) return;
-    clearAllPending();
-    if (!homePage.classList.contains('search-focused')) {
-      homePage.classList.add('search-focused');
-    }
-    void homePage.offsetHeight;
-    const inputRect = searchInput.getBoundingClientRect();
-    const targetScrollY = Math.max(window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP), 0);
-    if (Math.abs(targetScrollY - window.scrollY) > 4) {
-      manualSmoothScrollTo(targetScrollY, 280);
-    }
-  };
-  searchInput.addEventListener('pointerdown', () => {
-    // Defer until after pointerdown completes / focus settles
-    setTimeout(reTriggerScroll, 30);
-  });
-  searchInput.addEventListener('click', () => setTimeout(reTriggerScroll, 30));
 
-  // visualViewport: detect keyboard open/close.
-  // - close: collapse layout
-  // - re-open while still focused: re-scroll (iOS quirk where focus is kept)
+  // iOS quirk: re-tap on already-focused input doesn't fire 'focus'.
+  // Use pointerdown/click and visualViewport.resize as fallbacks.
+  const reTrigger = () => {
+    if (window.innerWidth > 768) return;
+    if (document.activeElement !== searchInput) return;
+    setTimeout(scrollSearchToTop, 100);
+  };
+  searchInput.addEventListener('pointerdown', reTrigger);
+  searchInput.addEventListener('click', reTrigger);
+
   if (window.visualViewport) {
     let lastKeyboardOpen = false;
     window.visualViewport.addEventListener('resize', () => {
-      const vv = window.visualViewport;
-      const keyboardOpen = (window.innerHeight - vv.height) > 100;
-      if (lastKeyboardOpen && !keyboardOpen) {
-        // keyboard just closed
-        collapseSearchFocused();
-      } else if (!lastKeyboardOpen && keyboardOpen && document.activeElement === searchInput) {
-        // keyboard just re-opened while input still focused — re-scroll
-        setTimeout(reTriggerScroll, 50);
+      const keyboardOpen = (window.innerHeight - window.visualViewport.height) > 100;
+      if (!lastKeyboardOpen && keyboardOpen && document.activeElement === searchInput) {
+        // Keyboard just opened (or re-opened) — bring search into view
+        setTimeout(scrollSearchToTop, 50);
       }
       lastKeyboardOpen = keyboardOpen;
     });
