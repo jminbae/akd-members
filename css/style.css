@@ -1671,8 +1671,7 @@ body[data-page="treatments"] .page-header {
   align-content: flex-start;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 90%, transparent 100%);
-          mask-image: linear-gradient(to bottom, black 0%, black 90%, transparent 100%);
+  padding-bottom: 14px;
 }
 
 .treatments-categories::-webkit-scrollbar {
