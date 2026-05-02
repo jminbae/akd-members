@@ -789,13 +789,16 @@ function renderHome() {
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     homePage.classList.add('search-focused');
-    // setTimeout 0 lets the new layout (flex-start, taller min-height) apply
-    // before we measure. Then smoothly scroll so input is just below nav.
+    // Force a synchronous layout reflow so the new flex-start / min-height
+    // styles take effect, then measure the input's new position and scroll.
+    void homePage.offsetHeight;
     setTimeout(() => {
+      // Read after another tick + force reflow again, just to be safe
+      void homePage.offsetHeight;
       const inputRect = searchInput.getBoundingClientRect();
       const targetScrollY = window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP);
       window.scrollTo({ top: Math.max(targetScrollY, 0), behavior: 'smooth' });
-    }, 0);
+    }, 60);
   });
   const collapseSearchFocused = () => {
     if (!homePage?.classList.contains('search-focused')) return;
