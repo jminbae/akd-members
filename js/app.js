@@ -831,54 +831,38 @@ function renderHome() {
   // prevents wrong measurements when user re-focuses mid-transition (where
   // search-box rect.top is between original and target, leading to a
   // smaller shift on subsequent slides).
-  // Debug overlay so you can SEE the measurements per cycle (remove later).
-  let __dbgDiv = null;
-  let __dbgCycle = 0;
-  const __dbgShow = (msg) => {
-    if (!__dbgDiv) {
-      __dbgDiv = document.createElement('div');
-      __dbgDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#000c;color:#0f0;font:11px/1.3 monospace;padding:6px 10px;white-space:pre-wrap;pointer-events:none;';
-      document.body.appendChild(__dbgDiv);
-    }
-    __dbgDiv.textContent = msg;
-  };
-
-  searchInput.addEventListener('focus', () => {
+  // The actual slide-up logic, callable from focus AND pointerdown/click.
+  // (Android Chrome sometimes keeps input focused after the keyboard is
+  // dismissed, so the next tap does NOT fire 'focus'. pointerdown/click DO
+  // fire on every tap, so we use them as fallback triggers.)
+  const slideSearchUp = () => {
     if (window.innerWidth > 768 || !homePage) return;
-    clearAllPending();
     if (homePage.classList.contains('search-focused')) return;
     const searchBox = document.querySelector('.search-box');
     if (!searchBox) return;
-    __dbgCycle++;
-    // Capture state BEFORE reset for debug
-    const beforeRect = searchBox.getBoundingClientRect();
-    const beforeTransform = getComputedStyle(homePage).transform;
-    // STEP 1: Reset to true identity
+    clearAllPending();
+    // Reset to true identity so getBoundingClientRect returns natural position
     homePage.style.transition = 'none';
     homePage.style.transform = 'none';
     void homePage.offsetHeight;
-    // STEP 2: Measure
     const rect = searchBox.getBoundingClientRect();
     const shift = Math.min(0, -(rect.top - 80));
-    // Show on screen
-    __dbgShow(
-      `Cycle ${__dbgCycle}\n` +
-      `BEFORE: rect.top=${beforeRect.top.toFixed(1)}  tx=${beforeTransform.slice(0, 50)}\n` +
-      `AFTER RESET: rect.top=${rect.top.toFixed(1)}\n` +
-      `shift=${shift.toFixed(1)}  innerH=${window.innerHeight}` +
-      (window.visualViewport ? `  vvH=${window.visualViewport.height.toFixed(0)}` : '')
-    );
+    homePage.style.transition = '';
     if (shift === 0) {
-      homePage.style.transition = '';
       homePage.style.transform = '';
       homePage.classList.add('search-focused');
       return;
     }
-    // STEP 3: Animate
-    homePage.style.transition = '';
     homePage.style.transform = `translate3d(0, ${shift}px, 0)`;
     homePage.classList.add('search-focused');
-  });
+  };
+  searchInput.addEventListener('focus', slideSearchUp);
+  // Pointer/click fallback: re-taps on an already-focused input do NOT fire
+  // 'focus', but they DO fire pointerdown/click. Defer slightly so any
+  // in-flight blur/revert callbacks have time to settle.
+  const reTap = () => setTimeout(slideSearchUp, 30);
+  searchInput.addEventListener('pointerdown', reTap);
+  searchInput.addEventListener('click', reTap);
   const revertIfEmpty = () => {
     if (searchInput.value.trim()) return;
     if (!homePage?.classList.contains('search-focused')) return;
