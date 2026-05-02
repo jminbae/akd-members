@@ -2197,7 +2197,12 @@ body[data-page="treatments"] .page-header {
      window.scrollTo({behavior: 'smooth'}). User can also scroll freely
      by hand at any time. */
   .home-page.search-focused {
-    min-height: calc(100vh + 240px);
+    /* Top-align content so it doesn't re-center when min-height grows */
+    justify-content: flex-start;
+    padding-top: 16px;
+    /* Make page taller than viewport so window.scrollTo can position the
+       search box near the top, and so user can freely scroll. */
+    min-height: calc(100vh + 320px);
   }
   /* Shortcuts stay visible while search is focused — dropdown overlays
      them via the higher z-index on .search-results. */
