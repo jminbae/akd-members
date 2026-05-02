@@ -789,15 +789,13 @@ function renderHome() {
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     homePage.classList.add('search-focused');
-    // Two animation frames: first lets the new layout (flex-start, taller
-    // min-height) settle, second measures the now-correct input position.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const inputRect = searchInput.getBoundingClientRect();
-        const targetScrollY = window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP);
-        window.scrollTo({ top: Math.max(targetScrollY, 0), behavior: 'smooth' });
-      });
-    });
+    // setTimeout 0 lets the new layout (flex-start, taller min-height) apply
+    // before we measure. Then smoothly scroll so input is just below nav.
+    setTimeout(() => {
+      const inputRect = searchInput.getBoundingClientRect();
+      const targetScrollY = window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP);
+      window.scrollTo({ top: Math.max(targetScrollY, 0), behavior: 'smooth' });
+    }, 0);
   });
   const collapseSearchFocused = () => {
     if (!homePage?.classList.contains('search-focused')) return;
