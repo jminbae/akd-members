@@ -763,9 +763,56 @@ function renderHome() {
 
   const searchInput = document.getElementById('searchInput');
   searchInput.addEventListener('input', handleSearch);
-  searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') handleSearch(e);
-  });
+  searchInput.addEventListener('keydown', handleSearchKeydown);
+}
+
+// Move active highlight in the suggestion dropdown by `delta` (+1 / -1).
+function moveSearchActive(delta) {
+  const items = Array.from(document.querySelectorAll('#searchResults .search-suggest-item'));
+  if (items.length === 0) return;
+  const currentIdx = items.findIndex(el => el.classList.contains('search-suggest-active'));
+  let nextIdx;
+  if (currentIdx === -1) {
+    nextIdx = delta > 0 ? 0 : items.length - 1;
+  } else {
+    nextIdx = (currentIdx + delta + items.length) % items.length;
+  }
+  items.forEach(el => el.classList.remove('search-suggest-active'));
+  items[nextIdx].classList.add('search-suggest-active');
+  // Scroll into view if dropdown is scrollable
+  items[nextIdx].scrollIntoView({ block: 'nearest' });
+}
+
+function handleSearchKeydown(e) {
+  const items = document.querySelectorAll('#searchResults .search-suggest-item');
+  if (e.key === 'ArrowDown') {
+    if (items.length === 0) return;
+    e.preventDefault();
+    moveSearchActive(1);
+  } else if (e.key === 'ArrowUp') {
+    if (items.length === 0) return;
+    e.preventDefault();
+    moveSearchActive(-1);
+  } else if (e.key === 'Enter') {
+    const active = document.querySelector('#searchResults .search-suggest-item.search-suggest-active');
+    if (active) {
+      e.preventDefault();
+      // Navigate via the anchor's href
+      const href = active.getAttribute('href');
+      if (href) window.location.hash = href.startsWith('#') ? href : ('#' + href.replace(/^#?\/*/, ''));
+    } else if (items.length === 1) {
+      // Single suggestion: auto-select on Enter
+      e.preventDefault();
+      const href = items[0].getAttribute('href');
+      if (href) window.location.hash = href;
+    } else {
+      // Fallback: re-run search (no-op since input handler already ran)
+      handleSearch(e);
+    }
+  } else if (e.key === 'Escape') {
+    e.target.value = '';
+    handleSearch({ target: e.target });
+  }
 }
 
 // Highlight matched substring in label (case-insensitive)

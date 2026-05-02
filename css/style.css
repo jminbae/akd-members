@@ -442,15 +442,22 @@ ul, ol {
   transition: background 0.12s;
 }
 
-.search-suggest-item:hover {
-  background: #f4f6f9;
+.search-suggest-item:hover,
+.search-suggest-item.search-suggest-active {
+  background: #eaf2fa;
+}
+
+.search-suggest-item.search-suggest-active {
+  box-shadow: inset 0 0 0 2px var(--secondary);
 }
 
 .search-suggest-item + .search-suggest-item {
   border-top: 1px solid #f0f2f5;
 }
 .search-suggest-item:hover + .search-suggest-item,
-.search-suggest-item:hover {
+.search-suggest-item:hover,
+.search-suggest-item.search-suggest-active + .search-suggest-item,
+.search-suggest-item.search-suggest-active {
   border-top-color: transparent;
 }
 
