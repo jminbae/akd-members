@@ -845,31 +845,46 @@ function renderHome() {
       homePage.classList.add('search-focused');
     }
   });
-  // On blur: keep the slid-up state if the user typed something (so they
-  // can tap a suggestion). Only revert (smoothly slide back) when the input
-  // is empty.
-  const tryRevertIfEmpty = () => {
-    if (document.activeElement === searchInput) return;
-    if (searchInput.value.trim()) return; // keep state while query is present
-    homePage?.classList.remove('search-focused');
+  // Revert search-box back to original position when input is empty.
+  // Does NOT check focus state — caller decides when to invoke this.
+  const revertIfEmpty = () => {
+    if (searchInput.value.trim()) return; // keep slid-up while query present
+    if (!homePage?.classList.contains('search-focused')) return;
+    homePage.classList.remove('search-focused');
     removeClassTimer = setTimeout(() => {
-      homePage?.style.removeProperty('--search-shift');
+      homePage.style.removeProperty('--search-shift');
       removeClassTimer = null;
     }, 400);
   };
   searchInput.addEventListener('blur', () => {
     blurDelayTimer = setTimeout(() => {
-      tryRevertIfEmpty();
+      revertIfEmpty();
       blurDelayTimer = null;
     }, 100);
   });
-  // If the user clears the field while it's blurred, revert immediately.
+  // If user clears the field while it's BLURRED (rare), revert immediately.
   searchInput.addEventListener('input', () => {
     if (window.innerWidth > 768) return;
     if (!searchInput.value.trim() && document.activeElement !== searchInput) {
-      tryRevertIfEmpty();
+      revertIfEmpty();
     }
   });
+  // Android: pressing the system back button dismisses the keyboard but may
+  // KEEP the input focused. Detect keyboard close via visualViewport and
+  // revert if the input has been emptied.
+  if (window.visualViewport) {
+    let lastKeyboardOpen = false;
+    window.visualViewport.addEventListener('resize', () => {
+      const keyboardOpen = (window.innerHeight - window.visualViewport.height) > 100;
+      if (lastKeyboardOpen && !keyboardOpen) {
+        // Keyboard just closed — if field is empty, revert (regardless of focus).
+        if (!searchInput.value.trim()) {
+          revertIfEmpty();
+        }
+      }
+      lastKeyboardOpen = keyboardOpen;
+    });
+  }
 }
 
 // Move active highlight in the suggestion dropdown by `delta` (+1 / -1).
