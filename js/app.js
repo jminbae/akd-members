@@ -2048,14 +2048,24 @@ router.add('#hospitals', renderHospitals);
 router.add('#hospital/:id', renderHospitalDetail);
 router.add('#treatments', renderTreatments);
 router.add('#treatment/:id', (params) => {
-  // Redirect to treatments page and select the specific treatment item
+  // Render treatments page then go directly to single-treatment view.
+  // (Previously we called selectTreatmentGroup first, which dispatched a
+  // GROUP-wide showTreatmentResults whose async geolocation callback could
+  // race with the subsequent selectTreatment, leaving the page showing the
+  // group result instead of the single treatment.)
   const treatmentName = decodeURIComponent(params.id);
   renderTreatments();
   setTimeout(() => {
-    // Find which group this treatment belongs to and switch to it
     const groupId = getTreatmentGroup(treatmentName);
-    selectTreatmentGroup(groupId);
-    // Then select the specific item
-    setTimeout(() => selectTreatment(treatmentName), 50);
+    // Update tabs / item visibility to reflect the chosen group, but do NOT
+    // run a group-wide showTreatmentResults.
+    document.querySelectorAll('.treatment-group-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.group === groupId);
+    });
+    document.querySelectorAll('.treatment-category-btn').forEach(btn => {
+      btn.style.display = btn.dataset.group === groupId ? '' : 'none';
+    });
+    // Now select the single treatment (this is the only showTreatmentResults call)
+    selectTreatment(treatmentName);
   }, 200);
 });

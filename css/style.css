@@ -248,7 +248,10 @@ ul, ol {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  /* 100vh fallback; lvh (large viewport height) doesn't shrink when the
+     mobile keyboard opens, so layout stays consistent across slide cycles. */
   min-height: calc(100vh - var(--nav-height) - 80px);
+  min-height: calc(100lvh - var(--nav-height) - 80px);
   padding: 40px 24px;
   text-align: center;
 }
