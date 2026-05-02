@@ -2060,8 +2060,8 @@ body[data-page="treatments"] .page-header {
    ANIMATIONS
    ======================================== */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes fadeInUp {
@@ -2208,31 +2208,20 @@ body[data-page="treatments"] .page-header {
     min-width: 100px;
   }
 
-  /* Mobile search focus — pure CSS transition, no scrolling.
-     The search-box slides up to just under the navbar via translateY,
-     while the logo and title fade out. JS sets --search-shift on the
-     home-page container, then we transform the search-box accordingly. */
-  .search-box {
+  /* Mobile search focus — slide ENTIRE home-page up (and back down on revert)
+     so the logo, title, search-box, and shortcuts all move as one cohesive
+     unit. The fixed navbar covers the elements as they pass under it. */
+  .home-page {
     transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
   }
-  .home-page.search-focused .search-box {
+  .home-page.search-focused {
     transform: translateY(var(--search-shift, 0));
-    /* Make sure dropdown sits above logo/title that are still in flow */
-    z-index: 50;
   }
-  .home-logo,
-  .home-subtitle,
-  .home-shortcuts {
-    transition: opacity 0.25s ease;
-  }
-  .home-page.search-focused .home-logo,
-  .home-page.search-focused .home-subtitle {
-    opacity: 0;
-    pointer-events: none;
-  }
-  .home-page.search-focused .home-shortcuts {
-    opacity: 0.35; /* dimmed; dropdown overlays them anyway */
+  /* Keep search-box's stacking high so dropdown overlays the moved content. */
+  .search-box {
+    position: relative;
+    z-index: 5;
   }
 
   /* Page header */
