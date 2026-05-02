@@ -830,14 +830,20 @@ function renderHome() {
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
-    const searchBox = document.querySelector('.search-box');
-    if (searchBox) {
-      const targetTop = 80; // navbar 56 + 24 px gap (slight breathing room)
-      const rect = searchBox.getBoundingClientRect();
-      const shift = Math.min(0, -(rect.top - targetTop));
-      homePage.style.setProperty('--search-shift', shift + 'px');
+    // Compute the slide offset ONLY when not already in the slid-up state.
+    // Re-measuring while the search-box is already transformed would yield
+    // shift=0 and visually "reset" the box to its original position while
+    // logo/title remain hidden (opacity:0) — confusing blank state.
+    if (!homePage.classList.contains('search-focused')) {
+      const searchBox = document.querySelector('.search-box');
+      if (searchBox) {
+        const targetTop = 80; // navbar 56 + 24 px gap
+        const rect = searchBox.getBoundingClientRect();
+        const shift = Math.min(0, -(rect.top - targetTop));
+        homePage.style.setProperty('--search-shift', shift + 'px');
+      }
+      homePage.classList.add('search-focused');
     }
-    homePage.classList.add('search-focused');
   });
   // On blur: keep the slid-up state if the user typed something (so they
   // can tap a suggestion). Only revert (smoothly slide back) when the input
@@ -914,15 +920,13 @@ function highlightMatch(label, query) {
   const lcLabel = label.toLowerCase();
   const lcQuery = query.toLowerCase();
   let idx = lcLabel.indexOf(lcQuery);
-  let matchLen = query.length;
   if (idx === -1) {
-    // Fuzzy: try strip-final form
+    // Fuzzy: search query as-is in stripped-label
     const sfLabel = stripKoreanFinal(lcLabel);
-    const sfQuery = stripKoreanFinal(lcQuery);
-    idx = sfLabel.indexOf(sfQuery);
+    idx = sfLabel.indexOf(lcQuery);
     if (idx === -1) return label;
-    matchLen = sfQuery.length;
   }
+  const matchLen = query.length;
   return label.slice(0, idx) +
     '<mark class="search-suggest-mark">' + label.slice(idx, idx + matchLen) + '</mark>' +
     label.slice(idx + matchLen);
@@ -944,21 +948,24 @@ function stripKoreanFinal(s) {
   return out;
 }
 
-// Match priority score (lower is higher priority):
-//   0 = label starts with exact query
-//   1 = label starts with strip-final-equivalent of query
-//   2 = label contains exact query
-//   3 = label contains strip-final-equivalent of query
+// Match priority score (lower = higher priority).
+// IMPORTANT: only LABEL is strip-finalized, NOT the query.
+// "배" (no final) matches "배정민" and "백반증" (백→배). ✓
+// "백" (with final ㄱ) only matches words actually starting with 백 —
+// the query is searched as-is so "배정민" does NOT match. ✓
+//   0 = label starts with query exactly
+//   1 = stripped-label starts with query  (e.g. 백반증→배반증 matches "배")
+//   2 = label contains query exactly
+//   3 = stripped-label contains query
 //  -1 = no match
 function fuzzyMatchScore(label, query) {
   const lcLabel = label.toLowerCase();
   const lcQuery = query.toLowerCase();
   if (lcLabel.startsWith(lcQuery)) return 0;
   const sfLabel = stripKoreanFinal(lcLabel);
-  const sfQuery = stripKoreanFinal(lcQuery);
-  if (sfLabel.startsWith(sfQuery)) return 1;
+  if (sfLabel.startsWith(lcQuery)) return 1;
   if (lcLabel.includes(lcQuery)) return 2;
-  if (sfLabel.includes(sfQuery)) return 3;
+  if (sfLabel.includes(lcQuery)) return 3;
   return -1;
 }
 
