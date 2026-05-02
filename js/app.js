@@ -764,6 +764,25 @@ function renderHome() {
   const searchInput = document.getElementById('searchInput');
   searchInput.addEventListener('input', handleSearch);
   searchInput.addEventListener('keydown', handleSearchKeydown);
+  // Mobile: when input gains focus, scroll the search box near the top so
+  // that on-screen keyboard does not cover the dropdown suggestions.
+  // Mobile: when input is focused, switch home layout to compact mode so
+  // that title moves up and search box + dropdown sit near the top
+  // (avoiding being covered by the on-screen keyboard).
+  const homePage = document.querySelector('.home-page');
+  searchInput.addEventListener('focus', () => {
+    if (window.innerWidth > 768) return;
+    homePage?.classList.add('search-focused');
+  });
+  searchInput.addEventListener('blur', () => {
+    // Only collapse back when input is empty (so user can still see results
+    // with keyboard collapsed via "Done" or scroll without losing layout).
+    setTimeout(() => {
+      if (!searchInput.value.trim()) {
+        homePage?.classList.remove('search-focused');
+      }
+    }, 100);
+  });
 }
 
 // Move active highlight in the suggestion dropdown by `delta` (+1 / -1).
