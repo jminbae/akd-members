@@ -764,6 +764,10 @@ function renderHome() {
   const searchInput = document.getElementById('searchInput');
   searchInput.addEventListener('input', handleSearch);
   searchInput.addEventListener('keydown', handleSearchKeydown);
+  // Auto-focus on desktop only (avoid forcing virtual keyboard on mobile)
+  if (window.innerWidth > 768) {
+    setTimeout(() => searchInput.focus({ preventScroll: true }), 50);
+  }
   // Mobile: when input gains focus, scroll the search box near the top so
   // that on-screen keyboard does not cover the dropdown suggestions.
   // Mobile: when input is focused, switch home layout to compact mode so
