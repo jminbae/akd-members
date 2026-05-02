@@ -1081,13 +1081,13 @@ function handleSearch(e) {
       const score = fuzzyMatchScore(name, query);
       if (score >= 0 && !treatmentSet.has(name)) {
         treatmentSet.add(name);
-        const count = MEMBERS.filter(m => m.treatments && m.treatments.includes(name)).length;
+        const hospitalCount = getHospitalsByTreatment(name).length;
         suggestions.push({
           type: 'treatment',
           typeLabel: '진료분야',
           icon: 'fa-wand-magic-sparkles',
           label: name,
-          sub: count > 0 ? `${g.name} · ${count}명의 의사` : g.name,
+          sub: hospitalCount > 0 ? `${g.name} · 진료 가능 ${hospitalCount}곳` : g.name,
           href: `#treatment/${encodeURIComponent(name)}`,
           score
         });
