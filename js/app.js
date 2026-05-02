@@ -827,20 +827,26 @@ function renderHome() {
   //   blur  → remove class → CSS reverses smoothly back to original.
   //   This avoids ALL scroll race conditions (iOS auto-scroll, my JS scroll,
   //   keyboard-induced viewport resize) which were causing stutter.
+  // Cache slide-up offset on FIRST focus (pristine layout). Reusing this
+  // prevents wrong measurements when user re-focuses mid-transition (where
+  // search-box rect.top is between original and target, leading to a
+  // smaller shift on subsequent slides).
+  let cachedShiftPx = null;
+  window.addEventListener('resize', () => { cachedShiftPx = null; });
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
-    // Compute the slide offset ONLY when not already in the slid-up state.
-    // Re-measuring while the search-box is already transformed would yield
-    // shift=0 and visually "reset" the box to its original position while
-    // logo/title remain hidden (opacity:0) — confusing blank state.
     if (!homePage.classList.contains('search-focused')) {
-      const searchBox = document.querySelector('.search-box');
-      if (searchBox) {
-        const targetTop = 80; // navbar 56 + 24 px gap
-        const rect = searchBox.getBoundingClientRect();
-        const shift = Math.min(0, -(rect.top - targetTop));
-        homePage.style.setProperty('--search-shift', shift + 'px');
+      if (cachedShiftPx === null) {
+        const searchBox = document.querySelector('.search-box');
+        if (searchBox) {
+          const targetTop = 80; // navbar 56 + 24 px gap
+          const rect = searchBox.getBoundingClientRect();
+          cachedShiftPx = Math.min(0, -(rect.top - targetTop));
+        }
+      }
+      if (cachedShiftPx !== null) {
+        homePage.style.setProperty('--search-shift', cachedShiftPx + 'px');
       }
       homePage.classList.add('search-focused');
     }
@@ -984,11 +990,26 @@ function fuzzyMatchScore(label, query) {
   return -1;
 }
 
+// Returns true when the query is purely Korean Jamo (consonants/vowels alone,
+// no completed syllables and no other characters). In that state the user is
+// still composing — wait for a syllable to form before showing results.
+function isOnlyKoreanJamo(s) {
+  if (!s) return false;
+  return /^[\u1100-\u11FF\u3130-\u318F]+$/.test(s);
+}
+
 function handleSearch(e) {
   const query = e.target.value.trim();
   const resultsDiv = document.getElementById('searchResults');
 
   if (!query) {
+    resultsDiv.innerHTML = '';
+    return;
+  }
+
+  // Wait silently while the user is composing a Korean syllable
+  // (e.g. "ㅂ" alone — a consonant without a vowel yet).
+  if (isOnlyKoreanJamo(query)) {
     resultsDiv.innerHTML = '';
     return;
   }
