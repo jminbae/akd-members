@@ -473,8 +473,8 @@ ul, ol {
   text-align: center;
 }
 
-.search-suggest-treatment .search-suggest-icon { color: #5fa8d3; }
-.search-suggest-member    .search-suggest-icon { color: var(--secondary); }
+.search-suggest-treatment .search-suggest-icon { color: #2E86DE; }
+.search-suggest-member    .search-suggest-icon { color: #7c3aed; }
 .search-suggest-hospital  .search-suggest-icon { color: var(--accent); }
 
 .search-suggest-label {
@@ -505,9 +505,9 @@ ul, ol {
   color: var(--text-light);
 }
 
-.search-suggest-treatment .search-suggest-type { background: rgba(95,168,211,0.15); color: #2E86DE; }
-.search-suggest-member    .search-suggest-type { background: rgba(46,134,222,0.12); color: var(--secondary); }
-.search-suggest-hospital  .search-suggest-type { background: rgba(232,80,91,0.1); color: var(--accent); }
+.search-suggest-treatment .search-suggest-type { background: rgba(46,134,222,0.13);  color: #2E86DE; }
+.search-suggest-member    .search-suggest-type { background: rgba(124,58,237,0.13);  color: #7c3aed; }
+.search-suggest-hospital  .search-suggest-type { background: rgba(232,80,91,0.13);   color: var(--accent); }
 
 .search-suggest-mark {
   background: rgba(255,217,102,0.55);
@@ -519,18 +519,31 @@ ul, ol {
 
 @media (max-width: 600px) {
   .search-suggest-item {
-    grid-template-columns: 22px 1fr auto;
-    gap: 10px;
-    padding: 10px 14px;
+    grid-template-columns: 20px 1fr auto;
+    gap: 8px;
+    padding: 7px 12px;
+    line-height: 1.2;
+  }
+  .search-suggest-label {
+    font-size: 14px;
   }
   .search-suggest-sub {
     grid-column: 2 / 4;
     grid-row: 2;
     max-width: 100%;
-    font-size: 12px;
-    margin-top: 2px;
+    font-size: 11.5px;
+    margin-top: 0;
+    line-height: 1.15;
   }
-  .search-suggest-type { grid-column: 3; grid-row: 1; }
+  .search-suggest-type {
+    grid-column: 3;
+    grid-row: 1;
+    font-size: 10.5px;
+    padding: 1px 7px;
+  }
+  .search-suggest-icon {
+    font-size: 13px;
+  }
 }
 
 .home-shortcuts {
