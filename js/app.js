@@ -768,8 +768,20 @@ function renderHome() {
   });
 }
 
+// Highlight matched substring in label (case-insensitive)
+function highlightMatch(label, query) {
+  if (!query) return label;
+  const lcLabel = label.toLowerCase();
+  const lcQuery = query.toLowerCase();
+  const idx = lcLabel.indexOf(lcQuery);
+  if (idx === -1) return label;
+  return label.slice(0, idx) +
+    '<mark class="search-suggest-mark">' + label.slice(idx, idx + query.length) + '</mark>' +
+    label.slice(idx + query.length);
+}
+
 function handleSearch(e) {
-  const query = e.target.value.trim().toLowerCase();
+  const query = e.target.value.trim();
   const resultsDiv = document.getElementById('searchResults');
 
   if (!query) {
@@ -777,56 +789,111 @@ function handleSearch(e) {
     return;
   }
 
-  const memberResults = MEMBERS.filter(m =>
-    m.name.includes(query) ||
-    m.specialty.includes(query) ||
-    (m.treatments && m.treatments.some(t => t.includes(query)))
-  );
+  const lcQuery = query.toLowerCase();
 
-  const hospitalResults = HOSPITALS.filter(h =>
-    h.name.includes(query) ||
-    h.shortName.includes(query) ||
-    h.address.includes(query) ||
-    h.treatments.some(t => t.includes(query))
-  );
+  // Build a unified suggestion list (matched ITEM names, not cards)
+  // Each suggestion: { type, label, sub, href, sortKey }
+  const suggestions = [];
 
-  let html = '';
-
-  memberResults.forEach(m => {
-    const hospital = getHospital(m.hospitalId);
-    html += `
-      <a href="#member/${m.id}" class="search-result-item">
-        <img src="${photoUrl(m.photo)}" class="search-result-photo" alt="${m.name}"
-             onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23e8ecf1%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23b2bec3%22>${m.name[0]}</text></svg>'">
-        <div class="search-result-info">
-          <h4>${m.name} ${m.role}</h4>
-          <p>${hospital ? hospital.shortName : ''}</p>
-        </div>
-        <span class="search-result-type member">의사</span>
-      </a>
-    `;
+  // Doctors — match by name
+  MEMBERS.forEach(m => {
+    if (m.name.toLowerCase().includes(lcQuery)) {
+      const hospital = getHospital(m.hospitalId);
+      suggestions.push({
+        type: 'member',
+        typeLabel: '의사',
+        icon: 'fa-user-md',
+        label: m.name,
+        sub: hospital ? `${hospital.shortName} ${m.role}` : (m.role || ''),
+        href: `#member/${m.id}`,
+        startsWith: m.name.toLowerCase().startsWith(lcQuery)
+      });
+    }
   });
 
-  hospitalResults.forEach(h => {
-    html += `
-      <a href="#hospital/${h.id}" class="search-result-item">
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <i class="fas fa-hospital" style="color:white;font-size:18px;"></i>
-        </div>
-        <div class="search-result-info">
-          <h4>${h.shortName}</h4>
-          <p>${h.address}</p>
-        </div>
-        <span class="search-result-type hospital">병원</span>
-      </a>
-    `;
+  // Hospitals — match by name / shortName / address
+  HOSPITALS.forEach(h => {
+    const matchedName = h.name.toLowerCase().includes(lcQuery) || h.shortName.toLowerCase().includes(lcQuery);
+    const matchedAddr = h.address.toLowerCase().includes(lcQuery);
+    if (matchedName) {
+      suggestions.push({
+        type: 'hospital',
+        typeLabel: '병원',
+        icon: 'fa-hospital',
+        label: h.name,
+        sub: h.address,
+        href: `#hospital/${h.id}`,
+        startsWith: h.name.toLowerCase().startsWith(lcQuery) || h.shortName.toLowerCase().startsWith(lcQuery)
+      });
+    } else if (matchedAddr) {
+      // Address-only match: still show as hospital with address highlighted in sub
+      suggestions.push({
+        type: 'hospital',
+        typeLabel: '병원',
+        icon: 'fa-hospital',
+        label: h.name,
+        sub: h.address,
+        subHighlight: true,
+        href: `#hospital/${h.id}`,
+        startsWith: false
+      });
+    }
   });
 
-  if (!html && query.length > 0) {
-    html = '<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:14px;">검색 결과가 없습니다.</div>';
+  // Treatments — match by name (only items registered in TREATMENT_GROUPS)
+  const treatmentSet = new Set();
+  TREATMENT_GROUPS.forEach(g => {
+    g.items.forEach(name => {
+      if (name.toLowerCase().includes(lcQuery) && !treatmentSet.has(name)) {
+        treatmentSet.add(name);
+        // Count how many doctors offer this
+        const count = MEMBERS.filter(m => m.treatments && m.treatments.includes(name)).length;
+        suggestions.push({
+          type: 'treatment',
+          typeLabel: '진료분야',
+          icon: 'fa-stethoscope',
+          label: name,
+          sub: count > 0 ? `${g.name} · ${count}명의 의사` : g.name,
+          href: `#treatment/${encodeURIComponent(name)}`,
+          startsWith: name.toLowerCase().startsWith(lcQuery)
+        });
+      }
+    });
+  });
+
+  // Sort: startsWith matches first (per type), then alphabetical
+  // Group order: 진료분야 → 의사 → 병원 (most likely intent for short queries)
+  const typeOrder = { treatment: 0, member: 1, hospital: 2 };
+  suggestions.sort((a, b) => {
+    if (typeOrder[a.type] !== typeOrder[b.type]) return typeOrder[a.type] - typeOrder[b.type];
+    if (a.startsWith !== b.startsWith) return a.startsWith ? -1 : 1;
+    return a.label.localeCompare(b.label, 'ko');
+  });
+
+  if (suggestions.length === 0) {
+    resultsDiv.innerHTML = `<div class="search-suggest-empty">'${escapeHtml(query)}'에 해당하는 항목이 없습니다.</div>`;
+    return;
   }
 
-  resultsDiv.innerHTML = html;
+  // Render as compact suggestion list
+  resultsDiv.innerHTML = suggestions.map(s => `
+    <a href="${s.href}" class="search-suggest-item search-suggest-${s.type}">
+      <i class="fas ${s.icon} search-suggest-icon"></i>
+      <span class="search-suggest-label">${
+        s.subHighlight ? escapeHtml(s.label) : highlightMatch(s.label, query)
+      }</span>
+      <span class="search-suggest-sub">${
+        s.subHighlight ? highlightMatch(s.sub, query) : escapeHtml(s.sub || '')
+      }</span>
+      <span class="search-suggest-type">${s.typeLabel}</span>
+    </a>
+  `).join('');
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
 }
 
 function renderMembers() {
