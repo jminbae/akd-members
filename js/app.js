@@ -1806,8 +1806,27 @@ window.unhighlightMarker = unhighlightMarker;
 // ==========================================
 
 // Mobile menu toggle
-document.getElementById('navToggle').addEventListener('click', () => {
+document.getElementById('navToggle').addEventListener('click', (e) => {
+  e.stopPropagation();
   document.getElementById('navMenu').classList.toggle('open');
+});
+
+// Auto-close mobile menu when user interacts elsewhere
+// (clicks outside the menu/toggle, or focuses an input/textarea)
+document.addEventListener('click', (e) => {
+  const navMenu = document.getElementById('navMenu');
+  if (!navMenu.classList.contains('open')) return;
+  // Ignore clicks inside nav-menu itself or on the toggle
+  if (e.target.closest('#navMenu') || e.target.closest('#navToggle')) return;
+  navMenu.classList.remove('open');
+}, true);
+// Also close when an input or textarea anywhere gains focus
+document.addEventListener('focusin', (e) => {
+  const navMenu = document.getElementById('navMenu');
+  if (!navMenu.classList.contains('open')) return;
+  if (e.target.matches('input, textarea, select, [contenteditable]')) {
+    navMenu.classList.remove('open');
+  }
 });
 
 // Navbar scroll effect
