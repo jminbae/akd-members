@@ -831,56 +831,34 @@ function renderHome() {
   // prevents wrong measurements when user re-focuses mid-transition (where
   // search-box rect.top is between original and target, leading to a
   // smaller shift on subsequent slides).
-  // Pre-compute the slide-up offset BEFORE the keyboard ever opens. On
-  // Android, the keyboard shrinks the layout viewport, which would change
-  // input's natural position and produce a smaller shift. By measuring
-  // once at page-load (pristine layout) and reusing, every slide cycle
-  // moves exactly the same distance.
-  // Invalidate ONLY when innerWidth changes (orientation change). Keyboard
-  // open/close changes innerHeight only — we deliberately ignore that.
-  let cachedShiftPx = null;
-  let cachedWidth = window.innerWidth;
-  const measureShiftNow = () => {
-    if (window.innerWidth > 768) return;
-    const searchBox = document.querySelector('.search-box');
-    if (!searchBox) return;
-    if (homePage?.classList.contains('search-focused')) return;
-    const rect = searchBox.getBoundingClientRect();
-    cachedShiftPx = Math.min(0, -(rect.top - 80));
-  };
-  setTimeout(measureShiftNow, 100);
-  window.addEventListener('resize', () => {
-    if (window.innerWidth !== cachedWidth) {
-      cachedWidth = window.innerWidth;
-      cachedShiftPx = null;
-      setTimeout(measureShiftNow, 200);
-    }
-  });
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
     if (homePage.classList.contains('search-focused')) return;
-    // Step 1: pin transform to identity instantly (cancels any in-flight transition)
+    const searchBox = document.querySelector('.search-box');
+    if (!searchBox) return;
+    // STEP 1: Reset to true identity (no transform) so getBoundingClientRect
+    // returns the natural, layout-determined position.
+    //   - Setting `transform = 'none'` removes any inline transform.
+    //   - Class is already not search-focused (we returned early above), so
+    //     CSS rule doesn't add transform.
+    //   - `transition: none` ensures the snap is instant (no animation).
     homePage.style.transition = 'none';
-    homePage.style.transform = 'translate3d(0, 0, 0)';
-    void homePage.offsetHeight;
-    // Step 2: measure if needed (now in pristine state)
-    if (cachedShiftPx === null) {
-      const searchBox = document.querySelector('.search-box');
-      if (searchBox) {
-        const rect = searchBox.getBoundingClientRect();
-        cachedShiftPx = Math.min(0, -(rect.top - 80));
-      }
-    }
-    if (cachedShiftPx === null) {
+    homePage.style.transform = 'none';
+    void homePage.offsetHeight; // force synchronous layout flush
+    // STEP 2: Measure search-box's natural position (now reset).
+    const rect = searchBox.getBoundingClientRect();
+    const shift = Math.min(0, -(rect.top - 80));
+    if (shift === 0) {
+      // Already at or above target — nothing to do
       homePage.style.transition = '';
       homePage.style.transform = '';
+      homePage.classList.add('search-focused');
       return;
     }
-    // Step 3: re-enable transition, then animate to target via INLINE transform
-    // (avoids any CSS var/rule resolution race condition)
+    // STEP 3: Re-enable transition, animate from 0 → shift via inline transform.
     homePage.style.transition = '';
-    homePage.style.transform = `translate3d(0, ${cachedShiftPx}px, 0)`;
+    homePage.style.transform = `translate3d(0, ${shift}px, 0)`;
     homePage.classList.add('search-focused');
   });
   const revertIfEmpty = () => {
