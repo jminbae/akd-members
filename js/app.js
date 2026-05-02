@@ -836,20 +836,27 @@ function renderHome() {
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
-    if (!homePage.classList.contains('search-focused')) {
-      if (cachedShiftPx === null) {
-        const searchBox = document.querySelector('.search-box');
-        if (searchBox) {
-          const targetTop = 80; // navbar 56 + 24 px gap
-          const rect = searchBox.getBoundingClientRect();
-          cachedShiftPx = Math.min(0, -(rect.top - targetTop));
-        }
+    if (homePage.classList.contains('search-focused')) return;
+    // Compute & cache shift on first focus (pristine layout)
+    if (cachedShiftPx === null) {
+      const searchBox = document.querySelector('.search-box');
+      if (searchBox) {
+        const targetTop = 80; // navbar 56 + 24 px gap
+        const rect = searchBox.getBoundingClientRect();
+        cachedShiftPx = Math.min(0, -(rect.top - targetTop));
       }
-      if (cachedShiftPx !== null) {
-        homePage.style.setProperty('--search-shift', cachedShiftPx + 'px');
-      }
-      homePage.classList.add('search-focused');
     }
+    if (cachedShiftPx === null) return;
+    // Force a clean starting state for the slide so re-focus during a
+    // running revert transition still produces a full, smooth slide.
+    // (1) Disable transition, (2) reset transform to identity, (3) reflow,
+    // (4) re-enable transition, (5) apply final transform via class+var.
+    homePage.style.transition = 'none';
+    homePage.style.removeProperty('--search-shift');
+    void homePage.offsetHeight; // flush
+    homePage.style.transition = '';
+    homePage.style.setProperty('--search-shift', cachedShiftPx + 'px');
+    homePage.classList.add('search-focused');
   });
   // Revert search-box back to original position when input is empty.
   // Does NOT check focus state — caller decides when to invoke this.
