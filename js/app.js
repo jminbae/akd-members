@@ -779,32 +779,43 @@ function renderHome() {
   if (window.innerWidth > 768) {
     setTimeout(() => searchInput.focus({ preventScroll: true }), 50);
   }
-  // Mobile: when input gains focus, scroll the search box near the top so
-  // that on-screen keyboard does not cover the dropdown suggestions.
-  // Mobile: when input is focused, switch home layout to compact mode so
-  // that title moves up and search box + dropdown sit near the top
-  // (avoiding being covered by the on-screen keyboard).
+  // Mobile: when input gains focus, expand the page height (becomes
+  // scrollable) and smoothly scroll the window so the search box sits
+  // just below the navbar. User can scroll freely afterwards. When the
+  // keyboard is dismissed, smoothly scroll back to top.
   const homePage = document.querySelector('.home-page');
+  const NAV_HEIGHT = 56;
+  const NAV_GAP = 24; // gap between navbar bottom and search box top
   searchInput.addEventListener('focus', () => {
-    if (window.innerWidth > 768) return;
-    if (!homePage) return;
-    // The .fade-in entry animation locks `transform: translateY(0)` via
-    // animation-fill-mode: forwards — strip it so our static transform applies.
-    homePage.classList.remove('fade-in');
-    const navHeight = 56;
-    const inputRect = searchInput.getBoundingClientRect();
-    const offset = Math.max(inputRect.top - (navHeight + 8), 0);
-    homePage.style.setProperty('--home-search-offset', offset + 'px');
+    if (window.innerWidth > 768 || !homePage) return;
     homePage.classList.add('search-focused');
+    requestAnimationFrame(() => {
+      const inputRect = searchInput.getBoundingClientRect();
+      const targetScrollY = window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP);
+      window.scrollTo({ top: Math.max(targetScrollY, 0), behavior: 'smooth' });
+    });
   });
+  const collapseSearchFocused = () => {
+    if (!homePage?.classList.contains('search-focused')) return;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Remove class after scroll-back so layout shift is not visible
+    setTimeout(() => homePage.classList.remove('search-focused'), 400);
+  };
   searchInput.addEventListener('blur', () => {
-    // Always restore layout when keyboard is dismissed so the shortcut
-    // buttons reappear. Small delay so a suggestion click (which causes
-    // blur) navigates first.
-    setTimeout(() => {
-      homePage?.classList.remove('search-focused');
-    }, 150);
+    // Slight delay so a tap on a suggestion (which blurs the input) navigates first
+    setTimeout(collapseSearchFocused, 200);
   });
+  // iOS Safari sometimes doesn't fire blur when the keyboard is dismissed.
+  // Use visualViewport as a fallback to detect keyboard close.
+  if (window.visualViewport) {
+    let lastKeyboardOpen = false;
+    window.visualViewport.addEventListener('resize', () => {
+      const vv = window.visualViewport;
+      const keyboardOpen = (window.innerHeight - vv.height) > 100;
+      if (lastKeyboardOpen && !keyboardOpen) collapseSearchFocused();
+      lastKeyboardOpen = keyboardOpen;
+    });
+  }
 }
 
 // Move active highlight in the suggestion dropdown by `delta` (+1 / -1).

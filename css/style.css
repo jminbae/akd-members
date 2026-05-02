@@ -2191,17 +2191,13 @@ body[data-page="treatments"] .page-header {
     min-width: 100px;
   }
 
-  /* Mobile: when search is focused, smoothly slide the page up so the
-     logo scrolls off-screen and the title sits near the top. Reverts
-     naturally on blur (when input is empty). */
-  .home-page {
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
-  }
-  /* Translation amount is computed by JS at focus time (--home-search-offset)
-     so it adapts to any viewport / content height. Fallback: 320px. */
+  /* Mobile: while search is focused, give the home-page enough extra
+     height so the document is scrollable. The actual auto-scroll that
+     positions the search box near the top is done by JS via
+     window.scrollTo({behavior: 'smooth'}). User can also scroll freely
+     by hand at any time. */
   .home-page.search-focused {
-    transform: translateY(calc(-1 * var(--home-search-offset, 320px)));
+    min-height: calc(100vh + 240px);
   }
   /* Shortcuts stay visible while search is focused — dropdown overlays
      them via the higher z-index on .search-results. */
