@@ -290,6 +290,7 @@ ul, ol {
   width: 100%;
   max-width: 600px;
   position: relative;
+  scroll-margin-top: 64px; /* keep gap below nav when scrolled into view */
 }
 
 .search-input {

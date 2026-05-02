@@ -786,55 +786,58 @@ function renderHome() {
   const homePage = document.querySelector('.home-page');
   const NAV_HEIGHT = 56;
   const NAV_GAP = 8; // small gap between navbar bottom and search box top
+  // Manual smooth scroll — more reliable than window.scrollTo({behavior:'smooth'})
+  // which has race-condition / state issues in some browsers across repeated calls.
+  let scrollAnim = null;
+  function manualSmoothScrollTo(targetY, duration = 280) {
+    if (scrollAnim) cancelAnimationFrame(scrollAnim);
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    if (Math.abs(distance) < 1) return;
+    const startTime = performance.now();
+    const tick = (now) => {
+      const t = Math.min((now - startTime) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3); // easeOutCubic
+      window.scrollTo(0, startY + distance * ease);
+      if (t < 1) scrollAnim = requestAnimationFrame(tick);
+      else scrollAnim = null;
+    };
+    scrollAnim = requestAnimationFrame(tick);
+  }
+
   // Track pending timers so we can cancel them when state flips quickly.
   let blurDelayTimer = null;
   let removeClassTimer = null;
-  let scrollTimer1 = null, scrollTimer2 = null;
   const clearAllPending = () => {
+    if (scrollAnim) { cancelAnimationFrame(scrollAnim); scrollAnim = null; }
     clearTimeout(blurDelayTimer);
     clearTimeout(removeClassTimer);
-    clearTimeout(scrollTimer1);
-    clearTimeout(scrollTimer2);
-    blurDelayTimer = removeClassTimer = scrollTimer1 = scrollTimer2 = null;
+    blurDelayTimer = removeClassTimer = null;
   };
 
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
-    // Cancel any pending blur/collapse timers so re-focusing keeps the
-    // expanded layout and re-runs the auto-scroll cleanly.
     clearAllPending();
     homePage.classList.add('search-focused');
-    // Force a layout reflow so the new flex-start / min-height take effect.
+    // Force synchronous layout reflow so new flex-start / min-height apply.
     void homePage.offsetHeight;
-    const searchBox = document.querySelector('.search-box');
-    const doScroll = () => {
-      if (!homePage.classList.contains('search-focused')) return;
-      void homePage.offsetHeight;
-      const inputRect = searchInput.getBoundingClientRect();
-      const targetScrollY = window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP);
-      window.scrollTo({ top: Math.max(targetScrollY, 0), behavior: 'smooth' });
-    };
-    // Try multiple times to overcome iOS Safari race conditions where layout
-    // hasn't settled or the browser's own keyboard scroll fights us.
-    doScroll();
-    scrollTimer1 = setTimeout(doScroll, 80);
-    scrollTimer2 = setTimeout(doScroll, 250);
+    // Measure input position in the new layout, then animate scroll.
+    const inputRect = searchInput.getBoundingClientRect();
+    const targetScrollY = Math.max(window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP), 0);
+    manualSmoothScrollTo(targetScrollY, 280);
   });
 
   const collapseSearchFocused = () => {
     if (!homePage?.classList.contains('search-focused')) return;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    manualSmoothScrollTo(0, 280);
     removeClassTimer = setTimeout(() => {
-      // Only remove if input still isn't focused (user didn't re-tap)
       if (document.activeElement !== searchInput) {
         homePage.classList.remove('search-focused');
       }
       removeClassTimer = null;
-    }, 400);
+    }, 320);
   };
   searchInput.addEventListener('blur', () => {
-    // Slight delay so a tap on a suggestion (which blurs the input)
-    // navigates first. Track timer so re-focus can cancel it.
     blurDelayTimer = setTimeout(() => {
       collapseSearchFocused();
       blurDelayTimer = null;
