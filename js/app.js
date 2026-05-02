@@ -821,41 +821,34 @@ function renderHome() {
     blurDelayTimer = removeClassTimer = null;
   };
 
-  // Mobile flow:
-  //   focus → expand body min-height → ONE scrollIntoView after keyboard opens
-  //                                     (native smooth via html scroll-behavior)
-  //   blur  → smooth scrollTo(0) → then collapse layout
-  //   navigation (router) → instant scroll, no animation
-  const expandDocForScroll = () => {
-    document.body.style.minHeight = 'calc(100vh + 480px)';
-  };
-  const collapseDoc = () => {
-    document.body.style.minHeight = '';
-  };
+  // Mobile flow — TRANSFORM-based, no scrolling at all:
+  //   focus → set --search-shift CSS var so CSS transition slides the
+  //           search-box up to just under the nav. Logo/title fade out.
+  //   blur  → remove class → CSS reverses smoothly back to original.
+  //   This avoids ALL scroll race conditions (iOS auto-scroll, my JS scroll,
+  //   keyboard-induced viewport resize) which were causing stutter.
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
+    const searchBox = document.querySelector('.search-box');
+    if (searchBox) {
+      const targetTop = 60; // navbar 56 + 4 px gap
+      const rect = searchBox.getBoundingClientRect();
+      const shift = Math.min(0, -(rect.top - targetTop)); // negative px (move up)
+      homePage.style.setProperty('--search-shift', shift + 'px');
+    }
     homePage.classList.add('search-focused');
-    expandDocForScroll();
-    // Wait for keyboard to begin opening (Android may resize layout viewport),
-    // then a single native smooth scroll respecting scroll-padding-top.
-    blurDelayTimer = setTimeout(() => {
-      const searchBox = document.querySelector('.search-box');
-      searchBox?.scrollIntoView({ block: 'start' }); // native smooth via CSS
-      blurDelayTimer = null;
-    }, 220);
   });
   searchInput.addEventListener('blur', () => {
-    // Smooth scroll back to top, then clean up layout.
     blurDelayTimer = setTimeout(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-      removeClassTimer = setTimeout(() => {
-        if (document.activeElement !== searchInput) {
-          homePage?.classList.remove('search-focused');
-          collapseDoc();
-        }
-        removeClassTimer = null;
-      }, 350);
+      if (document.activeElement !== searchInput) {
+        homePage?.classList.remove('search-focused');
+        // Clear the CSS var after the transition has played
+        removeClassTimer = setTimeout(() => {
+          homePage?.style.removeProperty('--search-shift');
+          removeClassTimer = null;
+        }, 400);
+      }
       blurDelayTimer = null;
     }, 100);
   });

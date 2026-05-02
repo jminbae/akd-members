@@ -2193,16 +2193,32 @@ body[data-page="treatments"] .page-header {
     min-width: 100px;
   }
 
-  /* Mobile: while search is focused, give the home-page enough extra
-     height so the document is scrollable. The actual auto-scroll that
-     positions the search box near the top is done by JS via
-     window.scrollTo({behavior: 'smooth'}). User can also scroll freely
-     by hand at any time. */
-  /* No layout change while focused — the on-screen keyboard naturally
-     shrinks the visual viewport, which provides scroll room without any
-     layout jump. The .search-focused class is now informational only. */
-  /* Shortcuts stay visible while search is focused — dropdown overlays
-     them via the higher z-index on .search-results. */
+  /* Mobile search focus — pure CSS transition, no scrolling.
+     The search-box slides up to just under the navbar via translateY,
+     while the logo and title fade out. JS sets --search-shift on the
+     home-page container, then we transform the search-box accordingly. */
+  .search-box {
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+  .home-page.search-focused .search-box {
+    transform: translateY(var(--search-shift, 0));
+    /* Make sure dropdown sits above logo/title that are still in flow */
+    z-index: 50;
+  }
+  .home-logo,
+  .home-subtitle,
+  .home-shortcuts {
+    transition: opacity 0.25s ease;
+  }
+  .home-page.search-focused .home-logo,
+  .home-page.search-focused .home-subtitle {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .home-page.search-focused .home-shortcuts {
+    opacity: 0.35; /* dimmed; dropdown overlays them anyway */
+  }
 
   /* Page header */
   .page-header {
