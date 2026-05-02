@@ -18,8 +18,8 @@ const HOSPITALS = [
     lng: 127.0235,
     website: 'http://www.healhousegn.com',
     hours: {
-      '평일 (월~금)': '10:00 - 19:00',
-      '토요일': '10:00 - 16:00',
+      '평일 (월~금)': '10:00 - 20:00',
+      '토요일': '09:00 - 15:00',
       '일요일·공휴일': '휴무'
     },
     treatments: ['백반증', '백반증수술', '고압산소', '스컬트라', '쥬브젠', '얼굴윤곽', '더엘주사', '필러', '주름', '탄력', '리프팅', '써마지', '울쎄라', '올타이트', '티타늄', '스킨부스터', '리바이브', '힐로웨이브', '레디어스', '여드름흉터', '문신제거', '텐써마', '쥬베룩', '기미/색소', '여드름', '모공', '흉터'],
@@ -335,7 +335,7 @@ const MEMBERS = [
     specialty: '피부과 전문의',
     quote: '한 번 시술 후 잊혀지는 의사가 아닌, 믿고 맡길 수 있는 피부 주치의를 약속합니다.',
     positions: [
-      '15기 교육간사, 정보위원, 홍보위원',
+      '15기 교육간사, 정보위원, 홍보간사',
       '14기 교육간사'
     ],
     career: [
@@ -1129,7 +1129,7 @@ function renderMemberDetail(params) {
             <!-- Position & Role -->
             ${member.positions && member.positions.length > 0 ? `
               <div class="info-card">
-                <h3 class="info-card-title"><i class="fas fa-id-badge"></i> 대한피부과의사회 직책</h3>
+                <h3 class="info-card-title"><i class="fas fa-id-badge"></i> 대한피부과의사회 활동</h3>
                 <ul>
                   ${member.positions.map(p => `<li>${p}</li>`).join('')}
                 </ul>
