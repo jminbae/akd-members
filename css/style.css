@@ -2211,17 +2211,15 @@ body[data-page="treatments"] .page-header {
     min-width: 100px;
   }
 
-  /* Mobile search focus — slide ENTIRE home-page up (and back down on revert)
-     so the logo, title, search-box, and shortcuts all move as one cohesive
-     unit. The fixed navbar covers the elements as they pass under it. */
+  /* Mobile search focus — JS sets the inline transform on .home-page so the
+     entire page (logo + title + search-box + shortcuts) slides as one unit.
+     CSS only declares the transition; the transform value is owned by the
+     inline style set in app.js (focus / revertIfEmpty handlers). */
   .home-page {
     transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
   }
-  .home-page.search-focused {
-    transform: translateY(var(--search-shift, 0));
-  }
-  /* Keep search-box's stacking high so dropdown overlays the moved content. */
+  /* Keep search-box's stacking high so the dropdown overlays moved content. */
   .search-box {
     position: relative;
     z-index: 5;

@@ -860,39 +860,37 @@ function renderHome() {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
     if (homePage.classList.contains('search-focused')) return;
-    // CRITICAL: force-reset transform to identity FIRST, then measure.
-    // Otherwise, if a previous revert transition is still mid-flight (or
-    // window.resize from keyboard already nulled the cache), measurement
-    // would happen against a transformed state and produce a wrong shift.
+    // Step 1: pin transform to identity instantly (cancels any in-flight transition)
     homePage.style.transition = 'none';
     homePage.style.transform = 'translate3d(0, 0, 0)';
-    homePage.style.removeProperty('--search-shift');
-    void homePage.offsetHeight; // flush layout & paint at identity
-    // Now safe to measure if cache is empty
+    void homePage.offsetHeight;
+    // Step 2: measure if needed (now in pristine state)
     if (cachedShiftPx === null) {
       const searchBox = document.querySelector('.search-box');
       if (searchBox) {
-        const targetTop = 80; // navbar 56 + 24 px gap
         const rect = searchBox.getBoundingClientRect();
-        cachedShiftPx = Math.min(0, -(rect.top - targetTop));
+        cachedShiftPx = Math.min(0, -(rect.top - 80));
       }
     }
-    // Restore transition + remove inline transform so class rule controls it
+    if (cachedShiftPx === null) {
+      homePage.style.transition = '';
+      homePage.style.transform = '';
+      return;
+    }
+    // Step 3: re-enable transition, then animate to target via INLINE transform
+    // (avoids any CSS var/rule resolution race condition)
     homePage.style.transition = '';
-    homePage.style.transform = '';
-    if (cachedShiftPx === null) return;
-    // Apply target (triggers full 0 → target transition)
-    homePage.style.setProperty('--search-shift', cachedShiftPx + 'px');
+    homePage.style.transform = `translate3d(0, ${cachedShiftPx}px, 0)`;
     homePage.classList.add('search-focused');
   });
-  // Revert search-box back to original position when input is empty.
-  // Does NOT check focus state — caller decides when to invoke this.
   const revertIfEmpty = () => {
-    if (searchInput.value.trim()) return; // keep slid-up while query present
+    if (searchInput.value.trim()) return;
     if (!homePage?.classList.contains('search-focused')) return;
     homePage.classList.remove('search-focused');
+    // Animate back to identity via inline transform (consistent with focus)
+    homePage.style.transform = 'translate3d(0, 0, 0)';
     removeClassTimer = setTimeout(() => {
-      homePage.style.removeProperty('--search-shift');
+      homePage.style.transform = '';
       removeClassTimer = null;
     }, 400);
   };
