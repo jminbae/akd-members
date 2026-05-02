@@ -821,12 +821,11 @@ function renderHome() {
     blurDelayTimer = removeClassTimer = null;
   };
 
-  // Mobile: NO custom scroll. Custom scrolling competes with iOS Safari's
-  // native auto-scroll-into-view, which causes multi-stage stutter.
-  // Instead: just give the document scroll room (body min-height +480px) and
-  // let the browser auto-scroll the focused input into view. CSS
-  // `scroll-padding-top: 64px` (on html, in style.css) tells the browser to
-  // leave space below the navbar.
+  // Mobile flow:
+  //   focus → expand body min-height → ONE scrollIntoView after keyboard opens
+  //                                     (native smooth via html scroll-behavior)
+  //   blur  → smooth scrollTo(0) → then collapse layout
+  //   navigation (router) → instant scroll, no animation
   const expandDocForScroll = () => {
     document.body.style.minHeight = 'calc(100vh + 480px)';
   };
@@ -838,17 +837,25 @@ function renderHome() {
     clearAllPending();
     homePage.classList.add('search-focused');
     expandDocForScroll();
-    // No JS scroll. The browser will auto-scroll the focused input
-    // respecting `scroll-padding-top` from CSS.
+    // Wait for keyboard to begin opening (Android may resize layout viewport),
+    // then a single native smooth scroll respecting scroll-padding-top.
+    blurDelayTimer = setTimeout(() => {
+      const searchBox = document.querySelector('.search-box');
+      searchBox?.scrollIntoView({ block: 'start' }); // native smooth via CSS
+      blurDelayTimer = null;
+    }, 220);
   });
   searchInput.addEventListener('blur', () => {
-    // Just collapse and let the page settle naturally — no smooth scroll
-    // on navigate-to-result either.
+    // Smooth scroll back to top, then clean up layout.
     blurDelayTimer = setTimeout(() => {
-      if (document.activeElement !== searchInput) {
-        homePage?.classList.remove('search-focused');
-        collapseDoc();
-      }
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      removeClassTimer = setTimeout(() => {
+        if (document.activeElement !== searchInput) {
+          homePage?.classList.remove('search-focused');
+          collapseDoc();
+        }
+        removeClassTimer = null;
+      }, 350);
       blurDelayTimer = null;
     }, 100);
   });
