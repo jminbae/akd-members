@@ -646,6 +646,10 @@ class Router {
       if (fromPath) hash = fromPath;
     }
     if (!hash) hash = '#home';
+    // Clean up any home-page search-mode state immediately on navigation
+    // (so the new page doesn't inherit expanded body height / focus class).
+    document.body.style.minHeight = '';
+    document.querySelector('.home-page')?.classList.remove('search-focused');
     for (const route of this.routes) {
       const match = this.match(route.pattern, hash);
       if (match !== null) {
@@ -659,7 +663,9 @@ class Router {
         }
         route.handler(match);
         this.updateNav(hash);
-        window.scrollTo(0, 0);
+        // Instant scroll on navigation — overrides html scroll-behavior:smooth
+        // so we don't see a slide-down animation when transitioning pages.
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         return;
       }
     }
@@ -815,68 +821,37 @@ function renderHome() {
     blurDelayTimer = removeClassTimer = null;
   };
 
-  // Mobile flow: ONE auto-scroll per focus, fired only after the keyboard
-  // is actually open (visualViewport shrunk). No layout change in home-page.
-  let lastScrollScheduled = 0;
-  const SCROLL_DEDUPE_MS = 600;
-  const scrollSearchToTop = () => {
-    if (scrollAnim) { cancelAnimationFrame(scrollAnim); scrollAnim = null; }
-    const inputRect = searchInput.getBoundingClientRect();
-    const targetScrollY = Math.max(window.scrollY + inputRect.top - (NAV_HEIGHT + NAV_GAP), 0);
-    if (Math.abs(targetScrollY - window.scrollY) > 2) {
-      manualSmoothScrollTo(targetScrollY, 280);
-    }
-    lastScrollScheduled = Date.now();
-  };
-  const scheduleScrollOnce = (delay) => {
-    if (Date.now() - lastScrollScheduled < SCROLL_DEDUPE_MS) return;
-    lastScrollScheduled = Date.now();
-    setTimeout(scrollSearchToTop, delay);
-  };
-  // Expand document body so we have scroll room without changing home-page layout.
+  // Mobile: NO custom scroll. Custom scrolling competes with iOS Safari's
+  // native auto-scroll-into-view, which causes multi-stage stutter.
+  // Instead: just give the document scroll room (body min-height +480px) and
+  // let the browser auto-scroll the focused input into view. CSS
+  // `scroll-padding-top: 64px` (on html, in style.css) tells the browser to
+  // leave space below the navbar.
   const expandDocForScroll = () => {
     document.body.style.minHeight = 'calc(100vh + 480px)';
   };
   const collapseDoc = () => {
     document.body.style.minHeight = '';
   };
-
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth > 768 || !homePage) return;
     clearAllPending();
     homePage.classList.add('search-focused');
     expandDocForScroll();
-    // Wait long enough for the keyboard to actually open before scrolling.
-    // visualViewport.resize will trigger sooner if available; otherwise this fires.
-    scheduleScrollOnce(380);
+    // No JS scroll. The browser will auto-scroll the focused input
+    // respecting `scroll-padding-top` from CSS.
   });
   searchInput.addEventListener('blur', () => {
+    // Just collapse and let the page settle naturally — no smooth scroll
+    // on navigate-to-result either.
     blurDelayTimer = setTimeout(() => {
-      manualSmoothScrollTo(0, 280);
-      removeClassTimer = setTimeout(() => {
-        if (document.activeElement !== searchInput) {
-          homePage?.classList.remove('search-focused');
-          collapseDoc();
-        }
-        removeClassTimer = null;
-      }, 320);
-      blurDelayTimer = null;
-    }, 150);
-  });
-
-  // visualViewport.resize: detect keyboard open/close
-  if (window.visualViewport) {
-    let lastKeyboardOpen = false;
-    window.visualViewport.addEventListener('resize', () => {
-      const keyboardOpen = (window.innerHeight - window.visualViewport.height) > 100;
-      if (!lastKeyboardOpen && keyboardOpen && document.activeElement === searchInput) {
-        // Keyboard just opened — that's our cue to scroll (early signal,
-        // before the 380ms timeout above). Dedupe ensures only one runs.
-        scheduleScrollOnce(0);
+      if (document.activeElement !== searchInput) {
+        homePage?.classList.remove('search-focused');
+        collapseDoc();
       }
-      lastKeyboardOpen = keyboardOpen;
-    });
-  }
+      blurDelayTimer = null;
+    }, 100);
+  });
 }
 
 // Move active highlight in the suggestion dropdown by `delta` (+1 / -1).
