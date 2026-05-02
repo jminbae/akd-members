@@ -2185,21 +2185,20 @@ body[data-page="treatments"] .page-header {
     min-width: 100px;
   }
 
-  /* Mobile compact mode: when search is focused, push the page up so the
-     logo disappears off-screen and only the title sits at the top —
-     keeping search box + dropdown above the on-screen keyboard. */
+  /* Mobile: when search is focused, smoothly slide the page up so the
+     logo scrolls off-screen and the title sits near the top. Reverts
+     naturally on blur (when input is empty). */
   .home-page {
-    transition: padding-top 0.25s ease, justify-content 0.25s ease;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
   }
   .home-page.search-focused {
-    justify-content: flex-start;
-    padding-top: 8px;
-  }
-  .home-page.search-focused .home-logo {
-    display: none;
+    transform: translateY(-160px);
   }
   .home-page.search-focused .home-shortcuts {
-    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
   }
 
   /* Page header */
