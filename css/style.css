@@ -603,15 +603,15 @@ ul, ol {
 
 /* Per-page header color variations — matched to dropdown category colors:
    의사=파랑, 진료분야=보라, 병원=붉은 톤 (톤매칭, 너무 빨갛지 않게) */
-body[data-page="dermatologists"] .page-header {
+body[data-page="dermatologist"] .page-header {
   background: linear-gradient(135deg, #1B4965 0%, #3E7CA1 100%);
 }
 
-body[data-page="hospitals"] .page-header {
+body[data-page="clinic"] .page-header {
   background: linear-gradient(135deg, #6B2B36 0%, #B0525E 100%);
 }
 
-body[data-page="treatments"] .page-header {
+body[data-page="treatment"] .page-header {
   background: linear-gradient(135deg, #3B3B6D 0%, #6E73B5 100%);
 }
 

@@ -692,15 +692,14 @@ class Router {
     document.querySelectorAll('.nav-link').forEach(link => {
       const linkPage = link.dataset.page;
       link.classList.toggle('active', linkPage === page ||
-        (linkPage === 'dermatologists' && page === 'member') ||
-        (linkPage === 'hospitals' && page === 'hospital') ||
-        (linkPage === 'treatments' && page === 'treatment'));
+        (linkPage === 'dermatologist' && page === 'member') ||
+        (linkPage === 'clinic' && page === 'hospital'));
     });
     // Set body data-page for per-page styling
     let topPage = page;
-    if (page === 'member') topPage = 'dermatologists';
-    else if (page === 'hospital') topPage = 'hospitals';
-    else if (page === 'treatment') topPage = 'treatments';
+    if (page === 'member') topPage = 'dermatologist';
+    else if (page === 'hospital') topPage = 'clinic';
+    else if (page === 'treatment') topPage = 'treatment';
     document.body.dataset.page = topPage;
     // Close mobile menu
     document.getElementById('navMenu').classList.remove('open');
@@ -751,15 +750,15 @@ function renderHome() {
         <div class="search-results" id="searchResults"></div>
       </div>
       <div class="home-shortcuts stagger">
-        <a href="#dermatologists" class="home-shortcut">
+        <a href="#dermatologist" class="home-shortcut">
           <i class="fas fa-user-md"></i>
           <span>피부과의사 찾기</span>
         </a>
-        <a href="#hospitals" class="home-shortcut">
+        <a href="#clinic" class="home-shortcut">
           <i class="fas fa-hospital"></i>
           <span>피부과 찾기</span>
         </a>
-        <a href="#treatments" class="home-shortcut">
+        <a href="#treatment" class="home-shortcut">
           <i class="fas fa-wand-magic-sparkles"></i>
           <span>진료분야로 찾기</span>
         </a>
@@ -2020,11 +2019,11 @@ document.querySelectorAll('.nav-link').forEach(link => {
 // Setup router
 const router = new Router();
 router.add('#home', renderHome);
-router.add('#dermatologists', renderMembers);
+router.add('#dermatologist', renderMembers);
 router.add('#member/:id', renderMemberDetail);
-router.add('#hospitals', renderHospitals);
+router.add('#clinic', renderHospitals);
 router.add('#hospital/:id', renderHospitalDetail);
-router.add('#treatments', renderTreatments);
+router.add('#treatment', renderTreatments);
 router.add('#treatment/:id', (params) => {
   // Render treatments page then go directly to single-treatment view.
   // (Previously we called selectTreatmentGroup first, which dispatched a
