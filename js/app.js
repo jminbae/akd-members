@@ -660,7 +660,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅'],
+    treatments: ['리프팅', '탄력', '울쎄라', '써마지', '필러', '스킨부스터', '스컬트라', '쥬베룩볼륨', '리투오', '바디온다', '기미/색소', '흉터'],
     links: [
       { type: 'website', label: '병원 홈페이지', url: 'https://seoul.hevclinic.com' },
       { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/hev_seoul' },
@@ -816,7 +816,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅']
+    treatments: ['리프팅', '탄력', '울쎄라', '써마지', '온다', '필러', '쥬베룩', '스컬트라', '쥬브아셀', '흉터', '여드름', '민감성피부']
   },
   {
     id: 'jung-jongheon',
@@ -841,7 +841,7 @@ const MEMBERS = [
     ],
     lectures: [],
     awards: [],
-    treatments: ['줄기세포', 'MCT', 'PRP', '고압산소', '필러', '실리프팅']
+    treatments: ['리프팅', '탄력', '울쎄라', '써마지', '온다', '필러', '스컬트라', '쥬베룩볼륨', '리투오', '쥬브아셀', '스킨부스터', '기미/색소', '흉터']
   },
   {
     id: 'lee-sangju',
