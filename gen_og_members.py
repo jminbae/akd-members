@@ -6,26 +6,34 @@ W, H = 1200, 630
 OUT_DIR = 'images/og'
 CUTOUT_DIR = '회원 프로필 사진_누끼'
 
-MEMBERS = [
-    ('bae-jungmin', '배정민', '힐하우스피부과의원 강남점'),
-    ('kim-hongseok', '김홍석', '보스피부과의원'),
-    ('lee-haeun', '이하은', '포레피부과의원'),
-    ('gye-jiwon', '계지원', '휴먼피부과의원 평택점'),
-    ('shin-jiyeon', '신지연', '헤브피부과의원 신사점'),
-    ('jung-hanmi', '정한미', '힐하우스피부과의원 강남점'),
-    ('park-saemi', '박새미', '힐하우스피부과의원 강남점'),
-    ('nam-chanhee', '남찬희', '휴먼피부과의원 평택점'),
-    ('park-mingi', '박민기', '휴먼피부과의원 평택점'),
-    ('lee-seolhee', '이설희', '헤브피부과의원 신사점'),
-    ('jung-jongheon', '정종헌', '헤브피부과의원 신사점'),
-]
+def _load_members():
+    """Read MEMBERS list from check.json (data dump from app.js)."""
+    import json, subprocess
+    from pathlib import Path
+    here = Path(__file__).parent
+    cj = Path('D:/tmp/check.json')
+    if not cj.exists():
+        # regenerate via export_data.js
+        subprocess.run(['node', str(here / 'export_data.js')],
+                       stdout=open(cj, 'w', encoding='utf-8'), check=True)
+    data = json.load(open(cj, encoding='utf-8'))
+    hosp = {h['id']: h.get('name', '') for h in data['HOSPITALS']}
+    out = []
+    for m in data['MEMBERS']:
+        hospital_name = hosp.get(m.get('hospitalId', ''), '')
+        out.append((m['id'], m['name'], hospital_name))
+    return out
+
+
+MEMBERS = _load_members()
 
 FONT_PATH = 'C:/Windows/Fonts/malgunbd.ttf'
 FONT_REG = 'C:/Windows/Fonts/malgun.ttf'
 
 
 def make_gradient():
-    img = Image.new('RGB', (W, H), (200, 207, 213))
+    # default.jpg 톤과 일치하는 밝은 블루-화이트 그라디언트
+    img = Image.new('RGB', (W, H), (235, 241, 247))
     px = img.load()
     cx, cy = int(W * 0.7), int(H * 0.3)
     max_r = ((W - cx) ** 2 + (H - cy) ** 2) ** 0.5
@@ -35,14 +43,14 @@ def make_gradient():
             t = min(d / max_r, 1.0)
             if t < 0.45:
                 k = t / 0.45
-                r = int(232 + (200 - 232) * k)
-                g = int(236 + (207 - 236) * k)
-                b = int(239 + (213 - 239) * k)
+                r = int(250 + (240 - 250) * k)
+                g = int(252 + (245 - 252) * k)
+                b = int(255 + (250 - 255) * k)
             else:
                 k = (t - 0.45) / 0.55
-                r = int(200 + (163 - 200) * k)
-                g = int(207 + (170 - 207) * k)
-                b = int(213 + (177 - 213) * k)
+                r = int(240 + (215 - 240) * k)
+                g = int(245 + (224 - 245) * k)
+                b = int(250 + (236 - 250) * k)
             px[x, y] = (r, g, b)
     return img
 
