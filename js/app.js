@@ -1149,7 +1149,11 @@ const MEMBERS = [
     ],
     awards: [],
     treatments: ['홍조/주사', '남성형탈모시술', '실리프팅', '기미/색소', '울쎄라', '써마지', '세르프', 'PRP', '남성특수부위토닝', '흉터시술', '여드름', '줄기세포', '필러', '쥬베룩', '리투오', '옴', '아토피피부염', '한포진', '원형탈모', '피부장벽치료'],
-    links: []
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'https://www.anbskin.com' },
+      { type: 'youtube', label: '이해진의 황금피부', url: 'https://youtube.com/@goldskins' },
+      { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/haejin.skindoc' }
+    ]
   },
   {
     id: 'lee-seunghun',
