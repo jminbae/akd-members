@@ -1517,7 +1517,13 @@ const MEMBERS = [
     ],
     awards: ['2023 우수기획자상'],
     treatments: ['수술흉터', '외상흉터', '화상흉터', '여드름흉터', '시술 및 수술부작용·합병증', '자해흔', '선천성모반', '색소침착', '피부항노화치료', '리프팅', '타이트닝', '체형교정', '미용수술', '피부질환', '피부외과적수술', '외상', '화상'],
-    links: []
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'https://www.naeumskin.com' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/naeum_skin' },
+      { type: 'instagram', label: '개인 인스타그램', url: 'https://www.instagram.com/boncheolleogoo' },
+      { type: 'facebook', label: '병원 페이스북', url: 'https://www.facebook.com/naeumskin' },
+      { type: 'facebook', label: '개인 페이스북', url: 'https://www.facebook.com/boncheolleogoo' }
+    ]
   },
   {
     id: 'jeon-sooyoung',
