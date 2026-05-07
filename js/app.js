@@ -629,9 +629,10 @@ const MEMBERS = [
     ],
     treatments: ['써마지', '덴서티알파', '올타이트', '탄력', '기미/색소', '밀크반점', '군집성흑자증', '베커모반', '선천성멜라닌세포성모반', '난치성모반', '여드름흉터', '외상흉터', '실리프팅', '켈로이드', '내향성발톱수술'],
     links: [
-      { type: 'website', label: '병원 홈페이지', url: 'http://humanpt.co.kr' },
-      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/pt_human/' },
-      { type: 'youtube', label: '유튜브', url: 'https://www.youtube.com/channel/UCTG-I_EmOuI4n5C5yAu51LA' }
+      { type: 'website', label: '병원 홈페이지', url: 'http://www.humanpt.co.kr/main/' },
+      { type: 'instagram', label: '병원 인스타그램(pt_human)', url: 'https://www.instagram.com/pt_human' },
+      { type: 'youtube', label: '병원 유튜브', url: 'https://www.youtube.com/@HUMAN_PT' },
+      { type: 'linktree', label: '링크트리', url: 'https://litt.ly/pt_human' }
     ]
   },
   {
@@ -1128,7 +1129,11 @@ const MEMBERS = [
     ],
     awards: ['2024 베스트기획자상'],
     treatments: [],
-    links: []
+    links: [
+      { type: 'facebook', label: '페이스북', url: 'https://www.facebook.com/chlroe' },
+      { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/nicederma/' },
+      { type: 'threads', label: '쓰레드', url: 'https://www.threads.com/@nicederma' }
+    ]
   },
   {
     id: 'lee-haejin',
@@ -1271,8 +1276,13 @@ const MEMBERS = [
     memberships: ['대한피부과학회 정회원', '대한임상피부치료연구회 정회원', '대한피부항노화학회 정회원', '대한피부레이저학회 정회원', '대한여드름주사학회 정회원'],
     lectures: [],
     awards: [],
-    treatments: [],
-    links: []
+    treatments: ['리프팅', '탄력', '써마지', '울쎄라', '덴서티', '소프웨이브', '온다', '필러', '스컬트라', '힐로웨이브', '리투오', '스킨부스터', '기미/색소'],
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'https://daegu.doctors365.co.kr/' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/doctors_daegu/' },
+      { type: 'youtube', label: '병원 유튜브', url: 'https://www.youtube.com/@피부라운지' },
+      { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/fooxfox_ed/' }
+    ]
   },
   {
     id: 'sohng-chihyeon',
@@ -1287,8 +1297,13 @@ const MEMBERS = [
     memberships: ['대한피부과학회 정회원', '대한피부과의사회 정회원', '대한임상피부치료연구회 정회원', '대한피부항노화학회 정회원', '대한피부레이저학회 정회원', '대한미용피부외과학회 정회원', '대한여드름주사학회 정회원'],
     lectures: [],
     awards: [],
-    treatments: [],
-    links: []
+    treatments: ['리프팅', '탄력', '써마지', '울쎄라', '덴서티', '소프웨이브', '온다', '필러', '스컬트라', '힐로웨이브', '리투오', '스킨부스터', '기미/색소'],
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'https://daegu.doctors365.co.kr/' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/doctors_daegu/' },
+      { type: 'youtube', label: '병원 유튜브', url: 'https://www.youtube.com/@피부라운지' },
+      { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/dr.ch_ssong/' }
+    ]
   },
   {
     id: 'ryu-taehyung',
