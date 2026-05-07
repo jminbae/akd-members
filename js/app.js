@@ -1039,7 +1039,10 @@ const MEMBERS = [
     ],
     awards: ['2025 베스트렉처상', '2023 우수기획자상'],
     treatments: ['여드름흉터', '쿠션흉터', '홍조/주사', '울트라펄스 알파', '스컬트라', '고우리', '힐로웨이브', '약물전달치료', '큐어젯', '스킨젯', '트리필 프로', '더블타이트', '이미지가이드 필러', '이미지가이드 보톡스'],
-    links: []
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'http://busan.bethelskin.com/' },
+      { type: 'youtube', label: '병원 유튜브', url: 'https://www.youtube.com/@bethelskin/' }
+    ]
   },
   {
     id: 'kim-dohyun',
