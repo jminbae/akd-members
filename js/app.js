@@ -3324,21 +3324,29 @@ function initInteriorTabs(photos) {
     buildLbTrack(currentList);
     lb.hidden = false;
     document.body.style.overflow = 'hidden';
-    // Wait for layout to settle, then position scroll + apply scale
-    setTimeout(() => {
+
+    function centerOn(idx) {
       const slides = track.querySelectorAll('.clinic-lightbox-slide');
-      const target = slides[startIdx];
-      if (target) {
-        const isHorizontal = window.matchMedia('(min-width: 769px)').matches;
-        // Direct scrollLeft/Top is more reliable than scrollIntoView on first open
-        if (isHorizontal) {
-          track.scrollLeft = target.offsetLeft - (track.clientWidth - target.offsetWidth) / 2;
-        } else {
-          track.scrollTop = target.offsetTop - (track.clientHeight - target.offsetHeight) / 2;
-        }
+      const target = slides[idx];
+      if (!target || !track.clientWidth) return false;
+      const isHorizontal = window.matchMedia('(min-width: 769px)').matches;
+      if (isHorizontal) {
+        track.scrollLeft = target.offsetLeft - (track.clientWidth - target.offsetWidth) / 2;
+      } else {
+        track.scrollTop = target.offsetTop - (track.clientHeight - target.offsetHeight) / 2;
       }
       updateScale();
-    }, 30);
+      return true;
+    }
+
+    // Multi-step centering: layout/styles may not be ready immediately after lb.hidden = false
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        centerOn(startIdx);
+        // Backup re-center after a tick (handles slow CSS apply / image dimensions)
+        setTimeout(() => centerOn(startIdx), 150);
+      });
+    });
   }
 
   function closeLb() {
