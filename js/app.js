@@ -247,7 +247,7 @@ const HOSPITALS = [
       '점심시간': '13:00 - 14:00'
     },
     treatments: [],
-    doctorIds: ['cho-sooick', 'park-juhyuk', 'lee-kyounggeun', 'kang-hyunah', 'park-minwoo', 'cho-eunbyul', 'heo-geunyeong'],
+    doctorIds: ['cho-sooick', 'park-juhyuk', 'lee-kyounggeun', 'kang-hyunah', 'park-minwoo', 'cho-eunbyul', 'heo-geunyeong', 'kim-junki'],
     description: '신사역 6번 출구 도보 5분. 더힐피부과 네트워크 신사 본점.'
   },
   {
@@ -1801,6 +1801,22 @@ const MEMBERS = [
     awards: [],
     treatments: [],
     links: []
+  }  ,
+  {
+    id: 'kim-junki',
+    name: '김준기',
+    photo: '회원 프로필 사진/김준기.jpg',
+    hospitalId: 'thehill-sinsa',
+    role: '원장',
+    specialty: '피부과 전문의',
+    quote: '',
+    positions: [],
+    career: [],
+    memberships: ['대한피부과학회 정회원', '대한피부과의사회 정회원'],
+    lectures: [],
+    awards: [],
+    treatments: ['울쎄라', '써마지', '리쥬란', '리투오'],
+    links: []
   }
 ];
 
@@ -2438,7 +2454,10 @@ function renderMembers() {
   setPageTitle('피부과의사 찾기, 대한피부과의사회', 'default.jpg');
   app.innerHTML = `
     <div class="page-header">
-      <h1>피부과의사 찾기</h1>
+      <h1>
+        <span>피부과의사 찾기</span>
+        <img src="images/badge.jpg" alt="피부과 전문의" class="page-header-badge">
+      </h1>
       <p>내 위치에서 가까운 피부과 전문의를 찾아드립니다.</p>
     </div>
     <div class="members-grid stagger" id="membersGrid">
@@ -2498,8 +2517,6 @@ function updateMembersView() {
         <img src="${photoUrl(m.photo)}" class="member-card-photo" alt="${m.name}"
              loading="lazy" decoding="async"
              onerror="this.style.display='none'">
-        <img src="images/badge.jpg" alt="피부과 전문의" class="member-card-badge-img"
-             loading="lazy" decoding="async">
         <span class="sr-only">${m.specialty}</span>
       </div>
       <div class="member-card-body">
