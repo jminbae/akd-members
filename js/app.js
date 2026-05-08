@@ -3000,15 +3000,6 @@ function renderHospitalDetail(params) {
   const transitInfo = hospital.transitInfo || '';
   const parkingInfo = hospital.parkingInfo || '';
 
-  const CAT_LABELS = {
-    reception: '접수·대기',
-    consultation: '상담실',
-    treatment: '시술실',
-    other: '기타'
-  };
-  const presentCats = [...new Set(interiorPhotos.map(p => p.category))];
-  const orderedCats = ['reception', 'consultation', 'treatment', 'other'].filter(c => presentCats.includes(c));
-
   app.innerHTML = `
     <div class="clinic-detail-v2 fade-in">
 
@@ -3087,17 +3078,10 @@ function renderHospitalDetail(params) {
       ${interiorPhotos.length > 0 ? `
         <section class="clinic-interior">
           <h2 class="clinic-section-h2"><i class="fas fa-camera"></i> 원내 둘러보기</h2>
-          <div class="interior-tabs" id="interiorTabs">
-            <button class="interior-tab active" data-cat="all">전체 (${interiorPhotos.length})</button>
-            ${orderedCats.map(c => {
-              const count = interiorPhotos.filter(p => p.category === c).length;
-              return `<button class="interior-tab" data-cat="${c}">${CAT_LABELS[c]} (${count})</button>`;
-            }).join('')}
-          </div>
           <div class="interior-grid" id="interiorGrid" data-collapsed="true">
             ${interiorPhotos.map((p, i) => `
-              <button class="interior-tile" data-cat="${p.category}" data-idx="${i}" aria-label="${p.caption || '병원 사진'}">
-                <img src="${photoUrl(p.image)}" alt="${p.caption || ''}" loading="lazy">
+              <button class="interior-tile" data-idx="${i}" aria-label="병원 사진 ${i+1}">
+                <img src="${photoUrl(p.image)}" alt="" loading="lazy">
               </button>
             `).join('')}
             <button class="interior-tile interior-more" id="interiorMoreBtn" aria-label="사진 더보기" hidden>
@@ -3169,7 +3153,6 @@ function renderHospitalDetail(params) {
     <div class="clinic-lightbox" id="clinicLightbox" hidden>
       <button class="clinic-lightbox-close" aria-label="닫기">&times;</button>
       <div class="clinic-lightbox-track" id="clinicLightboxTrack"></div>
-      <div class="clinic-lightbox-caption" id="clinicLightboxCap"></div>
     </div>
   `;
 
@@ -3205,42 +3188,26 @@ function initHeroSlider() {
 }
 
 function initInteriorTabs(photos) {
-  const tabs = document.getElementById('interiorTabs');
   const grid = document.getElementById('interiorGrid');
   const moreBtn = document.getElementById('interiorMoreBtn');
   const moreLabel = document.getElementById('interiorMoreLabel');
-  if (!tabs || !grid) return;
+  if (!grid) return;
 
-  const VISIBLE_COLLAPSED = 7;  // 7장 + "+1" 버튼 = 8칸
+  const VISIBLE_COLLAPSED = 7;  // 7장 + "+N" 버튼 = 8칸
 
   function applyView() {
-    const cat = tabs.querySelector('.interior-tab.active')?.dataset.cat || 'all';
     const collapsed = grid.dataset.collapsed === 'true';
     const tiles = [...grid.querySelectorAll('.interior-tile:not(.interior-more)')];
-    // Filter by category
-    const matching = tiles.filter(t => cat === 'all' || t.dataset.cat === cat);
-    const total = matching.length;
-
-    // Hide all first
-    tiles.forEach(t => t.hidden = true);
-
+    const total = tiles.length;
     if (collapsed && total > 8) {
-      matching.slice(0, VISIBLE_COLLAPSED).forEach(t => t.hidden = false);
+      tiles.forEach((t, i) => { t.hidden = i >= VISIBLE_COLLAPSED; });
       moreBtn.hidden = false;
       moreLabel.textContent = `+${total - VISIBLE_COLLAPSED}`;
     } else {
-      matching.forEach(t => t.hidden = false);
+      tiles.forEach(t => t.hidden = false);
       moreBtn.hidden = true;
     }
   }
-
-  tabs.addEventListener('click', (e) => {
-    const btn = e.target.closest('.interior-tab');
-    if (!btn) return;
-    tabs.querySelectorAll('.interior-tab').forEach(b => b.classList.toggle('active', b === btn));
-    grid.dataset.collapsed = 'true';  // 탭 바뀌면 다시 collapsed
-    applyView();
-  });
 
   if (moreBtn) {
     moreBtn.addEventListener('click', () => {
@@ -3254,15 +3221,12 @@ function initInteriorTabs(photos) {
   // ─── Coverflow Lightbox ───
   const lb = document.getElementById('clinicLightbox');
   const track = document.getElementById('clinicLightboxTrack');
-  const cap = document.getElementById('clinicLightboxCap');
   if (!lb || !track) return;
-
-  let currentList = [];
 
   function buildLbTrack(list) {
     track.innerHTML = list.map((p, i) => `
       <div class="clinic-lightbox-slide" data-idx="${i}">
-        <img src="${photoUrl(p.image)}" alt="${p.caption || ''}" loading="lazy">
+        <img src="${photoUrl(p.image)}" alt="" loading="lazy">
       </div>
     `).join('');
   }
@@ -3274,76 +3238,63 @@ function initInteriorTabs(photos) {
       ? trackRect.left + trackRect.width / 2
       : trackRect.top + trackRect.height / 2;
     const slides = track.querySelectorAll('.clinic-lightbox-slide');
-    let nearestIdx = 0;
-    let nearestDist = Infinity;
-    slides.forEach((s, i) => {
+    slides.forEach((s) => {
       const r = s.getBoundingClientRect();
       const sc = isHorizontal ? r.left + r.width / 2 : r.top + r.height / 2;
       const dist = Math.abs(sc - trackCenter);
-      const maxDist = (isHorizontal ? trackRect.width : trackRect.height) * 0.8;
+      const maxDist = (isHorizontal ? trackRect.width : trackRect.height) * 0.6;
       const t = Math.min(1, dist / maxDist);
-      const scale = 1 - 0.3 * t;
-      const opacity = 1 - 0.45 * t;
+      // 가벼운 scale (1.0 → 0.88) + 부드러운 opacity (1.0 → 0.75)
+      const scale = 1 - 0.12 * t;
+      const opacity = 1 - 0.25 * t;
       s.style.transform = `scale(${scale})`;
       s.style.opacity = opacity;
       s.classList.toggle('is-center', dist < r.width / 2 && dist < r.height / 2);
-      if (dist < nearestDist) { nearestDist = dist; nearestIdx = i; }
     });
-    if (currentList[nearestIdx]) {
-      cap.textContent = currentList[nearestIdx].caption || '';
+  }
+
+  function centerOn(idx) {
+    const slides = track.querySelectorAll('.clinic-lightbox-slide');
+    const target = slides[idx];
+    if (!target || !track.clientWidth) return false;
+    const isHorizontal = window.matchMedia('(min-width: 769px)').matches;
+    if (isHorizontal) {
+      track.scrollLeft = target.offsetLeft - (track.clientWidth - target.offsetWidth) / 2;
+    } else {
+      track.scrollTop = target.offsetTop - (track.clientHeight - target.offsetHeight) / 2;
     }
+    updateScale();
+    return true;
   }
 
   function scrollToSlide(idx, smooth = true) {
-    const slide = track.querySelectorAll('.clinic-lightbox-slide')[idx];
-    if (!slide) return;
+    const slides = track.querySelectorAll('.clinic-lightbox-slide');
+    const target = slides[idx];
+    if (!target) return;
     const isHorizontal = window.matchMedia('(min-width: 769px)').matches;
-    slide.scrollIntoView({
-      behavior: smooth ? 'smooth' : 'auto',
-      inline: isHorizontal ? 'center' : 'nearest',
-      block: isHorizontal ? 'nearest' : 'center'
-    });
+    const beh = smooth ? 'smooth' : 'auto';
+    if (isHorizontal) {
+      track.scrollTo({ left: target.offsetLeft - (track.clientWidth - target.offsetWidth) / 2, behavior: beh });
+    } else {
+      track.scrollTo({ top: target.offsetTop - (track.clientHeight - target.offsetHeight) / 2, behavior: beh });
+    }
   }
 
   track.addEventListener('scroll', () => requestAnimationFrame(updateScale), { passive: true });
   track.addEventListener('click', (e) => {
     const slide = e.target.closest('.clinic-lightbox-slide');
     if (!slide) return;
-    const idx = parseInt(slide.dataset.idx, 10);
-    scrollToSlide(idx);
+    scrollToSlide(parseInt(slide.dataset.idx, 10));
   });
 
-  function visiblePhotos() {
-    const cat = tabs.querySelector('.interior-tab.active')?.dataset.cat || 'all';
-    return cat === 'all' ? photos : photos.filter(p => p.category === cat);
-  }
-
   function openLb(startIdx) {
-    currentList = visiblePhotos();
-    if (currentList.length === 0) return;
-    buildLbTrack(currentList);
+    if (photos.length === 0) return;
+    buildLbTrack(photos);
     lb.hidden = false;
     document.body.style.overflow = 'hidden';
-
-    function centerOn(idx) {
-      const slides = track.querySelectorAll('.clinic-lightbox-slide');
-      const target = slides[idx];
-      if (!target || !track.clientWidth) return false;
-      const isHorizontal = window.matchMedia('(min-width: 769px)').matches;
-      if (isHorizontal) {
-        track.scrollLeft = target.offsetLeft - (track.clientWidth - target.offsetWidth) / 2;
-      } else {
-        track.scrollTop = target.offsetTop - (track.clientHeight - target.offsetHeight) / 2;
-      }
-      updateScale();
-      return true;
-    }
-
-    // Multi-step centering: layout/styles may not be ready immediately after lb.hidden = false
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         centerOn(startIdx);
-        // Backup re-center after a tick (handles slow CSS apply / image dimensions)
         setTimeout(() => centerOn(startIdx), 150);
       });
     });
@@ -3357,14 +3308,7 @@ function initInteriorTabs(photos) {
   grid.addEventListener('click', (e) => {
     const tile = e.target.closest('.interior-tile:not(.interior-more)');
     if (!tile) return;
-    // Find index in currently-visible list
-    const visibleTiles = [...grid.querySelectorAll('.interior-tile:not(.interior-more)')].filter(t => !t.hidden);
-    const visIdx = visibleTiles.indexOf(tile);
-    // Map to currentList index by matching data-idx attribute
-    const photoIdx = parseInt(tile.dataset.idx, 10);
-    const allList = visiblePhotos();
-    const startIdx = allList.findIndex(p => photos.indexOf(p) === photoIdx);
-    openLb(startIdx >= 0 ? startIdx : visIdx);
+    openLb(parseInt(tile.dataset.idx, 10));
   });
 
   lb.querySelector('.clinic-lightbox-close').addEventListener('click', closeLb);

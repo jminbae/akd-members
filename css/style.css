@@ -3025,8 +3025,9 @@ body[data-page="treatment"] .page-header {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   align-items: center;
-  padding: 0 50%;  /* 가장자리 슬라이드도 가운데까지 스크롤되도록 */
-  gap: 24px;
+  /* 슬라이드 50vw → 양옆 25vw 패딩으로 첫/마지막 슬라이드도 정중앙 도달 가능 */
+  padding: 0 25vw;
+  gap: 8px;
   scrollbar-width: none;
 }
 
@@ -3035,14 +3036,18 @@ body[data-page="treatment"] .page-header {
 .clinic-lightbox-slide {
   flex: 0 0 auto;
   scroll-snap-align: center;
-  width: min(70vw, 800px);
+  width: 50vw;
+  max-width: 720px;
   height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transform-origin: center;
-  transition: transform 0.35s ease, opacity 0.35s ease;
+  /* 가볍고 부드러운 트랜지션 */
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.4s ease-out;
+  will-change: transform, opacity;
 }
 
 .clinic-lightbox-slide img {
@@ -3050,24 +3055,8 @@ body[data-page="treatment"] .page-header {
   max-height: 100%;
   object-fit: contain;
   border-radius: 8px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
   pointer-events: none;
-}
-
-.clinic-lightbox-caption {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: white;
-  font-size: 14px;
-  padding: 8px 16px;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 100px;
-  max-width: 80%;
-  text-align: center;
-  pointer-events: none;
-  z-index: 2;
 }
 
 .clinic-lightbox-close {
@@ -3097,12 +3086,13 @@ body[data-page="treatment"] .page-header {
     overflow-x: hidden;
     overflow-y: auto;
     scroll-snap-type: y mandatory;
-    padding: 50% 0;
-    gap: 16px;
+    padding: 20vh 0;  /* 슬라이드 60vh → 양 위아래 20vh */
+    gap: 8px;
   }
   .clinic-lightbox-slide {
     width: 90vw;
-    height: 70vh;
+    height: 60vh;
+    max-width: none;
   }
 }
 
