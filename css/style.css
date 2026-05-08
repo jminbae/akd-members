@@ -2837,6 +2837,10 @@ body[data-page="treatment"] .page-header {
   transition: var(--transition);
 }
 
+.interior-tile[hidden] {
+  display: none !important;
+}
+
 .interior-tile:hover {
   transform: scale(1.02);
   box-shadow: var(--shadow);
@@ -2853,16 +2857,32 @@ body[data-page="treatment"] .page-header {
   transform: scale(1.05);
 }
 
-.interior-caption {
-  position: absolute;
-  left: 8px;
-  bottom: 8px;
-  padding: 3px 8px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  font-size: 11px;
-  border-radius: 4px;
-  backdrop-filter: blur(4px);
+/* "+N" 더보기 버튼 */
+.interior-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #e9eef5, #d8e0ec);
+  color: var(--secondary);
+  font-weight: 600;
+}
+
+.interior-more:hover {
+  background: linear-gradient(135deg, #dde6f1, #c8d4e3);
+}
+
+.interior-more-icon {
+  font-size: 36px;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.interior-more-label {
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  font-weight: 700;
 }
 
 /* 5. EQUIPMENT ─────────────── */
@@ -2980,48 +3000,85 @@ body[data-page="treatment"] .page-header {
   line-height: 1.5;
 }
 
-/* LIGHTBOX ─────────────── */
+/* COVERFLOW LIGHTBOX ───────────────
+   - 데스크톱: 가로 스크롤 + 가운데가 가장 크고 좌우는 작아짐
+   - 모바일: 세로 스크롤 + 가운데가 가장 크고 위아래 작아짐
+   - 클릭한 슬라이드가 가운데로 부드럽게 이동 */
 .clinic-lightbox[hidden] { display: none; }
 .clinic-lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: rgba(0, 0, 0, 0.94);
   z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
 }
 
-.clinic-lightbox-img {
+.clinic-lightbox-track {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  align-items: center;
+  padding: 0 50%;  /* 가장자리 슬라이드도 가운데까지 스크롤되도록 */
+  gap: 24px;
+  scrollbar-width: none;
+}
+
+.clinic-lightbox-track::-webkit-scrollbar { display: none; }
+
+.clinic-lightbox-slide {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  width: min(70vw, 800px);
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transform-origin: center;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.clinic-lightbox-slide img {
   max-width: 100%;
-  max-height: calc(100% - 60px);
-  border-radius: 8px;
+  max-height: 100%;
   object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
 }
 
 .clinic-lightbox-caption {
   position: absolute;
-  bottom: 16px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   color: white;
   font-size: 14px;
-  padding: 6px 14px;
+  padding: 8px 16px;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 100px;
   max-width: 80%;
   text-align: center;
+  pointer-events: none;
+  z-index: 2;
 }
 
-.clinic-lightbox-close,
-.clinic-lightbox-nav {
+.clinic-lightbox-close {
   position: absolute;
-  background: rgba(255, 255, 255, 0.12);
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.15);
   border: none;
   color: white;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 28px;
   border-radius: 50%;
   width: 44px;
   height: 44px;
@@ -3029,13 +3086,25 @@ body[data-page="treatment"] .page-header {
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
+  z-index: 2;
 }
 
-.clinic-lightbox-close { top: 16px; right: 16px; font-size: 30px; }
-.clinic-lightbox-nav.prev { left: 16px; top: 50%; transform: translateY(-50%); }
-.clinic-lightbox-nav.next { right: 16px; top: 50%; transform: translateY(-50%); }
-.clinic-lightbox-close:hover,
-.clinic-lightbox-nav:hover { background: rgba(255, 255, 255, 0.25); }
+.clinic-lightbox-close:hover { background: rgba(255, 255, 255, 0.28); }
+
+@media (max-width: 768px) {
+  .clinic-lightbox-track {
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    padding: 50% 0;
+    gap: 16px;
+  }
+  .clinic-lightbox-slide {
+    width: 90vw;
+    height: 70vh;
+  }
+}
 
 /* RESPONSIVE ─────────────── */
 @media (max-width: 768px) {
@@ -3065,7 +3134,8 @@ body[data-page="treatment"] .page-header {
   .interior-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .interior-caption { font-size: 10px; padding: 2px 6px; }
+  .interior-more-icon { font-size: 32px; }
+  .interior-more-label { font-size: 13px; }
   .clinic-name { font-size: 20px; }
   .clinic-section-h2 { font-size: 18px; }
 }
