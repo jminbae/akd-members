@@ -3324,11 +3324,21 @@ function initInteriorTabs(photos) {
     buildLbTrack(currentList);
     lb.hidden = false;
     document.body.style.overflow = 'hidden';
-    // Wait for layout, then center on startIdx
-    requestAnimationFrame(() => {
-      scrollToSlide(startIdx, false);
-      requestAnimationFrame(updateScale);
-    });
+    // Wait for layout to settle, then position scroll + apply scale
+    setTimeout(() => {
+      const slides = track.querySelectorAll('.clinic-lightbox-slide');
+      const target = slides[startIdx];
+      if (target) {
+        const isHorizontal = window.matchMedia('(min-width: 769px)').matches;
+        // Direct scrollLeft/Top is more reliable than scrollIntoView on first open
+        if (isHorizontal) {
+          track.scrollLeft = target.offsetLeft - (track.clientWidth - target.offsetWidth) / 2;
+        } else {
+          track.scrollTop = target.offsetTop - (track.clientHeight - target.offsetHeight) / 2;
+        }
+      }
+      updateScale();
+    }, 30);
   }
 
   function closeLb() {
