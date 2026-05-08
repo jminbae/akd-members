@@ -1434,7 +1434,13 @@ const MEMBERS = [
     ],
     awards: ['2025 우수렉처상'],
     treatments: ['콜라겐부스터', '여드름흉터', '줄기세포'],
-    links: []
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'http://www.thehealskin.co.kr/' },
+      { type: 'instagram', label: '병원 인스타그램', url: 'https://www.instagram.com/the_heal_derma/' },
+      { type: 'instagram', label: '더힐피부과 병원 전체 인스타그램', url: 'https://www.instagram.com/the_healderma/' },
+      { type: 'linktree', label: '링크트리', url: 'https://linktr.ee/thehealclinic' },
+      { type: 'kakao', label: '카카오 플러스친구', url: 'http://pf.kakao.com/_LxagWxb/chat' }
+    ]
   },
   {
     id: 'lee-kyounggeun',
@@ -2621,7 +2627,8 @@ function renderMemberDetail(params) {
     tiktok: 'fa-brands fa-tiktok',
     linktree: 'fa-solid fa-link',
     facebook: 'fa-brands fa-facebook',
-    blog: 'fa-solid fa-blog'
+    blog: 'fa-solid fa-blog',
+    kakao: 'fa-solid fa-comment'
   };
 
   // Generate random positions for SNS balloons
