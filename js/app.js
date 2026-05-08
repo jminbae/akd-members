@@ -296,7 +296,36 @@ const HOSPITALS = [
     },
     treatments: [],
     doctorIds: ['kwon-wonjoo', 'lee-hojung', 'jung-joonwoo'],
-    description: '9호선 등촌역 2번 출구 도보. 셀로디피부과 네트워크 강서점.'
+    description: '9호선 등촌역 2번 출구 도보. 셀로디피부과 네트워크 강서점.',
+    slogan: '9호선 등촌역 도보 1분, 강서구 피부과 전문의 진료',
+    heroImages: [
+      '병원 소개 이미지/celody-gangseo/03.jpg',
+      '병원 소개 이미지/celody-gangseo/04.jpg',
+      '병원 소개 이미지/celody-gangseo/05.jpg'
+    ],
+    philosophy: [
+      { title: '피부과 전문의 진료', description: '대한피부과의사회 정회원으로서 의학적 근거와 정품 의료기기를 기반으로 진료합니다.' },
+      { title: '맞춤 시술 설계', description: '환자의 피부 상태와 생활 패턴을 고려한 1:1 맞춤 시술 플랜을 제안합니다.' },
+      { title: '정품 장비 운영', description: '울쎄라·써마지·포텐자 등 식약처 허가 정품 장비를 운영합니다.' },
+      { title: '안전 우선 원칙', description: '모든 시술은 사전 상담을 통해 적응증·금기증을 충분히 확인한 후 진행합니다.' }
+    ],
+    interiorPhotos: [
+      { image: '병원 소개 이미지/celody-gangseo/01.jpg', category: 'treatment',    caption: '시술실 (울쎄라 프라임)' },
+      { image: '병원 소개 이미지/celody-gangseo/02.jpg', category: 'treatment',    caption: '시술실' },
+      { image: '병원 소개 이미지/celody-gangseo/03.jpg', category: 'reception',   caption: '리셉션' },
+      { image: '병원 소개 이미지/celody-gangseo/04.jpg', category: 'reception',   caption: '대기 공간' },
+      { image: '병원 소개 이미지/celody-gangseo/05.jpg', category: 'consultation',caption: '상담실' },
+      { image: '병원 소개 이미지/celody-gangseo/06.jpg', category: 'consultation',caption: '상담실' },
+      { image: '병원 소개 이미지/celody-gangseo/07.jpg', category: 'treatment',    caption: '시술실' },
+      { image: '병원 소개 이미지/celody-gangseo/08.jpg', category: 'treatment',    caption: '시술실' },
+      { image: '병원 소개 이미지/celody-gangseo/09.jpg', category: 'other',        caption: '내부 공간' },
+      { image: '병원 소개 이미지/celody-gangseo/10.jpg', category: 'other',        caption: '내부 공간' },
+      { image: '병원 소개 이미지/celody-gangseo/11.jpg', category: 'treatment',    caption: '시술실' },
+      { image: '병원 소개 이미지/celody-gangseo/12.jpg', category: 'other',        caption: '내부 공간' }
+    ],
+    equipment: [],
+    parkingInfo: '건물 내 주차장 이용 가능 (사전 문의)',
+    transitInfo: '9호선 등촌역 2번 출구 도보 17m'
   },
   {
     id: 'doctors-daegu',
@@ -2960,70 +2989,274 @@ function renderHospitalDetail(params) {
   }
 
   const doctors = getHospitalDoctors(hospital.id);
-
   setPageTitle(hospital.name, 'hospital-' + hospital.id + '.jpg');
 
+  // ─── Optional v2 fields (spec) ───
+  const heroImages = hospital.heroImages || [];
+  const philosophy = hospital.philosophy || [];
+  const interiorPhotos = hospital.interiorPhotos || [];
+  const equipment = hospital.equipment || [];
+  const slogan = hospital.slogan || '';
+  const transitInfo = hospital.transitInfo || '';
+  const parkingInfo = hospital.parkingInfo || '';
+
+  const CAT_LABELS = {
+    reception: '접수·대기',
+    consultation: '상담실',
+    treatment: '시술실',
+    other: '기타'
+  };
+  const presentCats = [...new Set(interiorPhotos.map(p => p.category))];
+  const orderedCats = ['reception', 'consultation', 'treatment', 'other'].filter(c => presentCats.includes(c));
+
   app.innerHTML = `
-    <div class="hospital-detail fade-in">
-      <div class="hospital-hero">
-        <h1>${hospital.name}</h1>
-        <p>${hospital.description}</p>
-      </div>
+    <div class="clinic-detail-v2 fade-in">
 
-      <div class="hospital-info-grid">
-        <div class="info-card">
-          <h3 class="info-card-title"><i class="fas fa-info-circle"></i> 병원 정보</h3>
-          <ul>
-            <li><strong>주소:</strong> ${hospital.address}</li>
-            <li><strong>전화:</strong> ${hospital.phone}</li>
-            ${hospital.website ? `<li><strong>웹사이트:</strong> <a href="${hospital.website}" target="_blank" style="color:var(--secondary)">${hospital.website}</a></li>` : ''}
-          </ul>
-        </div>
-        <div class="info-card">
-          <h3 class="info-card-title"><i class="fas fa-clock"></i> 진료 시간</h3>
-          <ul>
-            ${Object.entries(hospital.hours).map(([day, time]) => `
-              <li><strong>${day}:</strong> ${time}</li>
+      <!-- 1. HERO -->
+      <section class="clinic-hero-v2">
+        ${heroImages.length > 0 ? `
+          <div class="clinic-hero-slider" id="clinicHeroSlider">
+            ${heroImages.map((img, i) => `
+              <img src="${photoUrl(img)}" alt="${hospital.name} ${i+1}"
+                   class="clinic-hero-img${i === 0 ? ' active' : ''}"
+                   loading="${i === 0 ? 'eager' : 'lazy'}">
             `).join('')}
-          </ul>
-        </div>
-        <div class="hospital-map-container" id="hospitalMap"></div>
-      </div>
-
-      <div class="hospital-doctors-section">
-        <h2><i class="fas fa-user-md"></i> 소속 의료진</h2>
-        <div class="team-grid stagger">
-          ${doctors.map(d => `
-            <a href="#member/${d.id}" class="team-member-card">
-              <img src="${photoUrl(d.photo)}" class="team-member-photo" alt="${d.name}"
-                   onerror="this.style.background='var(--bg)'">
-              <div class="team-member-info">
-                <p class="specialty-label">${d.specialty}</p>
-                <h4>${d.name} ${d.role}</h4>
+            ${heroImages.length > 1 ? `
+              <div class="clinic-hero-dots">
+                ${heroImages.map((_, i) => `<button class="clinic-hero-dot${i === 0 ? ' active' : ''}" data-idx="${i}" aria-label="${i+1}번 슬라이드"></button>`).join('')}
               </div>
-            </a>
-          `).join('')}
+            ` : ''}
+          </div>
+        ` : ''}
+        <div class="clinic-hero-info">
+          <span class="clinic-cert-badge"><i class="fas fa-certificate"></i> 대한피부과의사회 정회원</span>
+          <h1 class="clinic-name">${hospital.name}</h1>
+          ${slogan ? `<p class="clinic-slogan">${slogan}</p>` : (hospital.description ? `<p class="clinic-slogan">${hospital.description}</p>` : '')}
+          <div class="clinic-meta">
+            ${hospital.address ? `<div class="clinic-meta-item"><i class="fas fa-map-marker-alt"></i><span>${hospital.address}</span></div>` : ''}
+            ${hospital.phone ? `<div class="clinic-meta-item"><i class="fas fa-phone"></i><a href="tel:${hospital.phone}">${hospital.phone}</a></div>` : ''}
+            ${hospital.website ? `<div class="clinic-meta-item"><i class="fas fa-globe"></i><a href="${hospital.website}" target="_blank" rel="noopener">${hospital.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a></div>` : ''}
+            ${Object.keys(hospital.hours || {}).length > 0 ? `
+              <div class="clinic-meta-item clinic-meta-hours">
+                <i class="fas fa-clock"></i>
+                <div>
+                  ${Object.entries(hospital.hours).map(([d, t]) => `<div><strong>${d}:</strong> ${t}</div>`).join('')}
+                </div>
+              </div>
+            ` : ''}
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="hospital-treatments-section">
-        <h2><i class="fas fa-wand-magic-sparkles"></i> 진료분야</h2>
-        <p class="hospital-treatments-desc">소속 원장님들이 진료하는 분야입니다</p>
-        <div class="treatment-tags">
-          ${TREATMENT_GROUPS.flatMap(g =>
-            hospital.treatments
-              .filter(t => g.items.includes(t))
-              .map(t => `<a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag group-${g.id}">${t}</a>`)
-          ).join('')}
-        </div>
-      </div>
+      <!-- 2. PHILOSOPHY -->
+      ${philosophy.length > 0 ? `
+        <section class="clinic-philosophy">
+          <h2 class="clinic-section-h2"><i class="fas fa-quote-left"></i> 진료 철학</h2>
+          <div class="philosophy-grid">
+            ${philosophy.map((p, i) => `
+              <div class="philosophy-card">
+                <div class="philosophy-num">${String(i+1).padStart(2,'0')}</div>
+                <h3>${p.title}</h3>
+                <p>${p.description}</p>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+      ` : ''}
+
+      <!-- 3. DOCTORS -->
+      ${doctors.length > 0 ? `
+        <section class="clinic-doctors">
+          <h2 class="clinic-section-h2"><i class="fas fa-user-md"></i> 의료진 ${doctors.length}명</h2>
+          <div class="team-grid stagger">
+            ${doctors.map(d => `
+              <a href="#member/${d.id}" class="team-member-card">
+                <img src="${photoUrl(d.photo)}" class="team-member-photo" alt="${d.name}"
+                     onerror="this.style.background='var(--bg)'">
+                <div class="team-member-info">
+                  <p class="specialty-label">${d.specialty}</p>
+                  <h4>${d.name} ${d.role}</h4>
+                </div>
+              </a>
+            `).join('')}
+          </div>
+        </section>
+      ` : ''}
+
+      <!-- 4. INTERIOR -->
+      ${interiorPhotos.length > 0 ? `
+        <section class="clinic-interior">
+          <h2 class="clinic-section-h2"><i class="fas fa-camera"></i> 원내 둘러보기</h2>
+          <div class="interior-tabs" id="interiorTabs">
+            <button class="interior-tab active" data-cat="all">전체 (${interiorPhotos.length})</button>
+            ${orderedCats.map(c => {
+              const count = interiorPhotos.filter(p => p.category === c).length;
+              return `<button class="interior-tab" data-cat="${c}">${CAT_LABELS[c]} (${count})</button>`;
+            }).join('')}
+          </div>
+          <div class="interior-grid" id="interiorGrid">
+            ${interiorPhotos.map((p, i) => `
+              <button class="interior-tile" data-cat="${p.category}" data-idx="${i}" aria-label="${p.caption || ''}">
+                <img src="${photoUrl(p.image)}" alt="${p.caption || ''}" loading="lazy">
+                ${p.caption ? `<span class="interior-caption">${p.caption}</span>` : ''}
+              </button>
+            `).join('')}
+          </div>
+        </section>
+      ` : ''}
+
+      <!-- 5. EQUIPMENT -->
+      <section class="clinic-equipment">
+        <h2 class="clinic-section-h2"><i class="fas fa-microchip"></i> 보유 장비</h2>
+        ${equipment.length > 0 ? `
+          <div class="equipment-grid">
+            ${equipment.map(eq => `
+              <div class="equipment-card">
+                ${eq.image ? `<img src="${photoUrl(eq.image)}" class="equipment-thumb" alt="${eq.name}">` : `<div class="equipment-thumb equipment-thumb-empty"><i class="fas fa-microchip"></i></div>`}
+                <div class="equipment-info">
+                  <h4>${eq.name}</h4>
+                  ${eq.manufacturerModel ? `<p class="equipment-mfr">${eq.manufacturerModel}</p>` : ''}
+                  ${eq.kfdaNumber ? `<p class="equipment-kfda">식약처 허가: ${eq.kfdaNumber}</p>` : ''}
+                  ${eq.description ? `<p class="equipment-desc">${eq.description}</p>` : ''}
+                  ${(eq.treatmentTags || []).length > 0 ? `
+                    <div class="equipment-tags">
+                      ${eq.treatmentTags.map(t => `<span class="equipment-tag">${t}</span>`).join('')}
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : `
+          <p class="clinic-section-empty">장비 정보 준비 중입니다.</p>
+        `}
+      </section>
+
+      <!-- 6. TREATMENTS -->
+      ${hospital.treatments && hospital.treatments.length > 0 ? `
+        <section class="clinic-treatments">
+          <h2 class="clinic-section-h2"><i class="fas fa-wand-magic-sparkles"></i> 대표 진료</h2>
+          <p class="clinic-section-sub">소속 원장님들이 진료하는 분야입니다</p>
+          <div class="treatment-tags">
+            ${TREATMENT_GROUPS.flatMap(g =>
+              hospital.treatments
+                .filter(t => g.items.includes(t))
+                .map(t => `<a href="#treatment/${encodeURIComponent(t)}" class="treatment-tag group-${g.id}">${t}</a>`)
+            ).join('')}
+          </div>
+        </section>
+      ` : ''}
+
+      <!-- 7. LOCATION -->
+      ${(hospital.lat && hospital.lng) || transitInfo || parkingInfo ? `
+        <section class="clinic-location">
+          <h2 class="clinic-section-h2"><i class="fas fa-map-marked-alt"></i> 오시는 길</h2>
+          ${hospital.lat && hospital.lng ? `<div class="hospital-map-container" id="hospitalMap"></div>` : ''}
+          <div class="clinic-location-info">
+            ${hospital.address ? `<div class="loc-row"><strong>주소</strong><span>${hospital.address}</span></div>` : ''}
+            ${transitInfo ? `<div class="loc-row"><strong>대중교통</strong><span>${transitInfo}</span></div>` : ''}
+            ${parkingInfo ? `<div class="loc-row"><strong>주차</strong><span>${parkingInfo}</span></div>` : ''}
+          </div>
+        </section>
+      ` : ''}
+
+    </div>
+
+    <!-- Lightbox -->
+    <div class="clinic-lightbox" id="clinicLightbox" hidden>
+      <button class="clinic-lightbox-close" aria-label="닫기">&times;</button>
+      <button class="clinic-lightbox-nav prev" aria-label="이전">&#10094;</button>
+      <button class="clinic-lightbox-nav next" aria-label="다음">&#10095;</button>
+      <img class="clinic-lightbox-img" alt="">
+      <div class="clinic-lightbox-caption"></div>
     </div>
   `;
 
-  // Initialize map
-  setTimeout(() => {
-    initHospitalMap(hospital);
-  }, 100);
+  if (heroImages.length > 1) initHeroSlider();
+  if (interiorPhotos.length > 0) initInteriorTabs(interiorPhotos);
+  if (hospital.lat && hospital.lng) {
+    setTimeout(() => initHospitalMap(hospital), 100);
+  }
+}
+
+function initHeroSlider() {
+  const slider = document.getElementById('clinicHeroSlider');
+  if (!slider) return;
+  const imgs = slider.querySelectorAll('.clinic-hero-img');
+  const dots = slider.querySelectorAll('.clinic-hero-dot');
+  if (imgs.length <= 1) return;
+  let idx = 0;
+  const show = (newIdx) => {
+    imgs[idx].classList.remove('active');
+    dots[idx]?.classList.remove('active');
+    idx = (newIdx + imgs.length) % imgs.length;
+    imgs[idx].classList.add('active');
+    dots[idx]?.classList.add('active');
+  };
+  let timer = setInterval(() => show(idx + 1), 5000);
+  dots.forEach(d => {
+    d.addEventListener('click', (e) => {
+      clearInterval(timer);
+      show(parseInt(e.currentTarget.dataset.idx, 10));
+      timer = setInterval(() => show(idx + 1), 5000);
+    });
+  });
+}
+
+function initInteriorTabs(photos) {
+  const tabs = document.getElementById('interiorTabs');
+  const grid = document.getElementById('interiorGrid');
+  if (!tabs || !grid) return;
+
+  tabs.addEventListener('click', (e) => {
+    const btn = e.target.closest('.interior-tab');
+    if (!btn) return;
+    tabs.querySelectorAll('.interior-tab').forEach(b => b.classList.toggle('active', b === btn));
+    const cat = btn.dataset.cat;
+    grid.querySelectorAll('.interior-tile').forEach(tile => {
+      tile.style.display = (cat === 'all' || tile.dataset.cat === cat) ? '' : 'none';
+    });
+  });
+
+  const lb = document.getElementById('clinicLightbox');
+  if (!lb) return;
+  const lbImg = lb.querySelector('.clinic-lightbox-img');
+  const lbCap = lb.querySelector('.clinic-lightbox-caption');
+  let lbIdx = 0;
+  const visiblePhotos = () => {
+    const cat = tabs.querySelector('.interior-tab.active')?.dataset.cat || 'all';
+    return cat === 'all' ? photos : photos.filter(p => p.category === cat);
+  };
+  const showLb = (idx) => {
+    const list = visiblePhotos();
+    if (list.length === 0) return;
+    lbIdx = (idx + list.length) % list.length;
+    lbImg.src = photoUrl(list[lbIdx].image);
+    lbImg.alt = list[lbIdx].caption || '';
+    lbCap.textContent = list[lbIdx].caption || '';
+    lb.hidden = false;
+    document.body.style.overflow = 'hidden';
+  };
+  grid.addEventListener('click', (e) => {
+    const tile = e.target.closest('.interior-tile');
+    if (!tile) return;
+    const visibleTiles = [...grid.querySelectorAll('.interior-tile')].filter(t => t.style.display !== 'none');
+    showLb(visibleTiles.indexOf(tile));
+  });
+  lb.querySelector('.clinic-lightbox-close').addEventListener('click', () => {
+    lb.hidden = true; document.body.style.overflow = '';
+  });
+  lb.querySelector('.prev').addEventListener('click', () => showLb(lbIdx - 1));
+  lb.querySelector('.next').addEventListener('click', () => showLb(lbIdx + 1));
+  lb.addEventListener('click', (e) => {
+    if (e.target === lb) { lb.hidden = true; document.body.style.overflow = ''; }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') { lb.hidden = true; document.body.style.overflow = ''; }
+    else if (e.key === 'ArrowLeft') showLb(lbIdx - 1);
+    else if (e.key === 'ArrowRight') showLb(lbIdx + 1);
+  });
 }
 
 function initHospitalMap(hospital) {

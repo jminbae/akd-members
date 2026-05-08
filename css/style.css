@@ -2557,3 +2557,515 @@ body[data-page="treatment"] .page-header {
   color: var(--text-muted);
   font-size: 14px;
 }
+
+/* ========================================
+   CLINIC DETAIL V2 (spec 2026-05)
+   ======================================== */
+
+.clinic-detail-v2 {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+.clinic-section-h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+}
+
+.clinic-section-h2 i {
+  color: var(--secondary);
+  font-size: 20px;
+}
+
+.clinic-section-sub {
+  color: var(--text-light);
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.clinic-section-empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 28px 24px;
+  background: var(--bg);
+  border-radius: 12px;
+  text-align: center;
+  border: 1px dashed var(--border);
+}
+
+/* 1. HERO ─────────────── */
+.clinic-hero-v2 {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+  padding: 32px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+
+.clinic-hero-slider {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.clinic-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.clinic-hero-img.active {
+  opacity: 1;
+}
+
+.clinic-hero-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.clinic-hero-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.clinic-hero-dot.active {
+  background: white;
+  transform: scale(1.3);
+}
+
+.clinic-hero-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.clinic-cert-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #1B4965, #3E7CA1);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 100px;
+  align-self: flex-start;
+  margin-bottom: 12px;
+}
+
+.clinic-cert-badge i {
+  font-size: 11px;
+}
+
+.clinic-name {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.clinic-slogan {
+  font-size: 15px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.clinic-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.clinic-meta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.clinic-meta-item i {
+  color: var(--secondary);
+  width: 16px;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.clinic-meta-item a {
+  color: var(--secondary);
+  text-decoration: none;
+}
+
+.clinic-meta-item a:hover {
+  text-decoration: underline;
+}
+
+.clinic-meta-hours div div {
+  margin-bottom: 2px;
+  font-size: 13px;
+}
+
+/* 2. PHILOSOPHY ─────────────── */
+.clinic-philosophy {
+  margin-bottom: 56px;
+}
+
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.philosophy-card {
+  background: var(--card);
+  padding: 24px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.philosophy-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.philosophy-num {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--secondary);
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.philosophy-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.philosophy-card p {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* 3. DOCTORS section wrapper */
+.clinic-doctors {
+  margin-bottom: 56px;
+}
+
+/* 4. INTERIOR ─────────────── */
+.clinic-interior {
+  margin-bottom: 56px;
+}
+
+.interior-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0 20px;
+  flex-wrap: wrap;
+}
+
+.interior-tab {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-light);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.interior-tab:hover {
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+.interior-tab.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.interior-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.interior-tile {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: var(--bg);
+  transition: var(--transition);
+}
+
+.interior-tile:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow);
+}
+
+.interior-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.interior-tile:hover img {
+  transform: scale(1.05);
+}
+
+.interior-caption {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 3px 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 11px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
+
+/* 5. EQUIPMENT ─────────────── */
+.clinic-equipment {
+  margin-bottom: 56px;
+}
+
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.equipment-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  background: var(--card);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.equipment-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--bg);
+}
+
+.equipment-thumb-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 24px;
+}
+
+.equipment-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.equipment-info h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.equipment-mfr,
+.equipment-kfda,
+.equipment-desc {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 3px;
+}
+
+.equipment-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.equipment-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: var(--bg);
+  color: var(--text-light);
+}
+
+/* 6. TREATMENTS section wrapper */
+.clinic-treatments {
+  margin-bottom: 56px;
+}
+
+/* 7. LOCATION ─────────────── */
+.clinic-location {
+  margin-bottom: 32px;
+}
+
+.clinic-location .hospital-map-container {
+  width: 100%;
+  height: 320px;
+  border-radius: 14px;
+  margin: 16px 0;
+  overflow: hidden;
+}
+
+.clinic-location-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.loc-row {
+  display: flex;
+  gap: 12px;
+}
+
+.loc-row strong {
+  flex-shrink: 0;
+  width: 80px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.loc-row span {
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+/* LIGHTBOX ─────────────── */
+.clinic-lightbox[hidden] { display: none; }
+.clinic-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.clinic-lightbox-img {
+  max-width: 100%;
+  max-height: calc(100% - 60px);
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.clinic-lightbox-caption {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 14px;
+  padding: 6px 14px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 100px;
+  max-width: 80%;
+  text-align: center;
+}
+
+.clinic-lightbox-close,
+.clinic-lightbox-nav {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 24px;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.clinic-lightbox-close { top: 16px; right: 16px; font-size: 30px; }
+.clinic-lightbox-nav.prev { left: 16px; top: 50%; transform: translateY(-50%); }
+.clinic-lightbox-nav.next { right: 16px; top: 50%; transform: translateY(-50%); }
+.clinic-lightbox-close:hover,
+.clinic-lightbox-nav:hover { background: rgba(255, 255, 255, 0.25); }
+
+/* RESPONSIVE ─────────────── */
+@media (max-width: 768px) {
+  .clinic-detail-v2 {
+    padding: 0 16px 60px;
+  }
+  .clinic-hero-v2 {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 0 32px;
+  }
+  .clinic-name { font-size: 24px; }
+  .philosophy-grid {
+    grid-template-columns: 1fr;
+  }
+  .interior-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .equipment-grid {
+    grid-template-columns: 1fr;
+  }
+  .clinic-section-h2 { font-size: 20px; }
+}
+
+@media (max-width: 480px) {
+  .interior-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .interior-caption { font-size: 10px; padding: 2px 6px; }
+  .clinic-name { font-size: 20px; }
+  .clinic-section-h2 { font-size: 18px; }
+}
