@@ -3084,10 +3084,18 @@ function renderHospitalDetail(params) {
                 <img src="${photoUrl(p.image)}" alt="" loading="lazy">
               </button>
             `).join('')}
-            <button class="interior-tile interior-more" id="interiorMoreBtn" aria-label="사진 더보기" hidden>
-              <span class="interior-more-icon">+</span>
-              <span class="interior-more-label" id="interiorMoreLabel">더보기</span>
-            </button>
+            ${interiorPhotos.length > 8 ? `
+              <button class="interior-tile interior-more" id="interiorMoreBtn" aria-label="사진 ${interiorPhotos.length - 7}장 더보기" hidden>
+                <img class="interior-more-bg" src="${photoUrl(interiorPhotos[7].image)}" alt="" loading="lazy">
+                <div class="interior-more-overlay">
+                  <span class="interior-more-icon">+</span>
+                </div>
+              </button>
+              <button class="interior-tile interior-less" id="interiorLessBtn" aria-label="접기" hidden>
+                <span class="interior-less-icon">−</span>
+                <span class="interior-less-label">접기</span>
+              </button>
+            ` : ''}
           </div>
         </section>
       ` : ''}
@@ -3190,22 +3198,30 @@ function initHeroSlider() {
 function initInteriorTabs(photos) {
   const grid = document.getElementById('interiorGrid');
   const moreBtn = document.getElementById('interiorMoreBtn');
-  const moreLabel = document.getElementById('interiorMoreLabel');
+  const lessBtn = document.getElementById('interiorLessBtn');
   if (!grid) return;
 
-  const VISIBLE_COLLAPSED = 7;  // 7장 + "+N" 버튼 = 8칸
+  const VISIBLE_COLLAPSED = 7;  // 7장 + "+" 버튼 = 8칸
 
   function applyView() {
     const collapsed = grid.dataset.collapsed === 'true';
-    const tiles = [...grid.querySelectorAll('.interior-tile:not(.interior-more)')];
+    const tiles = [...grid.querySelectorAll('.interior-tile:not(.interior-more):not(.interior-less)')];
     const total = tiles.length;
-    if (collapsed && total > 8) {
-      tiles.forEach((t, i) => { t.hidden = i >= VISIBLE_COLLAPSED; });
-      moreBtn.hidden = false;
-      moreLabel.textContent = `+${total - VISIBLE_COLLAPSED}`;
-    } else {
+    if (total <= 8) {
+      // 8장 이하 → 더보기/접기 버튼 불필요
       tiles.forEach(t => t.hidden = false);
-      moreBtn.hidden = true;
+      if (moreBtn) moreBtn.hidden = true;
+      if (lessBtn) lessBtn.hidden = true;
+    } else if (collapsed) {
+      // collapsed: 7장 + "+"
+      tiles.forEach((t, i) => { t.hidden = i >= VISIBLE_COLLAPSED; });
+      if (moreBtn) moreBtn.hidden = false;
+      if (lessBtn) lessBtn.hidden = true;
+    } else {
+      // expanded: 모두 + "−"
+      tiles.forEach(t => t.hidden = false);
+      if (moreBtn) moreBtn.hidden = true;
+      if (lessBtn) lessBtn.hidden = false;
     }
   }
 
@@ -3213,6 +3229,14 @@ function initInteriorTabs(photos) {
     moreBtn.addEventListener('click', () => {
       grid.dataset.collapsed = 'false';
       applyView();
+    });
+  }
+  if (lessBtn) {
+    lessBtn.addEventListener('click', () => {
+      grid.dataset.collapsed = 'true';
+      applyView();
+      // 접기 후 인테리어 섹션 상단으로 부드럽게 스크롤
+      grid.closest('.clinic-interior')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   }
 
@@ -3242,11 +3266,12 @@ function initInteriorTabs(photos) {
       const r = s.getBoundingClientRect();
       const sc = isHorizontal ? r.left + r.width / 2 : r.top + r.height / 2;
       const dist = Math.abs(sc - trackCenter);
-      const maxDist = (isHorizontal ? trackRect.width : trackRect.height) * 0.6;
-      const t = Math.min(1, dist / maxDist);
-      // 가벼운 scale (1.0 → 0.88) + 부드러운 opacity (1.0 → 0.75)
-      const scale = 1 - 0.12 * t;
-      const opacity = 1 - 0.25 * t;
+      const maxDist = (isHorizontal ? trackRect.width : trackRect.height) * 0.5;
+      // sqrt 곡선으로 가운데 근처에서 빠르게 작아지고, 멀어질수록 천천히
+      const t = Math.min(1, Math.sqrt(dist / maxDist));
+      // 가운데 1.0 → 사이드 0.72 (덜 부각되도록)
+      const scale = 1 - 0.28 * t;
+      const opacity = 1 - 0.4 * t;
       s.style.transform = `scale(${scale})`;
       s.style.opacity = opacity;
       s.classList.toggle('is-center', dist < r.width / 2 && dist < r.height / 2);

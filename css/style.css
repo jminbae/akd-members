@@ -2857,32 +2857,76 @@ body[data-page="treatment"] .page-header {
   transform: scale(1.05);
 }
 
-/* "+N" 더보기 버튼 */
+/* "+" 더보기 — 8번째 사진 위에 흰 음영 + 얇고 큰 + */
 .interior-more {
+  position: relative;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.interior-more-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.interior-more:hover .interior-more-bg {
+  transform: scale(1.05);
+}
+
+.interior-more-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease;
+}
+
+.interior-more:hover .interior-more-overlay {
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.interior-more-icon {
+  font-size: 72px;
+  line-height: 1;
+  font-weight: 100;
+  color: white;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
+  letter-spacing: -0.04em;
+}
+
+/* "−" 접기 — 펼쳐진 뒤 마지막에 표시 */
+.interior-less {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background: linear-gradient(135deg, #e9eef5, #d8e0ec);
+  gap: 4px;
+  background: linear-gradient(135deg, #f0f4f9, #e2e8f0);
+  color: var(--text-light);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.interior-less:hover {
+  background: linear-gradient(135deg, #e7eef6, #d6dde7);
   color: var(--secondary);
-  font-weight: 600;
 }
 
-.interior-more:hover {
-  background: linear-gradient(135deg, #dde6f1, #c8d4e3);
-}
-
-.interior-more-icon {
-  font-size: 36px;
+.interior-less-icon {
+  font-size: 44px;
   line-height: 1;
-  font-weight: 300;
+  font-weight: 100;
 }
 
-.interior-more-label {
-  font-size: 14px;
+.interior-less-label {
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.02em;
-  font-weight: 700;
 }
 
 /* 5. EQUIPMENT ─────────────── */
@@ -3112,7 +3156,7 @@ body[data-page="treatment"] .page-header {
   }
   .interior-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 4px;
   }
   .equipment-grid {
     grid-template-columns: 1fr;
@@ -3123,9 +3167,10 @@ body[data-page="treatment"] .page-header {
 @media (max-width: 480px) {
   .interior-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
   }
-  .interior-more-icon { font-size: 32px; }
-  .interior-more-label { font-size: 13px; }
+  .interior-more-icon { font-size: 56px; }
+  .interior-less-icon { font-size: 36px; }
   .clinic-name { font-size: 20px; }
   .clinic-section-h2 { font-size: 18px; }
 }
