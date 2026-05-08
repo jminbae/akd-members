@@ -3131,7 +3131,7 @@ body[data-page="treatment"] .page-header {
     overflow-y: auto;
     scroll-snap-type: y mandatory;
     padding: 20vh 0;  /* 슬라이드 60vh → 양 위아래 20vh */
-    gap: 8px;
+    gap: 4px;
   }
   .clinic-lightbox-slide {
     width: 90vw;
