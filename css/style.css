@@ -2880,7 +2880,8 @@ body[data-page="treatment"] .page-header {
 .interior-more-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.55);
+  /* 사진이 언뜻 비치지만 보이진 않을 정도로 진하게 */
+  background: rgba(255, 255, 255, 0.86);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2888,15 +2889,15 @@ body[data-page="treatment"] .page-header {
 }
 
 .interior-more:hover .interior-more-overlay {
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.78);
 }
 
 .interior-more-icon {
   font-size: 72px;
   line-height: 1;
   font-weight: 100;
-  color: white;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
+  /* 흰 음영 위에서 가독성을 위해 진한 회색 */
+  color: rgba(40, 56, 78, 0.75);
   letter-spacing: -0.04em;
 }
 
