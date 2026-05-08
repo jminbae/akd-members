@@ -3052,7 +3052,10 @@ body[data-page="treatment"] .page-header {
 .clinic-lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.94);
+  /* 뒤 페이지가 살짝 비치도록 86% + blur */
+  background: rgba(0, 0, 0, 0.86);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -3071,7 +3074,7 @@ body[data-page="treatment"] .page-header {
   align-items: center;
   /* 슬라이드 50vw → 양옆 25vw 패딩으로 첫/마지막 슬라이드도 정중앙 도달 가능 */
   padding: 0 25vw;
-  gap: 8px;
+  gap: 4px;
   scrollbar-width: none;
 }
 
@@ -3088,9 +3091,8 @@ body[data-page="treatment"] .page-header {
   justify-content: center;
   cursor: pointer;
   transform-origin: center;
-  /* 가볍고 부드러운 트랜지션 */
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-              opacity 0.4s ease-out;
+  /* CSS 트랜지션 제거 — JS가 매 scroll 프레임마다 transform/opacity를 직접 갱신해서
+     스크롤과 1:1 동기화되며 끊김 없이 부드러움 */
   will-change: transform, opacity;
 }
 
@@ -3131,12 +3133,24 @@ body[data-page="treatment"] .page-header {
     overflow-y: auto;
     scroll-snap-type: y mandatory;
     padding: 20vh 0;  /* 슬라이드 60vh → 양 위아래 20vh */
-    gap: 4px;
+    gap: 2px;
   }
   .clinic-lightbox-slide {
     width: 90vw;
     height: 60vh;
     max-width: none;
+  }
+  /* 모바일: 닫기 버튼을 화면 하단 가운데로 (엄지 닿기 쉬운 위치) */
+  .clinic-lightbox-close {
+    top: auto;
+    right: auto;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    width: 52px;
+    height: 52px;
+    font-size: 30px;
+    background: rgba(255, 255, 255, 0.22);
   }
 }
 

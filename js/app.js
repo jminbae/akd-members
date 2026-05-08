@@ -3226,13 +3226,15 @@ function initInteriorTabs(photos) {
   }
 
   if (moreBtn) {
-    moreBtn.addEventListener('click', () => {
+    moreBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       grid.dataset.collapsed = 'false';
       applyView();
     });
   }
   if (lessBtn) {
-    lessBtn.addEventListener('click', () => {
+    lessBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       grid.dataset.collapsed = 'true';
       applyView();
       // 접기 후 인테리어 섹션 상단으로 부드럽게 스크롤
@@ -3331,8 +3333,9 @@ function initInteriorTabs(photos) {
   }
 
   grid.addEventListener('click', (e) => {
-    const tile = e.target.closest('.interior-tile:not(.interior-more)');
+    const tile = e.target.closest('.interior-tile');
     if (!tile) return;
+    if (tile.classList.contains('interior-more') || tile.classList.contains('interior-less')) return;
     openLb(parseInt(tile.dataset.idx, 10));
   });
 
