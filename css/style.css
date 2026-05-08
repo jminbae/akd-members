@@ -2420,13 +2420,71 @@ body[data-page="treatment"] .page-header {
 }
 
 @media (max-width: 480px) {
+  /* 모바일: 한 줄에 4개로 컴팩트하게 표시 */
   .members-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    padding: 16px 8px;
   }
 
   .member-card-photo-wrap {
-    padding-top: 120%;
+    padding-top: 110%;
+  }
+
+  .member-card-badge-img {
+    width: 22px;
+    height: 22px;
+    top: 5px;
+    right: 5px;
+    border-radius: 5px;
+  }
+
+  .member-card-body {
+    padding: 8px 6px 10px;
+  }
+
+  .member-card-body h3 {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .member-card-body .member-card-role {
+    display: none;
+  }
+
+  /* 병원명 + 거리: 줄 바뀜 방지, 넘치면 병원명만 ellipsis */
+  .member-card-hospital {
+    font-size: 10px;
+    gap: 3px;
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+
+  .member-card-hospital i {
+    font-size: 9px;
+    flex-shrink: 0;
+  }
+
+  .member-card-hospital-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+
+  .member-card-distance {
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-left: 2px;
+  }
+
+  /* 태그는 4-col에서 너무 비좁아 숨김 */
+  .member-card-tags {
+    display: none;
   }
 
   .home-shortcuts {

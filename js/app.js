@@ -1131,7 +1131,7 @@ const MEMBERS = [
       { year: '2023', event: 'KOREADERMA 2023(25회춘계)', title: 'AI and Future Aesthetic Medicine' }
     ],
     awards: ['2024 베스트기획자상'],
-    treatments: [],
+    treatments: ['AI 진단', '울쎄라', '써마지', '리쥬란', '리투오'],
     links: [
       { type: 'facebook', label: '페이스북', url: 'https://www.facebook.com/chlroe' },
       { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/nicederma/' },
@@ -1433,7 +1433,7 @@ const MEMBERS = [
       { year: '2025', event: '27회 춘계', title: '이슈 포커스: BODY Rejuvenation & Contouring' }
     ],
     awards: ['2025 우수렉처상'],
-    treatments: [],
+    treatments: ['콜라겐부스터', '여드름흉터', '줄기세포'],
     links: []
   },
   {
@@ -1449,7 +1449,7 @@ const MEMBERS = [
     memberships: ['대한피부과학회 정회원', '대한피부과의사회 정회원', '대한아토피피부염학회 정회원', '대한피부항노화학회 정회원', '대한미용피부외과학회 정회원', '대한화장품의학회 정회원', '대한모발학회 정회원', '대한피부면역학회 정회원', '대한피부병리학회 정회원', '대한임상피부치료연구회 정회원'],
     lectures: [],
     awards: [],
-    treatments: [],
+    treatments: ['콜라겐부스터', '필러'],
     links: []
   },
   {
@@ -1465,7 +1465,7 @@ const MEMBERS = [
     memberships: ['대한피부과학회 정회원', '대한피부과의사회 정회원', '대한임상피부치료연구회 정회원', '대한피부레이저학회 정회원', '대한피부항노화학회 정회원', '대한여드름학회 정회원', '대한아토피피부염학회 정회원'],
     lectures: [],
     awards: [],
-    treatments: [],
+    treatments: ['울쎄라', '써마지', '리쥬란', '리투오'],
     links: []
   },
   {
@@ -1481,7 +1481,7 @@ const MEMBERS = [
     memberships: ['대한피부과학회 정회원', '대한피부과의사회 정회원', '대한임상피부치료연구회 정회원', '대한피부항노화학회 정회원', '대한아토피피부염학회 정회원', '대한여드름학회 정회원', '대한피부레이저학회 회원'],
     lectures: [],
     awards: [],
-    treatments: [],
+    treatments: ['콜라겐부스터', '필러'],
     links: []
   },
   {
@@ -1497,7 +1497,7 @@ const MEMBERS = [
     memberships: ['대한피부과학회 정회원', '대한피부과의사회 정회원', '대한여드름주사학회 정회원', '대한임상피부치료연구회 정회원', '대한피부항노화학회 정회원'],
     lectures: [],
     awards: [],
-    treatments: [],
+    treatments: ['울쎄라', '써마지', '리쥬란', '리투오', '필러'],
     links: []
   },
   {
@@ -1513,7 +1513,7 @@ const MEMBERS = [
     memberships: ['대한피부과학회 정회원', '대한피부과의사회 정회원', '대한임상피부치료연구회 정회원', '대한피부항노화학회 정회원', '대한아토피피부염학회 정회원'],
     lectures: [],
     awards: [],
-    treatments: [],
+    treatments: ['콜라겐부스터', '필러'],
     links: []
   },
   {
@@ -1829,13 +1829,13 @@ const TREATMENT_GROUPS = [
     id: 'aesthetic',
     name: '피부시술',
     icon: 'fa-syringe',
-    items: ['쁘띠성형', '필러', '스킨부스터', '스컬트라', '실리프팅', '힐로웨이브', '쥬베룩', '쥬브젠', '줄기세포', 'MCT', 'PRP', '메조보톡스', '항노화', '피부결', '레디어스', '리바이브', '스킨보톡스', '스킨보툴리늄톡신', '얼굴윤곽', '더엘주사', '리쥬란', '스킨바이브', '고우리', '약물전달치료', '큐어젯', '스킨젯', '트리필 프로', '이미지가이드 필러', '이미지가이드 보톡스', '리투오', '쥬베룩볼륨', '쥬브아셀', '보톡스', '흉터시술', '리제네라', '미용수술', '포텐자']
+    items: ['쁘띠성형', '필러', '스킨부스터', '스컬트라', '실리프팅', '힐로웨이브', '쥬베룩', '쥬브젠', '줄기세포', 'MCT', 'PRP', '메조보톡스', '항노화', '피부결', '레디어스', '리바이브', '스킨보톡스', '스킨보툴리늄톡신', '얼굴윤곽', '더엘주사', '리쥬란', '스킨바이브', '고우리', '약물전달치료', '큐어젯', '스킨젯', '트리필 프로', '이미지가이드 필러', '이미지가이드 보톡스', '리투오', '쥬베룩볼륨', '쥬브아셀', '보톡스', '흉터시술', '리제네라', '미용수술', '포텐자', '콜라겐부스터']
   },
   {
     id: 'other',
     name: '기타',
     icon: 'fa-ellipsis',
-    items: ['고압산소', '비만', '다이어트', '체형교정', 'HPL체형교정주사시술', '수면마취', '수액치료']
+    items: ['고압산소', '비만', '다이어트', '체형교정', 'HPL체형교정주사시술', '수면마취', '수액치료', 'AI 진단']
   }
 ];
 
@@ -2507,7 +2507,7 @@ function updateMembersView() {
         <p class="member-card-role">${hospital ? hospital.shortName : ''} ${m.role}</p>
         <div class="member-card-hospital">
           <i class="fas fa-hospital"></i>
-          ${hospital ? hospital.name : ''}
+          <span class="member-card-hospital-name">${hospital ? hospital.name : ''}</span>
           ${isFinite(distance) ? `<span class="member-card-distance">· 약 ${distance.toFixed(1)}km</span>` : ''}
         </div>
         ${m.treatments && m.treatments.length > 0 ? `
