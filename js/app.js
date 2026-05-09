@@ -1803,7 +1803,11 @@ const MEMBERS = [
     ],
     awards: ['2026 우수기획자상', '2024 베스트기획자상', '2022 베스트세션(기획자)', '2022 베스트세션(연자)'],
     treatments: [],
-    links: []
+    links: [
+      { type: 'website', label: '병원 홈페이지', url: 'https://healhousegd.com/' },
+      { type: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/dr.rhee50/' },
+      { type: 'threads', label: '쓰레드', url: 'https://www.threads.com/@dr.rhee50' }
+    ]
   },
   {
     id: 'kang-hyunjin',
