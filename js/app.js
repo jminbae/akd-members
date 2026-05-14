@@ -3189,7 +3189,7 @@ function renderHospitalDetail(params) {
                 </div>
               ` : ''}
             </div>
-            <div class="equipment-grid" id="equipmentGrid">
+            <div class="equipment-grid" id="equipmentGrid" data-collapsed="true">
               ${equipment.map((eq, i) => {
                 const cat = (eq.treatmentTags || [])[0] || '';
                 return `
@@ -3204,6 +3204,16 @@ function renderHospitalDetail(params) {
                   </button>
                 `;
               }).join('')}
+              <button class="equipment-card equipment-more" id="equipmentMoreBtn" aria-label="장비 더보기" hidden>
+                ${equipment[17] && equipment[17].image ? `<img class="equipment-more-bg" src="${photoUrl(equipment[17].image)}" alt="" loading="lazy">` : ''}
+                <div class="equipment-more-overlay">
+                  <span class="equipment-more-icon">+</span>
+                </div>
+              </button>
+              <button class="equipment-card equipment-less" id="equipmentLessBtn" aria-label="접기" hidden>
+                <span class="equipment-less-icon">−</span>
+                <span class="equipment-less-label">접기</span>
+              </button>
             </div>
           `;
         })()}
@@ -3268,27 +3278,71 @@ function initEquipmentSection(equipment) {
   if (!grid || !modal || !track) return;
 
   let currentList = equipment;
+  const moreBtn = document.getElementById('equipmentMoreBtn');
+  const lessBtn = document.getElementById('equipmentLessBtn');
 
   function activeCat() {
     return filter?.querySelector('.eq-chip.active')?.dataset.cat || 'all';
   }
 
-  function applyFilter() {
+  function collapsedCount() {
+    // 데스크톱 6열 × 3줄 = 18칸 → 17 + "+" 버튼
+    // 모바일 3열 × 4줄 = 12칸 → 11 + "+" 버튼
+    return window.matchMedia('(min-width: 769px)').matches ? 17 : 11;
+  }
+
+  function applyView() {
     const cat = activeCat();
-    grid.querySelectorAll('.equipment-card').forEach(c => {
-      c.hidden = cat !== 'all' && c.dataset.cat !== cat;
-    });
+    const collapsed = grid.dataset.collapsed === 'true';
+    const limit = collapsedCount();
+    const allCards = [...grid.querySelectorAll('.equipment-card:not(.equipment-more):not(.equipment-less)')];
+    const matching = allCards.filter(c => cat === 'all' || c.dataset.cat === cat);
+    const total = matching.length;
+
+    allCards.forEach(c => c.hidden = true);
     currentList = cat === 'all' ? equipment : equipment.filter(e => (e.treatmentTags || [])[0] === cat);
+
+    if (total <= limit + 1) {
+      // 펼침/접기 버튼 불필요
+      matching.forEach(c => c.hidden = false);
+      if (moreBtn) moreBtn.hidden = true;
+      if (lessBtn) lessBtn.hidden = true;
+    } else if (collapsed) {
+      matching.slice(0, limit).forEach(c => c.hidden = false);
+      if (moreBtn) moreBtn.hidden = false;
+      if (lessBtn) lessBtn.hidden = true;
+    } else {
+      matching.forEach(c => c.hidden = false);
+      if (moreBtn) moreBtn.hidden = true;
+      if (lessBtn) lessBtn.hidden = false;
+    }
   }
 
   filter?.addEventListener('click', (e) => {
     const btn = e.target.closest('.eq-chip');
     if (!btn) return;
     filter.querySelectorAll('.eq-chip').forEach(b => b.classList.toggle('active', b === btn));
-    applyFilter();
+    grid.dataset.collapsed = 'true';  // 필터 바꿀 때 다시 접힘 상태로
+    applyView();
   });
 
-  applyFilter();
+  moreBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    grid.dataset.collapsed = 'false';
+    applyView();
+  });
+
+  lessBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    grid.dataset.collapsed = 'true';
+    applyView();
+    document.querySelector('.clinic-equipment')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // 뷰포트 크기 변경 시(데스크톱↔모바일) collapsed 임계값 재적용
+  window.addEventListener('resize', () => applyView());
+
+  applyView();
 
   // ─── Coverflow modal ───
   function buildTrack(list) {
@@ -3389,6 +3443,7 @@ function initEquipmentSection(equipment) {
   grid.addEventListener('click', (e) => {
     const card = e.target.closest('.equipment-card');
     if (!card) return;
+    if (card.classList.contains('equipment-more') || card.classList.contains('equipment-less')) return;
     const idx = parseInt(card.dataset.idx, 10);
     openModal(equipment[idx]);
   });

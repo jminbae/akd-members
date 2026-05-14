@@ -3108,6 +3108,81 @@ body[data-page="treatment"] .page-header {
   letter-spacing: 0.02em;
 }
 
+/* 장비 "+" 더보기 — 18번째 사진 배경 + 흰 음영 + 얇은 + */
+.equipment-more {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+
+.equipment-more-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+  background: linear-gradient(180deg, #fafbfd 0%, #eef1f5 100%);
+  transition: transform 0.4s ease;
+}
+
+.equipment-more:hover .equipment-more-bg {
+  transform: scale(1.05);
+}
+
+.equipment-more-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.86);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease;
+}
+
+.equipment-more:hover .equipment-more-overlay {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.equipment-more-icon {
+  font-size: 56px;
+  line-height: 1;
+  font-weight: 100;
+  color: rgba(40, 56, 78, 0.75);
+  letter-spacing: -0.04em;
+}
+
+/* 장비 "−" 접기 */
+.equipment-less {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #f0f4f9, #e2e8f0);
+  color: var(--text-light);
+  aspect-ratio: 1;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.equipment-less:hover {
+  background: linear-gradient(135deg, #e7eef6, #d6dde7);
+  color: var(--secondary);
+}
+
+.equipment-less-icon {
+  font-size: 32px;
+  line-height: 1;
+  font-weight: 100;
+}
+
+.equipment-less-label {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.equipment-card[hidden] { display: none !important; }
+
 /* 장비 상세 모달 — coverflow 카드 갤러리 */
 .equipment-modal[hidden] { display: none; }
 .equipment-modal {
