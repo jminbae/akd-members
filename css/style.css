@@ -2978,6 +2978,47 @@ body[data-page="treatment"] .page-header {
   border-color: var(--primary);
 }
 
+/* ────── 카테고리별 색상 (3종) ──────
+   - 안티에이징: 코랄/핑크 (#E0556A)
+   - 레이저: 퍼플 (#7C3AED)
+   - 피부치료장비: 틸/그린 (#10B981) */
+
+/* 필터 칩 — 활성 상태 색상 */
+.eq-chip[data-cat="안티에이징"].active {
+  background: #E0556A;
+  border-color: #E0556A;
+}
+.eq-chip[data-cat="레이저"].active {
+  background: #7C3AED;
+  border-color: #7C3AED;
+}
+.eq-chip[data-cat="피부치료장비"].active {
+  background: #10B981;
+  border-color: #10B981;
+}
+
+/* 필터 칩 — hover 색상 */
+.eq-chip[data-cat="안티에이징"]:hover { border-color: #E0556A; color: #E0556A; }
+.eq-chip[data-cat="레이저"]:hover { border-color: #7C3AED; color: #7C3AED; }
+.eq-chip[data-cat="피부치료장비"]:hover { border-color: #10B981; color: #10B981; }
+
+/* 카드 안 작은 태그 + 모달 카테고리 배지 */
+.equipment-tag[data-cat="안티에이징"],
+.equipment-modal-cat[data-cat="안티에이징"] {
+  background: #FCE7EF;
+  color: #C0394C;
+}
+.equipment-tag[data-cat="레이저"],
+.equipment-modal-cat[data-cat="레이저"] {
+  background: #EDE9FE;
+  color: #6D28D9;
+}
+.equipment-tag[data-cat="피부치료장비"],
+.equipment-modal-cat[data-cat="피부치료장비"] {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
 /* 6열 그리드 (데스크톱), 모바일 3열 — 누끼 이미지 자연스럽게 */
 .equipment-grid {
   display: grid;

@@ -76,13 +76,13 @@ const HOSPITALS = [
       { name: '젠틀맥스프로', image: '장비 소개 이미지/healhouse-gangnam/22.png', treatmentTags: ['레이저'] },
       { name: '포토나스타워커', image: '장비 소개 이미지/healhouse-gangnam/23.png', treatmentTags: ['레이저'] },
       { name: '헬리오스Ⅳ', image: '장비 소개 이미지/healhouse-gangnam/24.png', treatmentTags: ['레이저'] },
-      { name: 'FN광선(UV700)', image: '장비 소개 이미지/healhouse-gangnam/25.png', treatmentTags: ['치료기'] },
-      { name: 'HF광선(UV400NB)', image: '장비 소개 이미지/healhouse-gangnam/26.png', treatmentTags: ['치료기'] },
-      { name: '손발광선기', image: '장비 소개 이미지/healhouse-gangnam/27.png', treatmentTags: ['치료기'] },
-      { name: '얼굴광선기', image: '장비 소개 이미지/healhouse-gangnam/28.png', treatmentTags: ['치료기'] },
-      { name: '엑시머 EXL-440', image: '장비 소개 이미지/healhouse-gangnam/29.png', treatmentTags: ['치료기'] },
-      { name: '전신광선기', image: '장비 소개 이미지/healhouse-gangnam/30.png', treatmentTags: ['치료기'] },
-      { name: '전신광선기2', image: '장비 소개 이미지/healhouse-gangnam/31.png', treatmentTags: ['치료기'] }
+      { name: 'FN광선(UV700)', image: '장비 소개 이미지/healhouse-gangnam/25.png', treatmentTags: ['피부치료장비'] },
+      { name: 'HF광선(UV400NB)', image: '장비 소개 이미지/healhouse-gangnam/26.png', treatmentTags: ['피부치료장비'] },
+      { name: '손발광선기', image: '장비 소개 이미지/healhouse-gangnam/27.png', treatmentTags: ['피부치료장비'] },
+      { name: '얼굴광선기', image: '장비 소개 이미지/healhouse-gangnam/28.png', treatmentTags: ['피부치료장비'] },
+      { name: '엑시머 EXL-440', image: '장비 소개 이미지/healhouse-gangnam/29.png', treatmentTags: ['피부치료장비'] },
+      { name: '전신광선기', image: '장비 소개 이미지/healhouse-gangnam/30.png', treatmentTags: ['피부치료장비'] },
+      { name: '전신광선기2', image: '장비 소개 이미지/healhouse-gangnam/31.png', treatmentTags: ['피부치료장비'] }
     ]
   },
   {
@@ -3199,7 +3199,7 @@ function renderHospitalDetail(params) {
                     </div>
                     <div class="equipment-info">
                       <div class="equipment-name">${eq.name}</div>
-                      ${cat ? `<span class="equipment-tag">${cat}</span>` : ''}
+                      ${cat ? `<span class="equipment-tag" data-cat="${cat}">${cat}</span>` : ''}
                     </div>
                   </button>
                 `;
@@ -3301,7 +3301,7 @@ function initEquipmentSection(equipment) {
               ${eq.image ? `<img src="${photoUrl(eq.image)}" alt="${eq.name}" loading="lazy">` : `<div class="equipment-thumb-empty"><i class="fas fa-microchip"></i></div>`}
             </div>
             <div class="equipment-modal-info">
-              ${cat ? `<span class="equipment-modal-cat">${cat}</span>` : ''}
+              ${cat ? `<span class="equipment-modal-cat" data-cat="${cat}">${cat}</span>` : ''}
               <h3 class="equipment-modal-name">${eq.name}</h3>
             </div>
           </div>
@@ -3405,11 +3405,20 @@ function initHeroSlider() {
   const imgs = slider.querySelectorAll('.clinic-hero-img');
   const dots = slider.querySelectorAll('.clinic-hero-dot');
   if (imgs.length <= 1) return;
+
+  // 미리 디코드 — JPEG 디코드는 메인 스레드 비용이 큼. 사전 디코드해두면
+  // 전환할 때 끊김 없이 부드럽게 페이드인됨.
+  imgs.forEach(img => {
+    if (img.decode) img.decode().catch(() => {});
+  });
+
   let idx = 0;
   const show = (newIdx) => {
+    const nextIdx = (newIdx + imgs.length) % imgs.length;
+    if (nextIdx === idx) return;
     imgs[idx].classList.remove('active');
     dots[idx]?.classList.remove('active');
-    idx = (newIdx + imgs.length) % imgs.length;
+    idx = nextIdx;
     imgs[idx].classList.add('active');
     dots[idx]?.classList.add('active');
   };
