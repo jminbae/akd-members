@@ -3073,7 +3073,7 @@ function renderHospitalDetail(params) {
             ${heroImages.map((img, i) => `
               <img src="${photoUrl(img)}" alt="${hospital.name} ${i+1}"
                    class="clinic-hero-img${i === 0 ? ' active' : ''}"
-                   loading="${i === 0 ? 'eager' : 'lazy'}">
+                   loading="eager" decoding="async" fetchpriority="${i === 0 ? 'high' : 'low'}">
             `).join('')}
             ${heroImages.length > 1 ? `
               <div class="clinic-hero-dots">
