@@ -3061,7 +3061,7 @@ body[data-page="treatment"] .page-header {
   letter-spacing: 0.02em;
 }
 
-/* 장비 상세 모달 */
+/* 장비 상세 모달 — coverflow 카드 갤러리 */
 .equipment-modal[hidden] { display: none; }
 .equipment-modal {
   position: fixed;
@@ -3073,31 +3073,53 @@ body[data-page="treatment"] .page-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
 }
 
-.equipment-modal-content {
+.equipment-modal-track {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  align-items: center;
+  /* 슬라이드 46vw → 양옆 27vw padding으로 첫/마지막도 가운데 정렬 가능 */
+  padding: 0 27vw;
+  gap: 10px;
+  scrollbar-width: none;
+}
+
+.equipment-modal-track::-webkit-scrollbar { display: none; }
+
+.equipment-modal-slide {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  width: 46vw;
+  max-width: 520px;
+  cursor: pointer;
+  transform-origin: center;
+  will-change: transform, opacity, filter;
+}
+
+.equipment-modal-slide-inner {
   background: var(--card);
   border-radius: 16px;
-  padding: 24px;
-  max-width: 560px;
-  width: 100%;
-  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
 .equipment-modal-img-wrap {
   width: 100%;
   aspect-ratio: 1;
-  background: linear-gradient(135deg, #f5f7fa, #e8ecf1);
-  border-radius: 12px;
-  overflow: hidden;
+  background: linear-gradient(180deg, #fafbfd 0%, #eef1f5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   max-height: 60vh;
 }
 
@@ -3105,19 +3127,25 @@ body[data-page="treatment"] .page-header {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  padding: 16px;
+  padding: 20px;
 }
 
 .equipment-modal-info {
+  position: relative;
+  padding: 16px 20px 18px;
+  min-height: 56px;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
 }
 
 .equipment-modal-cat {
-  font-size: 12px;
-  padding: 4px 10px;
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  padding: 3px 10px;
   border-radius: 100px;
   background: var(--bg);
   color: var(--secondary);
@@ -3130,6 +3158,8 @@ body[data-page="treatment"] .page-header {
   font-weight: 700;
   color: var(--text);
   line-height: 1.3;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .equipment-modal-close {
@@ -3148,31 +3178,34 @@ body[data-page="treatment"] .page-header {
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
+  z-index: 2;
 }
 
 .equipment-modal-close:hover { background: rgba(255, 255, 255, 0.3); }
 
-.equipment-modal-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.18);
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 22px;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
+@media (max-width: 768px) {
+  .equipment-modal-track {
+    padding: 0 12vw;
+    gap: 8px;
+  }
+  .equipment-modal-slide {
+    width: 76vw;
+    max-width: none;
+  }
+  .equipment-modal-name { font-size: 18px; }
+  .equipment-modal-cat { left: 12px; font-size: 10px; padding: 2px 8px; }
+  .equipment-modal-info { padding: 12px 14px 14px; min-height: 48px; }
+  .equipment-modal-close {
+    top: auto;
+    bottom: 24px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 52px;
+    height: 52px;
+    background: rgba(255, 255, 255, 0.22);
+  }
 }
-
-.equipment-modal-nav.prev { left: 16px; }
-.equipment-modal-nav.next { right: 16px; }
-.equipment-modal-nav:hover { background: rgba(255, 255, 255, 0.3); }
 
 /* 6. TREATMENTS section wrapper */
 .clinic-treatments {

@@ -3245,20 +3245,10 @@ function renderHospitalDetail(params) {
       <div class="clinic-lightbox-track" id="clinicLightboxTrack"></div>
     </div>
 
-    <!-- 장비 상세 모달: 단일 큰 이미지 + 장비명 + 카테고리, ← → 로 이동 -->
+    <!-- 장비 상세 모달: coverflow 카드 갤러리 (가운데 + 양옆 카드 보임, 클릭 시 가운데로) -->
     <div class="equipment-modal" id="equipmentModal" hidden>
       <button class="equipment-modal-close" aria-label="닫기">&times;</button>
-      <button class="equipment-modal-nav prev" aria-label="이전">&#10094;</button>
-      <button class="equipment-modal-nav next" aria-label="다음">&#10095;</button>
-      <div class="equipment-modal-content">
-        <div class="equipment-modal-img-wrap">
-          <img id="equipmentModalImg" alt="">
-        </div>
-        <div class="equipment-modal-info">
-          <span class="equipment-modal-cat" id="equipmentModalCat"></span>
-          <h3 class="equipment-modal-name" id="equipmentModalName"></h3>
-        </div>
-      </div>
+      <div class="equipment-modal-track" id="equipmentModalTrack"></div>
     </div>
   `;
 
@@ -3274,14 +3264,10 @@ function initEquipmentSection(equipment) {
   const grid = document.getElementById('equipmentGrid');
   const filter = document.getElementById('equipmentFilter');
   const modal = document.getElementById('equipmentModal');
-  if (!grid || !modal) return;
+  const track = document.getElementById('equipmentModalTrack');
+  if (!grid || !modal || !track) return;
 
-  const modalImg = document.getElementById('equipmentModalImg');
-  const modalName = document.getElementById('equipmentModalName');
-  const modalCat = document.getElementById('equipmentModalCat');
-
-  let currentList = equipment;  // 현재 필터된 리스트
-  let currentIdx = 0;
+  let currentList = equipment;
 
   function activeCat() {
     return filter?.querySelector('.eq-chip.active')?.dataset.cat || 'all';
@@ -3289,8 +3275,7 @@ function initEquipmentSection(equipment) {
 
   function applyFilter() {
     const cat = activeCat();
-    const cards = grid.querySelectorAll('.equipment-card');
-    cards.forEach(c => {
+    grid.querySelectorAll('.equipment-card').forEach(c => {
       c.hidden = cat !== 'all' && c.dataset.cat !== cat;
     });
     currentList = cat === 'all' ? equipment : equipment.filter(e => (e.treatmentTags || [])[0] === cat);
@@ -3305,34 +3290,88 @@ function initEquipmentSection(equipment) {
 
   applyFilter();
 
-  function openModal(eq) {
-    currentIdx = currentList.indexOf(eq);
-    if (currentIdx < 0) currentIdx = 0;
-    showCurrent();
-    modal.hidden = false;
-    document.body.style.overflow = 'hidden';
+  // ─── Coverflow modal ───
+  function buildTrack(list) {
+    track.innerHTML = list.map((eq, i) => {
+      const cat = (eq.treatmentTags || [])[0] || '';
+      return `
+        <div class="equipment-modal-slide" data-idx="${i}">
+          <div class="equipment-modal-slide-inner">
+            <div class="equipment-modal-img-wrap">
+              ${eq.image ? `<img src="${photoUrl(eq.image)}" alt="${eq.name}" loading="lazy">` : `<div class="equipment-thumb-empty"><i class="fas fa-microchip"></i></div>`}
+            </div>
+            <div class="equipment-modal-info">
+              ${cat ? `<span class="equipment-modal-cat">${cat}</span>` : ''}
+              <h3 class="equipment-modal-name">${eq.name}</h3>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
   }
 
-  function showCurrent() {
-    const eq = currentList[currentIdx];
-    if (!eq) return;
-    modalImg.src = photoUrl(eq.image || '');
-    modalImg.alt = eq.name;
-    modalName.textContent = eq.name;
-    const cat = (eq.treatmentTags || [])[0] || '';
-    modalCat.textContent = cat;
-    modalCat.style.display = cat ? '' : 'none';
+  function updateScale() {
+    const trackRect = track.getBoundingClientRect();
+    const trackCenter = trackRect.left + trackRect.width / 2;
+    const slides = track.querySelectorAll('.equipment-modal-slide');
+    slides.forEach((s) => {
+      const r = s.getBoundingClientRect();
+      const sc = r.left + r.width / 2;
+      const dist = Math.abs(sc - trackCenter);
+      const maxDist = trackRect.width * 0.5;
+      const t = Math.min(1, Math.sqrt(dist / maxDist));
+      // 가운데 1.0 → 양옆 0.78 + 어둡게 (filter brightness)
+      const scale = 1 - 0.22 * t;
+      const opacity = 1 - 0.35 * t;
+      const brightness = 1 - 0.35 * t;
+      s.style.transform = `scale(${scale})`;
+      s.style.opacity = opacity;
+      s.style.filter = `brightness(${brightness})`;
+      s.classList.toggle('is-center', dist < r.width / 2);
+    });
+  }
+
+  function centerOn(idx) {
+    const slides = track.querySelectorAll('.equipment-modal-slide');
+    const target = slides[idx];
+    if (!target || !track.clientWidth) return;
+    track.scrollLeft = target.offsetLeft - (track.clientWidth - target.offsetWidth) / 2;
+    updateScale();
+  }
+
+  function scrollToIdx(idx) {
+    const slides = track.querySelectorAll('.equipment-modal-slide');
+    const target = slides[idx];
+    if (!target) return;
+    track.scrollTo({
+      left: target.offsetLeft - (track.clientWidth - target.offsetWidth) / 2,
+      behavior: 'smooth'
+    });
+  }
+
+  track.addEventListener('scroll', () => requestAnimationFrame(updateScale), { passive: true });
+  track.addEventListener('click', (e) => {
+    const slide = e.target.closest('.equipment-modal-slide');
+    if (!slide) return;
+    scrollToIdx(parseInt(slide.dataset.idx, 10));
+  });
+
+  function openModal(startEq) {
+    buildTrack(currentList);
+    const startIdx = currentList.indexOf(startEq);
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        centerOn(startIdx >= 0 ? startIdx : 0);
+        setTimeout(() => centerOn(startIdx >= 0 ? startIdx : 0), 150);
+      });
+    });
   }
 
   function closeModal() {
     modal.hidden = true;
     document.body.style.overflow = '';
-  }
-
-  function next(dir) {
-    if (currentList.length === 0) return;
-    currentIdx = (currentIdx + dir + currentList.length) % currentList.length;
-    showCurrent();
   }
 
   grid.addEventListener('click', (e) => {
@@ -3343,16 +3382,20 @@ function initEquipmentSection(equipment) {
   });
 
   modal.querySelector('.equipment-modal-close').addEventListener('click', closeModal);
-  modal.querySelector('.prev').addEventListener('click', () => next(-1));
-  modal.querySelector('.next').addEventListener('click', () => next(1));
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
   });
   document.addEventListener('keydown', (e) => {
     if (modal.hidden) return;
     if (e.key === 'Escape') closeModal();
-    else if (e.key === 'ArrowLeft') next(-1);
-    else if (e.key === 'ArrowRight') next(1);
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      const slides = track.querySelectorAll('.equipment-modal-slide');
+      let centerIdx = 0;
+      slides.forEach((s, i) => { if (s.classList.contains('is-center')) centerIdx = i; });
+      const dir = e.key === 'ArrowRight' ? 1 : -1;
+      scrollToIdx(Math.max(0, Math.min(slides.length - 1, centerIdx + dir)));
+      e.preventDefault();
+    }
   });
 }
 
