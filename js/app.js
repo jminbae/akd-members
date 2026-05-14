@@ -3165,29 +3165,48 @@ function renderHospitalDetail(params) {
 
       <!-- 5. EQUIPMENT -->
       <section class="clinic-equipment">
-        <h2 class="clinic-section-h2"><i class="fas fa-microchip"></i> 보유 장비</h2>
-        ${equipment.length > 0 ? `
-          <div class="equipment-grid">
-            ${equipment.map(eq => `
-              <div class="equipment-card">
-                ${eq.image ? `<img src="${photoUrl(eq.image)}" class="equipment-thumb" alt="${eq.name}">` : `<div class="equipment-thumb equipment-thumb-empty"><i class="fas fa-microchip"></i></div>`}
-                <div class="equipment-info">
-                  <h4>${eq.name}</h4>
-                  ${eq.manufacturerModel ? `<p class="equipment-mfr">${eq.manufacturerModel}</p>` : ''}
-                  ${eq.kfdaNumber ? `<p class="equipment-kfda">식약처 허가: ${eq.kfdaNumber}</p>` : ''}
-                  ${eq.description ? `<p class="equipment-desc">${eq.description}</p>` : ''}
-                  ${(eq.treatmentTags || []).length > 0 ? `
-                    <div class="equipment-tags">
-                      ${eq.treatmentTags.map(t => `<span class="equipment-tag">${t}</span>`).join('')}
-                    </div>
-                  ` : ''}
+        ${(() => {
+          if (equipment.length === 0) {
+            return `<h2 class="clinic-section-h2"><i class="fas fa-microchip"></i> 보유 장비</h2>
+                    <p class="clinic-section-empty">장비 정보 준비 중입니다.</p>`;
+          }
+          // 카테고리 추출 (treatmentTags 첫 항목 기준)
+          const eqCats = [];
+          equipment.forEach(eq => {
+            const c = (eq.treatmentTags || [])[0];
+            if (c && !eqCats.includes(c)) eqCats.push(c);
+          });
+          return `
+            <div class="clinic-section-header">
+              <h2 class="clinic-section-h2"><i class="fas fa-microchip"></i> 보유 장비</h2>
+              ${eqCats.length > 1 ? `
+                <div class="equipment-filter" id="equipmentFilter">
+                  <button class="eq-chip active" data-cat="all">전체 (${equipment.length})</button>
+                  ${eqCats.map(c => {
+                    const cnt = equipment.filter(e => (e.treatmentTags||[])[0] === c).length;
+                    return `<button class="eq-chip" data-cat="${c}">${c} (${cnt})</button>`;
+                  }).join('')}
                 </div>
-              </div>
-            `).join('')}
-          </div>
-        ` : `
-          <p class="clinic-section-empty">장비 정보 준비 중입니다.</p>
-        `}
+              ` : ''}
+            </div>
+            <div class="equipment-grid" id="equipmentGrid">
+              ${equipment.map((eq, i) => {
+                const cat = (eq.treatmentTags || [])[0] || '';
+                return `
+                  <button class="equipment-card" data-idx="${i}" data-cat="${cat}" aria-label="${eq.name}">
+                    <div class="equipment-thumb-wrap">
+                      ${eq.image ? `<img src="${photoUrl(eq.image)}" alt="${eq.name}" loading="lazy">` : `<div class="equipment-thumb-empty"><i class="fas fa-microchip"></i></div>`}
+                    </div>
+                    <div class="equipment-info">
+                      <div class="equipment-name">${eq.name}</div>
+                      ${cat ? `<span class="equipment-tag">${cat}</span>` : ''}
+                    </div>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          `;
+        })()}
       </section>
 
       <!-- 6. TREATMENTS -->
@@ -3225,13 +3244,116 @@ function renderHospitalDetail(params) {
       <button class="clinic-lightbox-close" aria-label="닫기">&times;</button>
       <div class="clinic-lightbox-track" id="clinicLightboxTrack"></div>
     </div>
+
+    <!-- 장비 상세 모달: 단일 큰 이미지 + 장비명 + 카테고리, ← → 로 이동 -->
+    <div class="equipment-modal" id="equipmentModal" hidden>
+      <button class="equipment-modal-close" aria-label="닫기">&times;</button>
+      <button class="equipment-modal-nav prev" aria-label="이전">&#10094;</button>
+      <button class="equipment-modal-nav next" aria-label="다음">&#10095;</button>
+      <div class="equipment-modal-content">
+        <div class="equipment-modal-img-wrap">
+          <img id="equipmentModalImg" alt="">
+        </div>
+        <div class="equipment-modal-info">
+          <span class="equipment-modal-cat" id="equipmentModalCat"></span>
+          <h3 class="equipment-modal-name" id="equipmentModalName"></h3>
+        </div>
+      </div>
+    </div>
   `;
 
   if (heroImages.length > 1) initHeroSlider();
   if (interiorPhotos.length > 0) initInteriorTabs(interiorPhotos);
+  if (equipment.length > 0) initEquipmentSection(equipment);
   if (hospital.lat && hospital.lng) {
     setTimeout(() => initHospitalMap(hospital), 100);
   }
+}
+
+function initEquipmentSection(equipment) {
+  const grid = document.getElementById('equipmentGrid');
+  const filter = document.getElementById('equipmentFilter');
+  const modal = document.getElementById('equipmentModal');
+  if (!grid || !modal) return;
+
+  const modalImg = document.getElementById('equipmentModalImg');
+  const modalName = document.getElementById('equipmentModalName');
+  const modalCat = document.getElementById('equipmentModalCat');
+
+  let currentList = equipment;  // 현재 필터된 리스트
+  let currentIdx = 0;
+
+  function activeCat() {
+    return filter?.querySelector('.eq-chip.active')?.dataset.cat || 'all';
+  }
+
+  function applyFilter() {
+    const cat = activeCat();
+    const cards = grid.querySelectorAll('.equipment-card');
+    cards.forEach(c => {
+      c.hidden = cat !== 'all' && c.dataset.cat !== cat;
+    });
+    currentList = cat === 'all' ? equipment : equipment.filter(e => (e.treatmentTags || [])[0] === cat);
+  }
+
+  filter?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.eq-chip');
+    if (!btn) return;
+    filter.querySelectorAll('.eq-chip').forEach(b => b.classList.toggle('active', b === btn));
+    applyFilter();
+  });
+
+  applyFilter();
+
+  function openModal(eq) {
+    currentIdx = currentList.indexOf(eq);
+    if (currentIdx < 0) currentIdx = 0;
+    showCurrent();
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function showCurrent() {
+    const eq = currentList[currentIdx];
+    if (!eq) return;
+    modalImg.src = photoUrl(eq.image || '');
+    modalImg.alt = eq.name;
+    modalName.textContent = eq.name;
+    const cat = (eq.treatmentTags || [])[0] || '';
+    modalCat.textContent = cat;
+    modalCat.style.display = cat ? '' : 'none';
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  function next(dir) {
+    if (currentList.length === 0) return;
+    currentIdx = (currentIdx + dir + currentList.length) % currentList.length;
+    showCurrent();
+  }
+
+  grid.addEventListener('click', (e) => {
+    const card = e.target.closest('.equipment-card');
+    if (!card) return;
+    const idx = parseInt(card.dataset.idx, 10);
+    openModal(equipment[idx]);
+  });
+
+  modal.querySelector('.equipment-modal-close').addEventListener('click', closeModal);
+  modal.querySelector('.prev').addEventListener('click', () => next(-1));
+  modal.querySelector('.next').addEventListener('click', () => next(1));
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (modal.hidden) return;
+    if (e.key === 'Escape') closeModal();
+    else if (e.key === 'ArrowLeft') next(-1);
+    else if (e.key === 'ArrowRight') next(1);
+  });
 }
 
 function initHeroSlider() {
