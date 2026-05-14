@@ -3105,7 +3105,7 @@ function renderHospitalDetail(params) {
       <!-- 2. PHILOSOPHY -->
       ${philosophy.length > 0 ? `
         <section class="clinic-philosophy">
-          <h2 class="clinic-section-h2"><i class="fas fa-quote-left"></i> 진료 철학</h2>
+          <h2 class="clinic-section-h2">진료 철학</h2>
           <div class="philosophy-grid">
             ${philosophy.map((p, i) => `
               <div class="philosophy-card">
@@ -3121,7 +3121,7 @@ function renderHospitalDetail(params) {
       <!-- 3. DOCTORS -->
       ${doctors.length > 0 ? `
         <section class="clinic-doctors">
-          <h2 class="clinic-section-h2"><i class="fas fa-user-md"></i> 의료진 ${doctors.length}명</h2>
+          <h2 class="clinic-section-h2">의료진 ${doctors.length}명</h2>
           <div class="team-grid stagger">
             ${doctors.map(d => `
               <a href="#member/${d.id}" class="team-member-card">
@@ -3140,7 +3140,7 @@ function renderHospitalDetail(params) {
       <!-- 4. INTERIOR -->
       ${interiorPhotos.length > 0 ? `
         <section class="clinic-interior">
-          <h2 class="clinic-section-h2"><i class="fas fa-camera"></i> 원내 둘러보기</h2>
+          <h2 class="clinic-section-h2">원내 둘러보기</h2>
           <div class="interior-grid" id="interiorGrid" data-collapsed="true">
             ${interiorPhotos.map((p, i) => `
               <button class="interior-tile" data-idx="${i}" aria-label="병원 사진 ${i+1}">
@@ -3167,7 +3167,7 @@ function renderHospitalDetail(params) {
       <section class="clinic-equipment">
         ${(() => {
           if (equipment.length === 0) {
-            return `<h2 class="clinic-section-h2"><i class="fas fa-microchip"></i> 보유 장비</h2>
+            return `<h2 class="clinic-section-h2">보유 장비</h2>
                     <p class="clinic-section-empty">장비 정보 준비 중입니다.</p>`;
           }
           // 카테고리 추출 (treatmentTags 첫 항목 기준)
@@ -3178,7 +3178,7 @@ function renderHospitalDetail(params) {
           });
           return `
             <div class="clinic-section-header">
-              <h2 class="clinic-section-h2"><i class="fas fa-microchip"></i> 보유 장비</h2>
+              <h2 class="clinic-section-h2">보유 장비</h2>
               ${eqCats.length > 1 ? `
                 <div class="equipment-filter" id="equipmentFilter">
                   <button class="eq-chip active" data-cat="all">전체 (${equipment.length})</button>
@@ -3212,7 +3212,7 @@ function renderHospitalDetail(params) {
       <!-- 6. TREATMENTS -->
       ${hospital.treatments && hospital.treatments.length > 0 ? `
         <section class="clinic-treatments">
-          <h2 class="clinic-section-h2"><i class="fas fa-wand-magic-sparkles"></i> 대표 진료</h2>
+          <h2 class="clinic-section-h2">대표 진료</h2>
           <p class="clinic-section-sub">소속 원장님들이 진료하는 분야입니다</p>
           <div class="treatment-tags">
             ${TREATMENT_GROUPS.flatMap(g =>
@@ -3227,7 +3227,7 @@ function renderHospitalDetail(params) {
       <!-- 7. LOCATION -->
       ${(hospital.lat && hospital.lng) || transitInfo || parkingInfo ? `
         <section class="clinic-location">
-          <h2 class="clinic-section-h2"><i class="fas fa-map-marked-alt"></i> 오시는 길</h2>
+          <h2 class="clinic-section-h2">오시는 길</h2>
           ${hospital.lat && hospital.lng ? `<div class="hospital-map-container" id="hospitalMap"></div>` : ''}
           <div class="clinic-location-info">
             ${hospital.address ? `<div class="loc-row"><strong>주소</strong><span>${hospital.address}</span></div>` : ''}
