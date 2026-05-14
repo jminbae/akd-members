@@ -3335,15 +3335,14 @@ function initEquipmentSection(equipment) {
     const slides = track.querySelectorAll('.equipment-modal-slide');
     const target = slides[idx];
     if (!target || !track.clientWidth) return;
-    // scroll-snap이 mandatory라 layout 안 잡힌 시점에 스크롤하면 0으로 되돌아감.
-    // 잠시 snap 끄고 스크롤한 뒤 다음 프레임에 복원.
-    const prevSnap = track.style.scrollSnapType;
+    // scroll-snap mandatory + 초기 layout 미완료 → scrollLeft 변경이 0으로 되돌려질 수 있음.
+    // snap 끄고 force reflow → 스크롤 → 충분히 settle된 뒤 snap 복원.
     track.style.scrollSnapType = 'none';
+    void track.offsetWidth;  // force reflow
     track.scrollLeft = target.offsetLeft - (track.clientWidth - target.offsetWidth) / 2;
     updateScale();
-    requestAnimationFrame(() => {
-      track.style.scrollSnapType = prevSnap || '';
-    });
+    // 250ms 후 snap 복원
+    setTimeout(() => { track.style.scrollSnapType = ''; }, 250);
   }
 
   function scrollToIdx(idx) {
