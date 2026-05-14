@@ -3335,8 +3335,15 @@ function initEquipmentSection(equipment) {
     const slides = track.querySelectorAll('.equipment-modal-slide');
     const target = slides[idx];
     if (!target || !track.clientWidth) return;
+    // scroll-snap이 mandatory라 layout 안 잡힌 시점에 스크롤하면 0으로 되돌아감.
+    // 잠시 snap 끄고 스크롤한 뒤 다음 프레임에 복원.
+    const prevSnap = track.style.scrollSnapType;
+    track.style.scrollSnapType = 'none';
     track.scrollLeft = target.offsetLeft - (track.clientWidth - target.offsetWidth) / 2;
     updateScale();
+    requestAnimationFrame(() => {
+      track.style.scrollSnapType = prevSnap || '';
+    });
   }
 
   function scrollToIdx(idx) {
