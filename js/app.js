@@ -3360,12 +3360,17 @@ function initEquipmentSection(equipment) {
     // 갤러리는 카테고리 필터와 무관하게 전체 장비를 이어서 볼 수 있게
     buildTrack(equipment);
     const startIdx = equipment.indexOf(startEq);
+    const targetIdx = startIdx >= 0 ? startIdx : 0;
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
+    // 여러 시점에서 centerOn 재시도 — 레이아웃·이미지 로딩 시점 차이 흡수
+    const tryCenter = () => centerOn(targetIdx);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        centerOn(startIdx >= 0 ? startIdx : 0);
-        setTimeout(() => centerOn(startIdx >= 0 ? startIdx : 0), 150);
+        tryCenter();
+        setTimeout(tryCenter, 80);
+        setTimeout(tryCenter, 200);
+        setTimeout(tryCenter, 500);
       });
     });
   }
