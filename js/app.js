@@ -3357,8 +3357,9 @@ function initEquipmentSection(equipment) {
   });
 
   function openModal(startEq) {
-    buildTrack(currentList);
-    const startIdx = currentList.indexOf(startEq);
+    // 갤러리는 카테고리 필터와 무관하게 전체 장비를 이어서 볼 수 있게
+    buildTrack(equipment);
+    const startIdx = equipment.indexOf(startEq);
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
     requestAnimationFrame(() => {
