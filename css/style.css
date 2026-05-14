@@ -2974,54 +2974,54 @@ body[data-page="treatment"] .page-header {
   border-color: var(--primary);
 }
 
-/* 4열 그리드 (데스크톱), 모바일에서는 2열 */
+/* 6열 그리드 (데스크톱), 모바일 3열 — 누끼 이미지 자연스럽게 */
 .equipment-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
 }
 
 .equipment-card {
   display: flex;
   flex-direction: column;
   padding: 0;
-  background: var(--card);
+  background: transparent;
   border-radius: 10px;
-  border: 1px solid var(--border);
+  border: none;
   overflow: hidden;
   cursor: pointer;
   transition: var(--transition);
-  text-align: left;
+  text-align: center;
 }
 
 .equipment-card[hidden] { display: none !important; }
 
 .equipment-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-  border-color: var(--secondary);
+  transform: translateY(-3px);
 }
 
 .equipment-thumb-wrap {
   width: 100%;
   aspect-ratio: 1;
-  background: linear-gradient(135deg, #f5f7fa, #e8ecf1);
+  /* 누끼 이미지 배경: 아주 옅은 그라디언트 (자연스러운 무대 효과) */
+  background: linear-gradient(180deg, #fafbfd 0%, #eef1f5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .equipment-thumb-wrap img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 8px;
+  padding: 6px;
   transition: transform 0.4s ease;
 }
 
 .equipment-card:hover .equipment-thumb-wrap img {
-  transform: scale(1.05);
+  transform: scale(1.07);
 }
 
 .equipment-thumb-empty {
@@ -3035,15 +3035,16 @@ body[data-page="treatment"] .page-header {
 }
 
 .equipment-info {
-  padding: 10px 12px 12px;
+  padding: 8px 4px 4px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 2px;
 }
 
 .equipment-name {
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--text);
   white-space: nowrap;
   overflow: hidden;
@@ -3051,13 +3052,13 @@ body[data-page="treatment"] .page-header {
 }
 
 .equipment-tag {
-  align-self: flex-start;
-  font-size: 10px;
-  padding: 2px 8px;
+  font-size: 9px;
+  padding: 1px 7px;
   border-radius: 100px;
   background: var(--bg);
   color: var(--text-light);
   font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 /* 장비 상세 모달 */
@@ -3345,10 +3346,10 @@ body[data-page="treatment"] .page-header {
     gap: 4px;
   }
   .equipment-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
   }
-  .equipment-name { font-size: 13px; }
+  .equipment-name { font-size: 11px; }
   .clinic-section-header {
     flex-direction: column;
     align-items: flex-start;
